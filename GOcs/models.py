@@ -101,7 +101,7 @@ class Colaboradores(models.Model):
 
     Posee_Licencia_Vehicular=models.CharField(max_length=10, help_text="licencia de conducir del colaborador",default='Si')
     Posee_Carro_Vehicular=models.CharField(max_length=10, help_text="Posee carro vehicular del colaborador",default='Si')
-    Supervisor = models.ForeignKey('self', on_delete=models.PROTECT ,  null=True, blank=True)
+    Supervisor = models.ForeignKey('self', on_delete=models.PROTECT ,  default=1 )
     imagen = models.ImageField( default='no_hay_archivo.jpg')
     Quien_agrego_Jornada=models.CharField(max_length=50, help_text="Quien agrego la jornada", default='Administrador')
 

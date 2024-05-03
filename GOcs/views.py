@@ -7455,6 +7455,7 @@ def ver_carta_trabajo(request,  searched='1'):
              lista_supervisores.append([value,nombre])
 
     if request.method=='GET':
+     try:
         lista_final=[]
         Colaborador_obj=Colaboradores.objects.get(pk=int(searched))
         
@@ -7660,7 +7661,13 @@ def ver_carta_trabajo(request,  searched='1'):
         
         
         return render(request, "ver_carta_trabajo.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'name_file':name_file, 'MEDIA_URL':settings.MEDIA_URL, 'name_1':nombre_archivo_WORD, 'lista_cliente':lista_final, 'qty_notificaciones_permisos':qty_notificaciones_permisos, 'qty_notificaciones_acreedores':qty_notificaciones_acreedores, 'Colaborador_obj':Colaborador_obj, 'pk_colaborador':searched, })
-
+     except Exception as e:
+            print("Se produjo una excepción:", type(e).__name__, "-", e)
+            # Imprimir la información de la traza de la excepción
+            traceback.print_exc()
+            print(traceback.print_exc(), 'print')
+            print("Archivo:", e.__traceback__.tb_frame.f_code.co_filename)
+            print("Línea:", e.__traceback__.tb_lineno)
 def ver_archivos_colaborador(request,  searched='1'):
     if True: #Autenticacion
         if not request.user.is_authenticated:
