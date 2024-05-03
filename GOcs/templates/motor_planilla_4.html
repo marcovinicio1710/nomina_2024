@@ -1,0 +1,386 @@
+
+<!doctype html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Motor de Planilla Paso 4</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        <br>
+        
+
+        
+        
+        <nav aria-label="Page navigation example">
+            
+                
+            <ul class="pagination justify-content-center ">
+                <li class="page-item ">
+                    <form class="row g-3 needs-validation" method="post" action="{% url 'motor-planilla_p3/' %}" >
+                        {% csrf_token %}
+                        
+                        <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                        <button type="submit" class="btn btn-danger">  <span>Regresar  </span>  </button>
+                    </form>
+                        
+                        
+                </li>
+                <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-arrow-left-circle"></i></a></li>
+                <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-arrow-right-circle"></i></a></li>
+                <li class="page-item">
+                    <form class="row g-3 needs-validation" method="post" action="{% url 'motor-planilla_p5/' %}">
+                        {% csrf_token %}
+                        {% if siguiente_bool %}
+                            <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                            <button type="submit" class="btn btn-success"> Siguiente</button>
+                        {% else %}
+                            <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                            <button type="submit" class="btn btn-success" disabled> Siguiente</button>
+
+                        {% endif %}
+                    </form>
+                </li>
+            </ul>
+        </form>
+        </nav>
+        <div class="main-container d-flex">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+              <div class="col-md-8 mt-5 border rounded p-4 shadow">
+                   {% if agregado == 'existo' %}
+                   <h4 class="text-danger">  {{Mensaje}}  </h4>
+                   {% endif %}
+                  <div class="bd-example m-0 border-0">
+                      <form class="row g-3 needs-validation" method="post">
+                        {% csrf_token %}´
+                        {% if siguiente_bool %}
+                            <div class="col-md-12">
+                                <div class="card" >
+                                    <div class="card-header">
+                                        <strong class="fs-4 text-primary"> <i class="bi bi-check-circle-fill"></i> Acciones Confirmadas Presione el botón  de "Siguiente" para continuar con el proceso.
+                                        </strong>
+                                    </div>
+                            
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-md-12">
+                                <div class="card" >
+                                    <div class="card-header">
+                                        <strong class="fs-4 text-danger"> <i class="bi bi-exclamation-octagon-fill"></i> Tienes Acciones Pendientes, Confirmelas para continuar con el proceso.
+                                        </strong>
+                                    </div>
+                        
+                                </div>
+                            </div>
+                        {% endif %}
+                          <div class="col-md-12">
+                            <div class="card" >
+                              <div class="card-header">
+                                <strong class="fs-2">
+                                   <i class="bi bi-1-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-2-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-3-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-4-circle-fill"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-5-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-6-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-7-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-8-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-9-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-1-circle"></i>
+                                   <i class="bi bi-0-circle"></i>
+                                
+                                </strong>
+                              </div>
+                              <ul class="list-group list-group-flush">
+                                <li class="list-group-item text-primary"><strong> Paso 4 </strong> ( Validar Horas Extras mayores a 3 hr Extras  ) </li>
+                        
+                                
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Total Colaboradores <i class="bi bi-people-fill"></i> {{TOTAL_C}}</strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  <li class="list-group-item">Administrativo <i class="bi bi-people-fill"></i> <strong> {{admin}}</strong></li>
+                                  <li class="list-group-item">Produccion <i class="bi bi-people-fill"></i> <strong> {{produccion}}</strong></li>
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                          <div class="col-md-5">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Planilla Quincenal {{lista_planilla.0}} <i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  
+                                  <li class="list-group-item"><i class="bi bi-calendar3"></i><strong> Fecha Inicio: </strong> {{lista_planilla.1}}</li>
+                                  <li class="list-group-item"><i class="bi bi-calendar3"></i><strong> Fecha Final: </strong> {{lista_planilla.2}}</li>
+                                  <li class="list-group-item"><i class="bi bi-calendar-check-fill"></i><strong> Fecha Pago: </strong> {{lista_planilla.3}}</li>
+                                  
+                                </ul>
+                              </div>
+                          </div>
+
+                          <div class="col-md-4">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Confirmar Horas Extras > 3+ hrs. </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  <input type="text" name="Actualizar" value="{{lista_planilla.0}}" hidden>
+                                  <li class="list-group-item "><button class="btn btn-secondary fs-5" type="submit"><i class="bi bi-cloud-arrow-up-fill "></i>  Actualizar Hr. Extras Base Datos</button></li>
+                                  
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                        
+                          
+
+                          <div class="col-md-12">
+                            <div class="form-check">
+                                <span><strong>Previsualize jornadas de Horas Extras mayores 3 hrs. Extras por dia en los Colaboradores durante este fecha de corte de Planilla</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+
+                                                <th class="table-dark">Aprobar</th>
+                                                <th class="table-dark">Editar</th>
+                                                <th class="table-dark">Colaborador</th>
+                                                
+                                                <th class="table-dark">Cargo</th>
+                                                <th class="table-dark">Dpto.</th>
+                                                <th class="table-dark">Codigo Cliente</th>
+                                                <th class="table-dark">Cliente</th>
+                                            
+                                                <th class="table-dark">Entrada</th>
+                                                <th class="table-dark">Salida</th>
+                                                
+                                                <th class="table-dark">Hrs-Ex. > 3hrs </th>
+                                                
+                                                <th class="table-dark">Quien agrego Jornada </th>
+                                                
+                                                
+                                                
+                                                
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for clientes in lista_cliente %}
+                                                <tr>
+                                                    
+                                                    <td >
+                                                        {% if clientes.12 %}
+                                                            <div class="form-check form-switch">
+                                                                
+                                                                <input class="form-check-input" type="checkbox" name="switch_aprobar" value="{{clientes.0}}" role="switch" id="flexSwitchCheckChecked" checked>
+                                                                <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                                                            </div>
+
+                                                            
+                                                        {% else %}
+                                                        <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox" name="switch_aprobar" value="{{clientes.0}}" role="switch" id="flexSwitchCheckDefault">
+                                                            <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+                                                        </div>
+                                                       
+                                                        {% endif %}
+                                                        
+                                                    </td>
+                                                    <td class="size-font-sm"> 
+                                                        
+                                                        <span class="nav-item dropdown">
+                                                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <span class="text-success"><i class="bi bi-pen fs-5"></i><br>Editar Fechas</span>
+                                                            </a>
+                                                            <ul class="dropdown-menu dropdown-menu-dark form-check">
+                                                                
+                                                                
+                                                                    
+                                                                    <li>
+                                                                        <form  method="post">
+                                                                            {% csrf_token %}
+                                                                            <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                                                                            <input type="text" name="Cambiar" value="{{ clientes.0 }}" hidden>
+                                                                            
+                                                                            <label for="validationCustom01" class="form-label m-1"><strong>Entrada</strong>  </label>
+                                                                            <br><input type="time" name="hora_entrada" id="validationdate" class="m-1" >
+                                                                            <br>
+                                                                            <label for="validationCustom01" class="form-label m-1"><strong>Salida</strong>  </label>
+                                                                            <br><input type="time" name="hora_salida" id="validationdate" class="m-1" >
+                                                                            
+                                                                            <button class="btn btn-primary m-1" type="submit">Cambiar</button>
+                                                                                  
+
+                                                                        </form>
+                                                                    </li>
+                                                                    
+                                                                
+                                                            </ul>
+                                                        </span>
+                                                    </td>
+                                                    
+                                                    <td class="small"><img src="{{ MEDIA_URL }}{{  clientes.14 }}" alt="mdo" width="32" height="32" class="rounded-circle mb-2">  {{ clientes.1 }}</td>
+                                     
+                                                    <td class="small">{{ clientes.2 }}</td>
+                                                    <td class="small">{{ clientes.3 }}</td>
+                                                    <td class="small">{{ clientes.4 }}</td>
+                                                    <td class="small">{{ clientes.5 }}</td>
+                                                    <td class="small-text-manual">{{ clientes.6 }} <br><button  class="btn btn-secondary size-font-sm" type="button">{{ clientes.10 }}</button></td>
+                                                    <td class="small-text-manual">{{ clientes.7 }} <br><button  class="btn btn-secondary size-font-sm" type="button">{{ clientes.11 }}</button></td>
+                                                    <td class="small">
+                                                        <button  class="btn btn-danger size-font-sm" type="button">{{ clientes.8 }} min.</button>
+                                                        
+                                                    </td>
+                                                    <td class="small">{{ clientes.9 }}</td>
+                                         
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                          </div>
+
+                          
+                              
+                          
+                          <div class="col-12">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" id="invalidCheck" disabled >
+                              <label class="form-check-label" for="invalidCheck">
+                                  Inicie motor y asistencia de planilla automatizada para sus Colaboradores.
+                              </label>
+                            
+                            </div>
+                          </div>
+                        
+                      </form>
+                  </div>
+
+              </div>
+            </div> 
+
+        </div>
+        <br>
+        <nav aria-label="Page navigation example">
+            
+                
+            <ul class="pagination justify-content-center ">
+                <li class="page-item ">
+                    <form class="row g-3 needs-validation" method="post" action="{% url 'motor-planilla_p3/' %}" >
+                        {% csrf_token %}
+                        
+                        <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                        <button type="submit" class="btn btn-danger">  <span>Regresar  </span>  </button>
+                    </form>
+                        
+                        
+                </li>
+                <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-arrow-left-circle"></i></a></li>
+                <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-arrow-right-circle"></i></a></li>
+                <li class="page-item">
+                    <form class="row g-3 needs-validation" method="post" action="{% url 'motor-planilla_p5/' %}">
+                        {% csrf_token %}
+                        {% if siguiente_bool %}
+                            <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                            <button type="submit" class="btn btn-success"> Siguiente</button>
+                        {% else %}
+                            <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                            <button type="submit" class="btn btn-success" disabled> Siguiente</button>
+
+                        {% endif %}
+                    </form>
+                </li>
+            </ul>
+        </form>
+        </nav>
+
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        
+        
+  
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

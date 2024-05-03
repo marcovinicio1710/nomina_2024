@@ -1,0 +1,299 @@
+
+<!doctype html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Ver Importar SIPE</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        {% load static %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        
+        <div class="main-container d-flex">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+                <div class="col-md-8 mt-5 border rounded p-4 shadow">
+                  {% if agregado == 'existo' %}
+                  <h4 class="text-danger"> Colaborador {{colaborador}} se ha creado con exitoso.! </h4>
+                  {% endif %}
+                    <div class="bd-example m-0 border-0">
+                        <form class="row g-3 needs-validation" method="post" >
+                          {% csrf_token %}
+                          <!--  Tipo de documento  --> 
+                          <h4 class="text-primary">Visualizar Datos de Importanciones.</h4>
+                          
+                        
+                          <div class="col-md-4">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Elija Rango de Fechas de SIPE <i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  
+                                  <li class="list-group-item">
+                                    <div class="col-md-12">
+                                        <label for="validationCustom01" class="form-label"><strong>Desde:</strong>  </label>
+                                        <br><input type="date" name="inicial" id="validationdate" required >
+                                        
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="col-md-12">
+                                        <label for="validationCustom01" class="form-label"><strong>Hasta:</strong>  </label>
+                                        <br><input type="date" name="final" id="validationdate" required >
+                                        
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item">
+                                    <button class="btn btn-primary" type="submit">Ver SIPE</button>
+                                  </li>
+                                
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                          
+
+                          <div class="col-md-4">
+                            
+                          </div>
+
+                          {% if request == 'POST' %}
+
+                          <div class="col-md-12">
+                            <div class="form-check">
+                                <span><strong>Previsualize Totales  en Rango Seleccionado</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla4" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+                                                
+                                                
+                                                <th class="table-dark">Qty Pagos</th>
+                                                <th class="table-dark">Total Gasto Patron</th>
+                                                <th class="table-dark">Salario </th>
+                                                <th class="table-dark">Vacaciones</th>
+                                                <th class="table-dark">Salario Ajustado</th>
+                                                <th class="table-dark">XIII</th>
+                                                <th class="table-dark">SS</th>
+                                                <th class="table-dark">SE</th>
+                                                <th class="table-dark">SS XIII</th>
+                                                <th class="table-dark">ISLR</th>
+                                                <th class="table-dark">R.P</th>
+                                                <th class="table-dark">Pago SIPE</th>
+                                                   
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                                <tr>
+                                                  
+                                                    
+                                                    <td class="small"> {{ lista_totales.0 }}</td>
+                                                    <td class="small"><button type="button"   class="btn btn-success">$ {{ lista_totales.1 }}</button></td>
+                                                    
+                                                    <td class="small">$ {{ lista_totales.2 }}</td>
+                                                    <td class="small">$ {{ lista_totales.3 }}</td>
+                                                    <td class="small">$ {{ lista_totales.4 }}</td>
+                                                    <td class="small">$ {{ lista_totales.5 }}</td>
+                                                    <td class="small">$ {{ lista_totales.6 }}</td>
+                                                
+                                                    <td class="small">$ {{ lista_totales.7 }}</td>
+                                                    <td class="small">$ {{ lista_totales.8 }}</td>
+                                                    <td class="small">$ {{ lista_totales.9 }}</td>
+                                                    <td class="small">$ {{ lista_totales.10 }}</td>
+                                                    <td class="small"><button type="button"  disabled class="btn btn-success">$ {{ lista_totales.11}}</button></td>
+                                                    
+                                                   
+                                                </tr>
+                                            
+                                            
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                          </div>
+
+                          <div class="col-md-12">
+                            <div class="form-check">
+                                <span><strong>Previsualize Datos por colaborador en fechas seleccionadas en  declaracion SIPE</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla_2" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+                                                
+                                                <th class="table-dark">Año</th>
+                                                <th class="table-dark">Mes</th>
+
+                                                <th class="table-dark">T. Identif</th>
+                                                <th class="table-dark">Nro Identif</th>
+                                                <th class="table-dark">Colaborador</th>
+                                                <th class="table-dark">Salario</th>
+                                                <th class="table-dark">Vacaciones</th>
+                                                <th class="table-dark">Salario Ajustado</th>
+                                                <th class="table-dark">XIII</th>
+                                                <th class="table-dark">SS</th>
+                                                <th class="table-dark">SE</th>
+                                                <th class="table-dark">SS DTM</th>
+                                                <th class="table-dark">ISLR</th>
+                                                <th class="table-dark">R.P</th>
+                                                <th class="table-dark">Aportes SIPE</th>
+                                                <th class="table-dark">Total Gasto Patronales</th>
+                                                
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for clientes in lista_clientes %}
+                                            
+                                                <tr>
+                                                  
+                                                    
+                                                    <td class="small"> {{ clientes.year }}</td>
+                                                    <td class="small"> {{ clientes.mes }}</td>
+                                                    <td class="small"> {{ clientes.tipo_docu }}</td>
+                                                    <td class="small"> {{ clientes.nro_identificacion }}</td>
+                                                    <td class="small"> {{ clientes.nombre }}  {{ clientes.apellido }}</td>
+                                                    <td class="small"><button type="button" disabled class="btn btn-terniary"> {{ clientes.total_sueldo|floatformat:2 }}</button></td>
+                                                    <td class="small"><button type="button" disabled class="btn btn-terniary"> {{ clientes.total_vacaciones|floatformat:2 }}</button></td>
+                                                    <td class="small"><button type="button" disabled class="btn btn-terniary"> {{ clientes.total_sueldo_ajustado|floatformat:2 }}</button></td>
+                                                    <td class="small"><button type="button" disabled class="btn btn-terniary"> {{ clientes.total_xxi|floatformat:2 }}</button></td>
+                                                    <td class="small"><button type="button" disabled class="btn btn-danger"> {{ clientes.total_ss|floatformat:2 }}</button></td>
+                                                    <td class="small"><button type="button" disabled class="btn btn-danger">{{ clientes.total_se|floatformat:2 }}</button></td>
+                                                    <td class="small"><button type="button" disabled class="btn btn-danger">{{ clientes.total_dtm|floatformat:2 }}</button></td>
+                                                    <td class="small"><button type="button" disabled class="btn btn-danger">{{ clientes.total_islr|floatformat:2 }}</button></td>
+                                                    <td class="small"><button type="button" disabled class="btn btn-danger">{{ clientes.total_rp|floatformat:2 }}</button></td>
+                                                    <td class="small"><button type="button"  class="btn btn-danger">{{ clientes.total_pago_Sipe|floatformat:2 }}</button></td>
+                                                    <td class="small"><button type="button"  class="btn btn-success">{{ clientes.Total_Gasto_Patron|floatformat:2 }}</button></td>
+                                                    
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                          </div>
+
+
+                          {% endif %}
+
+                          <div class="col-md-8">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Notificacion Importante de Importacion de datos. <i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  
+                                  <li class="list-group-item">
+                                        <span>Los Datos suministrado estan guardados en una base datos diferente a la planilla dentro de este software o la base datos de Liquidaciones.</span>
+                                  </li>
+                                  
+                                  <li class="list-group-item">
+                                    <span>Los datos que visualizara no sera tomado en cuenta para analizar de datos para el software ( Datos de Colaboradores, Tardanzas, Vacaciones , XIII o liquidaciones )</span>
+                                  </li>
+
+                                  <li class="list-group-item">
+                                    <span>Para visualizar datos de este archivo cargado Por Favor ir Estadisticas de Importanciones SIPE ==> Estadisticas Globales</span>
+                                  </li>
+
+                                  <li class="list-group-item">
+                                    <span>Los unicos datos que seran tomados en cuenta para analisis seran para Colaboradores de Contrato Indefinico para el Calculo de Prestaciones y Liquidaciones en su Prima de Antiguedad.</span>
+                                  </li>
+                                  
+                                  
+                                  
+                                </ul>
+                              </div>
+                          </div>
+
+                          
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            
+
+        </div>
+       
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_3').DataTable();
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

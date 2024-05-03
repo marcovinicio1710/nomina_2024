@@ -1,0 +1,719 @@
+
+<!doctype html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Analisis Quincena </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        
+        <div class="main-container d-flex">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+              <div class="col-md-8 mt-5 border rounded p-4 shadow">
+                   {% if agregado == 'existo' %}
+                   <h4 class="text-danger">  {{Mensaje}}  </h4>
+                   {% endif %}
+                  <div class="bd-example m-0 border-0">
+                      <form class="row g-3 needs-validation" method="post">
+                        {% csrf_token %}
+
+                          
+                          <div class="col-md-3">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Total Colaboradores <i class="bi bi-people-fill"></i> {{TOTAL_C}}</strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  <li class="list-group-item">Administrativo <i class="bi bi-people-fill"></i> <strong> {{admin}}</strong></li>
+                                  <li class="list-group-item">Produccion <i class="bi bi-people-fill"></i> <strong> {{produccion}}</strong></li>
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                          <div class="col-md-5">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Elija el Periodo correcto para generar Analisis. <i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  
+                                  <li class="list-group-item">
+                                    <div class="col-md-12">
+                                      <label for="validationCustom04" class="form-label "><strong>Periodo Quincenal</strong></label>
+                                      <select class="form-select" id="validationCustom04" name="quincena" required>
+                                        <option selected disabled value="">Elija un Quincena a generar Planilla </option>
+                                        <option value="Q1"><span><strong>Q1</strong> ( 1 - 15 )  días</span> </option>
+                                        <option value="Q2"><span><strong>Q2</strong> (16 - Fin de mes )  días</span></option>
+                                        
+
+                                      </select>
+                                    
+                                  </div>
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="col-md-12">
+                                      <label for="validationCustom04" class="form-label "><strong>Periodo Mensual</strong></label>
+                                      <select class="form-select" id="validationCustom04" name="mes" required>
+                                        <option selected disabled value="">Elija un mes</option>
+                                        <option value="1"><span>Enero</span> </option>
+                                        <option value="2"><span>Febrero</span></option>
+                                        <option value="3"><span>Marzo</span></option>
+                                        <option value="4"><span><strong></strong>Abril</span></option>
+                                        <option value="5"><span><strong></strong>Mayo</span></option>
+                                        <option value="6"><span><strong></strong>Junio</span></option>
+                                        <option value="7"><span><strong></strong>Julio</span></option>
+                                        <option value="8"><span><strong></strong>Agosto</span></option>
+                                        <option value="9"><span><strong></strong>Septiembre</span></option>
+                                        <option value="10"><span><strong></strong>Octubre</span></option>
+                                        <option value="11"><span><strong></strong>Noviembre</span></option>
+                                        <option value="12"><span><strong></strong>Diciembre</span></option>
+                                        
+
+                                      </select>
+                                    
+                                  </div>
+                                  </li>
+                                  <li class="list-group-item">
+                                    
+                                    <div class="col-md-12">
+                                      <label for="validationCustom04" class="form-label "><strong>Periodo Anual</strong></label>
+                                      <select class="form-select" id="validationCustom04" name="year" required>
+                                        <option selected disabled value="">Elija un año</option>
+                                        <option value="2019"><span>2019</span> </option>
+                                        <option value="2020"><span>2020</span> </option>
+                                        <option value="2021"><span>2021</span></option>
+                                        <option value="2022"><span>2022</span></option>
+                                        <option value="2023"><span>2023</span></option>
+                                        <option value="2024"><span>2024</span></option>
+                                        <option value="2025"><span>2025</span></option>
+                                        <option value="2026"><span>2026</span></option>
+                                        <option value="2027"><span>2027</span></option>
+                                        <option value="2028"><span>2028</span></option>
+                                        <option value="2029"><span>2029</span></option>
+                                        <option value="2030"><span>2030</span></option>
+                                        
+                                        
+
+                                      </select>
+                                    
+                                  </div>
+                                  </li>
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                        
+                          <div class="col-md-4">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Motor de Analisis </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  
+                                  <li class="list-group-item"><button class="btn btn-success" type="submit"><i class="bi bi-play-circle-fill"></i>  Iniciar Analisis Planilla</button></li>
+                                  
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                          {% if request == 'GET' %}
+                          
+                          
+                          <div class="col-md-12">
+                            <div class="form-check">
+                                <span><strong> Colaboradores Activos</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+                                                <th class="table-dark ">#</th>
+                                                <th class="table-dark">Identificacion</th>
+                                                <th class="table-dark">Nombre</th>
+                                                <th class="table-dark">Apellido</th>
+                                                <th class="table-dark">Cargo</th>
+                                                <th class="table-dark">Departamento</th>
+                                                <th class="table-dark">Supervisor</th>
+                                                
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for clientes in lista_cliente %}
+                                                <tr>
+                                                    <td> 
+                                                        <div class="form-check" >
+                                                            <input class="form-check-input" type="radio" name="colaborador" value="{{ clientes.0 }}" id="flexCheckDefault" >
+                                                            
+                                                          </div>
+                                                              
+                                                    </td>
+                                                    <td>{{ clientes.1 }}</td>
+                                                    <td>{{ clientes.2 }}</td>
+                                                    <td>{{ clientes.3 }}</td>
+                                                    <td>{{ clientes.4 }}</td>
+                                                    <td>{{ clientes.5 }}</td>
+                                                    <td>{{ clientes.6 }}</td>
+                                                    
+                                                    
+                                                    
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                          </div>
+                          {% endif %}
+                          
+                          {% if request == 'POST' %}
+
+                          <div class="col-md-12">
+                            <div class="form-check">
+                                <span><strong> Colaboradores Activos</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+                                                <th class="table-dark ">Periodo</th>
+                                                <th class="table-dark">Inicio Corte</th>
+                                                <th class="table-dark">Fin Corte</th>
+                                                <th class="table-dark">Fecha Pago</th>
+                                                <th class="table-dark">Total General Sueldo Bruto</th>
+                                                
+                                                
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                           
+                                                <tr>
+                                                   
+                                                    <td>{{ lista_planilla.0 }}</td>
+                                                    <td>{{ lista_planilla.1 }}</td>
+                                                    <td>{{ lista_planilla.2 }}</td>
+                                                    <td>{{ lista_planilla.3 }}</td>
+                                                    <td>{{total_bruto|floatformat:2}}</td>
+                                                    
+                                                    
+                                                    
+                                                </tr>
+                                         
+                                            
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                          </div>  
+                          
+
+                          <div class="col-md-5 ">
+                            <div class="card mt-3" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Totales Generales de la Quincena. <i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                {% for clientes in lista_Quincena_General %} 
+                                 {% if clientes.0 == 'Total Patronal' %}
+                                  <li class="list-group-item">
+                                    <div class="col-md-12">
+                                      <label for="validationCustom04" class="form-label ">{{clientes.0}}: <strong>$ {{clientes.2|floatformat:2}}</strong></label>
+                                     
+                                        <div class="progress" id="validationCustom04" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                    
+                                            <div class="progress-bar bg-success overflow-visible" style="width: {{ clientes.1 }}%">{{ clientes.1 }}%</div>
+                                        </div>
+                                    
+                                    </div>
+                                  </li>
+
+                                  {% else %}  
+                                  <li class="list-group-item">
+                                    <div class="col-md-12">
+                                      <label for="validationCustom04" class="form-label ">{{clientes.0}}: <strong>$ {{clientes.2|floatformat:2}}</strong></label>
+                                     
+                                        <div class="progress" id="validationCustom04" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                    
+                                            <div class="progress-bar overflow-visible" style="width: {{ clientes.1 }}%">{{ clientes.1 }}%</div>
+                                        </div>
+                                    
+                                    </div>
+                                   </li>
+
+
+                                  {% endif %}
+                                {% endfor %}
+                                  
+                                  
+                                </ul>
+                              </div>
+                          </div>
+
+                          <div class="col-md-7 ">
+                            <div class="card mt-3" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Ultimas 6 quincenas ( Saldos Generales ). <i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                
+                                  <li class="list-group-item">
+                                    <div class="col-md-12 mx-auto">
+                                        <canvas id="barChart"></canvas>
+                                      </div>
+                                  </li>
+
+                                  
+                                </ul>
+                              </div>
+                          </div>
+
+                          <div class="col-md-4   ">
+                            <div class="card mt-3" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Relacion Departamento /  Saldos Generales  en Quincena. <i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                
+                                  <li class="list-group-item">
+                                    <div class="col-md-12 mx-auto">
+                                        <canvas id="doughnutChart"></canvas>
+                                      </div>
+                                  </li>
+
+                                  
+                                </ul>
+                              </div>
+                          </div>
+
+                          <div class="col-md-4   ">
+                            <div class="card mt-3" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Relacion Cuentas Clientes /  Saldos Generales  en Quincena. <i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                
+                                  <li class="list-group-item">
+                                    <div class="col-md-12 mx-auto">
+                                        <canvas id="doughnutChart1"></canvas>
+                                      </div>
+                                  </li>
+
+                                  
+                                </ul>
+                              </div>
+                          </div>
+
+                          <div class="col-md-4   ">
+                            <div class="card mt-3" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Desglose de Liquidacion en Quincena. <i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                
+                                  <li class="list-group-item">
+                                    <div class="col-md-12 mx-auto">
+                                        <canvas id="barChart_1"></canvas>
+                                      </div>
+                                  </li>
+
+                                  
+                                </ul>
+                              </div>
+                          </div>
+
+
+                          <div class="col-md-8">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Desglose del Salario Bruto. <i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                {% for clientes in lista_desglose_sueldo %} 
+                                  <li class="list-group-item">
+                                    <div class="col-md-12">
+                                    {% if clientes.0 == 'Salario Bruto' %}
+                                      <label for="validationCustom04" class="form-label ">{{clientes.0}} <strong> {{clientes.2}}</strong></label>
+                                     
+                                        <div class="progress" id="validationCustom04" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                    
+                                            <div class="progress-bar bg-success overflow-visible" style="width: {{ clientes.1 }}%">{{ clientes.1 }}%</div>
+                                        </div>
+
+                                    {% elif clientes.0 == 'Dias Ausencia ' %}
+                                        <label for="validationCustom04" class="form-label ">{{clientes.0}} <strong> {{clientes.2}}</strong></label>
+                                       
+                                          <div class="progress" id="validationCustom04" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                      
+                                              <div class="progress-bar bg-danger overflow-visible" style="width: {{ clientes.1 }}%">{{ clientes.1 }}%</div>
+                                          </div>
+
+                                    {% elif clientes.0 == 'Descuento Minutos Ausencia Dentro Jornada ' %}
+                                          <label for="validationCustom04" class="form-label ">{{clientes.0}} <strong> {{clientes.2}}</strong></label>
+                                         
+                                            <div class="progress" id="validationCustom04" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                        
+                                                <div class="progress-bar bg-danger overflow-visible" style="width: {{ clientes.1 }}%">{{ clientes.1 }}%</div>
+                                            </div>
+                                    
+                                    {% elif clientes.0 == 'Deduccion con Impuestos ' %}
+                                          <label for="validationCustom04" class="form-label ">{{clientes.0}} <strong> {{clientes.2}}</strong></label>
+                                         
+                                            <div class="progress" id="validationCustom04" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                        
+                                                <div class="progress-bar bg-danger overflow-visible" style="width: {{ clientes.1 }}%">{{ clientes.1 }}%</div>
+                                            </div>
+                                    {% else %}  
+                                        <label for="validationCustom04" class="form-label ">{{clientes.0}} <strong> {{clientes.2}}</strong></label>
+                                     
+                                        <div class="progress" id="validationCustom04" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                    
+                                            <div class="progress-bar  overflow-visible" style="width: {{ clientes.1 }}%">{{ clientes.1 }}%</div>
+                                        </div> 
+                                    {% endif %}
+                                    </div>
+                                  </li>
+                                {% endfor %}
+                                  
+                                  
+                                </ul>
+                              </div>
+                          </div>
+
+                          
+
+                          {% endif %}
+                          
+                              
+                          
+                          <div class="col-12">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" id="invalidCheck" disabled >
+                              <label class="form-check-label" for="invalidCheck">
+                                  Inicie motor y asistencia de planilla automatizada para sus Colaboradores.
+                              </label>
+                            
+                            </div>
+                          </div>
+                        
+                      </form>
+                  </div>
+
+              </div>
+          </div> 
+
+    
+            
+            
+
+        </div>
+
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        
+        
+  
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+
+            // Obtener datos de Django y parsearlos
+        var datos_grafica = JSON.parse('{{ datos_grafica|safe }}');
+
+        // Configurar los datos para la gráfica
+        var data = {
+            labels: datos_grafica.labels,
+            datasets: [{
+            label: 'Ultimos 6 ',
+            backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 205, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(201, 203, 207, 0.2)'
+            ]       ,
+            borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(255, 159, 64)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(54, 162, 235)',
+                'rgb(153, 102, 255)',
+                'rgb(201, 203, 207)'
+            ],
+            borderWidth: 1,
+            data: datos_grafica.datos
+            }]
+        };
+
+        // Configuración de la gráfica
+        options= {
+            plugins: {
+            legend: {
+                display: true,
+                labels: {
+                    color: 'rgb(255, 99, 132)'
+                }
+            }
+        },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+            }
+        };
+
+        // Crear la gráfica de barras
+        var ctx = document.getElementById('barChart').getContext('2d');
+        var myBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: data,
+            options: options
+        });
+
+        //liquidaciones
+
+        var datos_bar = JSON.parse('{{ datos_bar|safe }}');
+
+        // Configurar los datos para la gráfica
+        var data3 = {
+            labels: datos_bar.labels,
+            datasets: [{
+            label: datos_bar.label,
+            backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 205, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(201, 203, 207, 0.2)'
+            ]       ,
+            borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(255, 159, 64)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(54, 162, 235)',
+                'rgb(153, 102, 255)',
+                'rgb(201, 203, 207)'
+            ],
+            borderWidth: 1,
+            data: datos_bar.datos
+            }]
+        };
+
+        // Configuración de la gráfica
+        options_1= {
+            indexAxis: 'y',
+            plugins: {
+            legend: {
+                display: true,
+                labels: {
+                    color: 'rgb(255, 99, 132)'
+                }
+            }
+        },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+            }
+        };
+
+        // Crear la gráfica de barras
+        var ctx_1 = document.getElementById('barChart_1').getContext('2d');
+        var myBarChart_1 = new Chart(ctx_1, {
+            type: 'bar',
+            data: data3,
+            options: options_1
+        });
+
+        // Dona
+        // Inicializar el gráfico de tipo Doughnut
+        var doughnut_datasets = JSON.parse('{{ doughnut_datasets|safe }}');
+        var data1 = {
+            labels: doughnut_datasets.labels,
+            datasets: [{
+            label: doughnut_datasets.label,
+            backgroundColor: [
+                        'rgb(255, 206, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(255, 99, 132 )',
+                        'rgb(54, 162, 235 )',
+                       
+                        'rgb(153, 102, 255)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 206, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        
+                        'rgb(153, 102, 255)'
+                    ],
+            borderWidth: 1,
+            hoverOffset: 4,
+
+            data: doughnut_datasets.datos
+            }]
+        };
+
+        options= {
+            plugins: {
+            legend: {
+                display: true,
+                labels: {
+                    color: 'rgb(255, 99, 132)'
+                }
+            }
+        },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+            }
+        };
+        // Inicializar el gráfico de tipo Doughnut
+        var ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+        new Chart(ctxDoughnut, {
+            type: 'doughnut',
+            data: data1,
+            options: options
+        });
+
+        var doughnut_datasets_1 = JSON.parse('{{ doughnut_datasets_1|safe }}');
+        var data2 = {
+            labels: doughnut_datasets_1.labels,
+            datasets: [{
+            label: doughnut_datasets_1.label,
+            backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(153, 102, 255, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+            borderWidth: 1,
+            hoverOffset: 4,
+            data: doughnut_datasets_1.datos
+            }]
+        };
+
+    
+        // Inicializar el gráfico de tipo Doughnut
+        var ctxDoughnut1 = document.getElementById('doughnutChart1').getContext('2d');
+        new Chart(ctxDoughnut1, {
+            type: 'doughnut',
+            data: data2,
+            options: options
+        });
+
+
+        var pie_datasets = JSON.parse('{{ pie_datasets|safe }}');
+
+        // Inicializar el gráfico de tipo Pie
+        var ctxPie = document.getElementById('pieChart').getContext('2d');
+        new Chart(ctxPie, {
+            type: 'pie',
+            data: {
+                labels: pie_datasets[0].labels,
+                datasets: [{
+                    label: pie_datasets[0].label,
+                    data: pie_datasets[0].data,
+                    backgroundColor: [
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(153, 102, 255, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1,
+                    
+                }]
+            }
+        });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

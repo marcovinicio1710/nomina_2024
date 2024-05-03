@@ -1,0 +1,166 @@
+
+<!doctype html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Reporte Prestaciones Colaborador</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        {% load static %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        
+        <div class="container py-3">
+            {% include 'categoria_2.html' %}
+            <header>
+              <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+                <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="32" class="me-2" viewBox="0 0 118 94" role="img"><title>Bootstrap</title><path fill-rule="evenodd" clip-rule="evenodd" d="M24.509 0c-6.733 0-11.715 5.893-11.492 12.284.214 6.14-.064 14.092-2.066 20.577C8.943 39.365 5.547 43.485 0 44.014v5.972c5.547.529 8.943 4.649 10.951 11.153 2.002 6.485 2.28 14.437 2.066 20.577C12.794 88.106 17.776 94 24.51 94H93.5c6.733 0 11.714-5.893 11.491-12.284-.214-6.14.064-14.092 2.066-20.577 2.009-6.504 5.396-10.624 10.943-11.153v-5.972c-5.547-.529-8.934-4.649-10.943-11.153-2.002-6.484-2.28-14.437-2.066-20.577C105.214 5.894 100.233 0 93.5 0H24.508zM80 57.863C80 66.663 73.436 72 62.543 72H44a2 2 0 01-2-2V24a2 2 0 012-2h18.437c9.083 0 15.044 4.92 15.044 12.474 0 5.302-4.01 10.049-9.119 10.88v.277C75.317 46.394 80 51.21 80 57.863zM60.521 28.34H49.948v14.934h8.905c6.884 0 10.68-2.772 10.68-7.727 0-4.643-3.264-7.207-9.012-7.207zM49.948 49.2v16.458H60.91c7.167 0 10.964-2.876 10.964-8.281 0-5.406-3.903-8.178-11.425-8.178H49.948z" fill="currentColor"></path></svg>
+                  <span class="fs-4">Reporte Prestaciones {{user_profile_obj.Colaborador.Colaborador_nombre}} !</span>
+                </a>
+            
+              </div>
+          
+            </header>
+          
+            <main>
+              <div class="row   text-center">
+                <form class="row g-3 needs-validation" method="post" >
+                    {% csrf_token %}
+                    <div class="col-md-6">
+                        <div class="card" >
+                            <div class="card-header">
+                              <strong class="text-primary">Elija Rango de Fechas de Pago Prestaciones<i class="bi bi-calendar-check-fill"></i> </strong>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              
+                              <li class="list-group-item">
+                                <div class="col-md-12">
+                                    <label for="validationCustom01" class="form-label"><strong>Desde:</strong>  </label>
+                                    <br><input type="date" name="inicial" id="validationdate" value="{{inicio}}" required >
+                                    
+                                </div>
+                              </li>
+                              <li class="list-group-item">
+                                <div class="col-md-12">
+                                    <label for="validationCustom01" class="form-label"><strong>Hasta:</strong>  </label>
+                                    <br><input type="date" name="final" id="validationdate" value="{{final}}" required >
+                                    
+                                </div>
+                              </li>
+                            
+                              
+                            </ul>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card" >
+                            <div class="card-header">
+                              <strong class="text-primary">Visualizar Prestaciones </strong>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              
+                              <li class="list-group-item"><button class="btn btn-success" type="submit"><i class="bi bi-play-circle-fill"></i>  Generar Reporte Prestaciones</button></li>
+                              
+                              
+                            </ul>
+                          </div>
+                    </div>
+                </form>
+
+                {% if request == 'POST' %}
+                            <div class="col-md-3 mt-5">
+                            
+                            </div>
+                            <div class="col-md-12 mt-5">
+                                <div class="card" >
+                                    <div class="card-header">
+                                        <a  class="link-dark text-decoration-none text-success" title="FILE_XLSX" href="{{ MEDIA_URL }}{{ name_1 }}" download>
+                                            <img src="{% static 'logo_excel.png' %}" alt="" class="logo_txt" style="width:60px ;"/>
+                                            <span class="fw-bold fs-6 d-inline-flex p-1 mt-1"> Descargar Estado Completo Prestaciones  <i class="bi bi-cloud-download-fill "></i></span>
+                                        </a>
+                                     </div>
+                                    
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                            
+                            </div>
+                           
+                {% endif %}
+                
+              </div>
+          
+              
+          
+              
+            </main>
+          
+            
+        </div>
+
+        
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        
+        
+  
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

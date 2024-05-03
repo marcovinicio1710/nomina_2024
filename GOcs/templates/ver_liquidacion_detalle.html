@@ -1,0 +1,500 @@
+
+<!doctype html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Ver Liquidacion Detalle </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+  
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        
+        <div class="container-fluid">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+              <div class="col-md-8 mt-5 border rounded p-4 shadow">
+                   {% if agregado == 'existo' %}
+                   <h4 class="text-danger">  {{Mensaje}}  </h4>
+                   {% endif %}
+                  <div class="bd-example m-0 border-0">
+                    <form class="row g-3 needs-validation" method="post">
+
+                        <div class="col-md-3">
+                        <div class="card" >
+                            <div class="card-header">
+                              <strong class="text-primary">Pago Prestaciones en  {{lista_planilla.0}} <i class="bi bi-calendar-check-fill"></i> </strong>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              
+                              <li class="list-group-item small"><i class="bi bi-calendar3"></i><strong> Fecha Inicio: </strong> {{lista_planilla.1}}</li>
+                              <li class="list-group-item small"><i class="bi bi-calendar3"></i><strong> Fecha Pago: </strong> {{lista_planilla.2}}</li>
+                              <li class="list-group-item small"><i class="bi bi-calendar-check-fill"></i><strong>Tiempo Laborado : </strong> {{lista_planilla.3}}</li>
+                              <li class="list-group-item small"><i class="bi bi-calendar-check-fill"></i><strong>Causa Liquidacion : </strong> {{detalle.Tipo_de_Liquidacion}}</li>
+                              
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4">
+                        <div class="card" >
+                            <div class="card-header">
+                              <strong class="text-primary">Datos Colaborador <i class="bi bi-person-circle"></i> </strong>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              
+                              <li class="list-group-item small"><strong> Nombre: </strong> {{ detalle.Colaborador.Colaborador_nombre}}  {{ detalle.Colaborador.Colaborador_apellido}}</li>
+                              <li class="list-group-item small"><strong> Cargo: </strong>{{ detalle.Colaborador.Cargo}}</li>
+                              <li class="list-group-item small"><strong> Departamento: </strong> {{ detalle.Colaborador.Departamento}} </li>
+                              <li class="list-group-item small"><strong> Tipo Contrato: </strong> {{ detalle.Colaborador.Tipo_contrato}} </li>
+                              <li class="list-group-item small"><strong> Salario Nominal: </strong>{{ detalle.Colaborador.Sueldo|floatformat:2   }} </li>
+                              
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div class="col-md-3">
+                        <div class="card" >
+                            <div class="card-header">
+                              <strong class="text-primary">Datos Pago <i class="bi bi-person-circle"></i> </strong>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              
+                              <li class="list-group-item small"><strong> Identificacion: </strong> {{ detalle.Colaborador.Nro_Identificacion}}</li>
+                              <li class="list-group-item small"><strong> Mejor Promedio Salario: </strong>{{ detalle.Salario_Mayor|floatformat:2}}</li>
+                              <li class="list-group-item small"><strong> Salario promedio Últimos 30 días : </strong>{{ detalle.Salario_Ultimos_30_Dias|floatformat:2}}</li>
+                              <li class="list-group-item small"><strong> Salario promedio Últimos 6 meses : </strong>{{ detalle.Salario_Ultimos_6_meses|floatformat:2}}</li>
+                              <li class="list-group-item small"><strong> Salario promedio Últimos 5 años : </strong>{{ detalle.Salario_Ultimos_5_anios|floatformat:2}}</li>
+                              
+                              
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="col-md-2 ">
+                            <img src="{{ MEDIA_URL }}{{ detalle.Colaborador.imagen }}" alt="mdo" width="170" height="170" class="rounded-circle mb-2">
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-check">
+                                <span><strong>Previsualize el desglose del Pago de Liquidacion</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla3" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+                                                <th class="table-dark">Base Calculo</th>
+                                                <th class="table-dark col-6">Concepto</th>
+                                                <th class="table-dark">Meses / Dias </th>
+                                                <th class="table-dark">Asignacion</th>
+                                                <th class="table-dark">Deduccion</th>
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                             <!-- Vacaciones Proporcionalesl \-->  
+                                            <tr>
+                                                
+                                                    <td class="small"><strong>$ {{ lista_planilla.4|floatformat:2   }}</strong> / Dia </td>
+                                                    <td class="small ancho-especifico-concepto" > Vacaciones Proporcionales</td>
+                                                    <td class="small">{{ detalle.Dias_Vacaciones_Acumuladas|floatformat:2 }} dias</td>
+                                                    <td class="small " >$ {{ detalle.Vacaciones_Provisionales_Brutas|floatformat:2 }} </td>
+                                                    <td class="small"></td>
+                                                    
+                                            </tr>
+                                             <!-- Seguro Social Vacaciones Proporcionales \-->  
+                                             <tr>
+                                                
+                                                <td class="small"> <strong>9.75 % </strong> </td>
+                                                <td class="small ancho-especifico-concepto" > Seguro Social Vacaciones Proporcionales</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small " >$ {{ detalle.Seguro_Social_Provisiones_Vacas|floatformat:2 }} </td>
+                                                
+                                            </tr>
+                                            <!-- Seguro Educativo Vacaciones Proporcionales \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> <strong>1.25 % </strong> </td>
+                                                <td class="small ancho-especifico-concepto" > Seguro Educativo Vacaciones Proporcionales</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small " >$ {{ detalle.Seguro_Educativo_Proviciones_Vacas|floatformat:2 }} </td>
+                                                
+                                            </tr>
+                                            <!--  XIII Mes Proporcional \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto" > XIII Mes Proporcional</td>
+                                                <td class="small"></td>
+                                                <td class="small">{{ detalle.Decimo_Provisional_Bruto|floatformat:2 }}</td>
+                                                
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Seguro Social XIII Mes Proporcional  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> <strong>7.25 % </strong> </td>
+                                                <td class="small ancho-especifico-concepto" > Seguro Social XIII Mes Proporcional</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">{{ detalle.Seguro_Social_Decimo_Provisiones|floatformat:2 }}</td>
+                                                
+                                               
+                                                
+                                            </tr>
+                                            
+                                            <!-- Prima de Antiguedad  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"><strong>1.0</strong></td>
+                                                <td class="small ancho-especifico-concepto"> Prima de Antiguedad</td>
+                                                <td class="small">{{ detalle.Antiguedad_En_Anios|floatformat:4}} Años. </td>
+                                                <td class="small">{{ detalle.Prima_Antiguedad|floatformat:2 }}</td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Indemnización \-->  
+                                            <tr>
+                                                
+                                                <td class="small"><strong>3.4</strong> </td>
+                                                <td class="small ancho-especifico-concepto"> Indemnización</td>
+                                                <td class="small">{{ detalle.Antiguedad_En_Anios|floatformat:4}} Años. </td>
+                                                <td class="small">{{ detalle.Indemnizacion|floatformat:2 }}</td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Cesantía \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> </td>
+                                                <td class="small ancho-especifico-concepto"> Cesantía</td>
+                                                <td class="small"> </td>
+                                                <td class="small">{{ detalle.Cesantía|floatformat:2 }}</td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Preaviso  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> </td>
+                                                <td class="small ancho-especifico-concepto"> Preaviso</td>
+                                                <td class="small"> </td>
+                                                <td class="small"></td>
+                                                <td class="small">{{ detalle.Preaviso|floatformat:2 }}</td>
+                                                
+                                            </tr>
+                                            <!-- Total_Liquidacion_Bruta  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Total Liquidacion en Bruto</td>
+                                                <td class="small"></td>
+                                                <td class="small"><button disabled class="btn btn-success">$ {{ detalle.Total_Liquidacion_Bruta|floatformat:2 }}</button></td>
+                                                <td class="small"></td>
+                                                
+                                                
+                                            </tr>
+                                            <!-- Total_deduciones_Colaborador  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Devolucion ISLR </td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small"><button disabled class="btn btn-success">$ {{ detalle.Devolucion_ISLR|floatformat:2 }}</button></td>
+                                                
+                                               
+                                                
+                                            </tr>
+                                            <!-- Deducciones Acreedores  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Prestamo Personal con la Empresa</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Descuento_Acreedores_Empresa|floatformat:2 }}</td>
+                                                
+                                               
+                                                
+                                            </tr>
+                                            <!-- Total_deduciones_Colaborador  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Deducciones Colaborador Prestanciones</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small"><button disabled class="btn btn-danger">$ {{ detalle.Total_deduciones_Colaborador|floatformat:2 }}</button></td>
+                                                
+                                               
+                                                
+                                            </tr>
+                                            <!-- Total_Liquidacion_Neta   \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Prestaciones Netas al Colaborador</td>
+                                                <td class="small"> </td>
+                                                <td class="small"><button  class="btn btn-success">$ {{ detalle.Total_Liquidacion_Neta|floatformat:2 }}</button></td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Seguro_Social_Provisiones_Vacas_Patron  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> <strong>12.25 % </strong> </td>
+                                                <td class="small ancho-especifico-concepto" > Seguro Social Vacaciones Proporcional <strong>Patronales</strong></td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">{{ detalle.Seguro_Social_Provisiones_Vacas_Patron|floatformat:2 }}</td>
+                                                
+                                            </tr>
+                                            <!-- Seguro eduactivo patronañ \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> <strong>1.50 % </strong> </td>
+                                                <td class="small ancho-especifico-concepto" > Seguro Educativo Vacaciones Proporcional <strong>Patronales</strong></td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">{{ detalle.Seguro_Educativo_Proviciones_Vacas_Patron|floatformat:2 }}</td>
+                                                
+                                            </tr>
+                                            <!-- Seguro_Social_Decimo_Provisiones_Patron \-->  
+                                            <tr>
+                                                <td class="small"> <strong>10.75 % </strong> </td>
+                                                <td class="small ancho-especifico-concepto" > Seguro Social XIII Mes Proporcional <strong>Patronales</strong></td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">{{ detalle.Seguro_Social_Decimo_Provisiones_Patron|floatformat:2 }}</td>
+                                                
+                                            </tr>
+                                             <!-- Total_deduciones Patronales  \-->  
+                                             <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Deducciones de Ley Patronales de Prestanciones</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small"><button disabled class="btn btn-danger">$ {{ detalle.Total_Deduciones_Patronales|floatformat:2 }}</button></td>
+                                                
+                                               
+                                                
+                                            </tr>
+                                            <!-- Total_Liquidacion_Neta   \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Total Gastos de Prestaciones Patronales</td>
+                                                <td class="small"> </td>
+                                                <td class="small"><button  class="btn btn-success">$ {{ detalle.Total_Gastos_Patron|floatformat:2 }}</button></td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                           
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                        </div>
+
+                        <div class="col-md-12   custom-pill-background mt-2">
+                            <form class="row mt-4 g-3 needs-validation d-flex justify-content-center text-primary custom-pill-background mt-2" method="post" >
+                                {% csrf_token %}
+                                
+
+                                <span class=" text-light">Tilda el checkbox para Visualizar Desglose Pagos Mensuales Historico</span>
+                                
+                                <div>
+                                    <div class="mb-3">
+                                        <input type="checkbox" id="checkExpand1" class="form-check-input" name="Activo1" value="1">
+                                        <label for="checkExpand1" class="form-label"> <span class="fw-bold text-light">Despliegue Pagos Mensuales</span> </label>
+                                    </div>
+                                    <div id="expandableInputs1" style="display: none;">
+                                     
+                                        
+                                        <div class="col-md-12 position-relative">
+                                            
+                                            <table  id="miTabla_2" class="table table-dark table-hover table-bordered table-striped  text-center display ">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="table-light ">Año</th>
+                                                        <th class="table-light">Periodo</th>
+                                                        <th class="table-light">Salario Bruto</th>
+                                                        <th class="table-light">XIII Bruto</th>
+                                                       
+                                                        
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for clientes in lista_sueldo %}
+                                                        <tr>
+                                                            <td>{{ clientes.0 }}</td>
+                                                            <td>{{ clientes.1 }}</td>
+                                                            <td>{{ clientes.2|floatformat:2 }}</td>
+                                                            <td>{{ clientes.3|floatformat:2 }}</td>
+                                                            
+                                                        </tr>
+                                                    {% endfor %}
+                                                    
+                                                    <!-- Agrega más filas según sea necesario -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
+                                        <div class="col-md-12 position-relative">
+                                            <span class="text-light fs-5">Mensualidades de Importancion de SIPE</span>
+                                            <table  id="miTabla" class="table table-dark table-hover table-bordered table-striped  text-center display ">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="table-light ">Año</th>
+                                                        <th class="table-light">Mes</th>
+                                                        <th class="table-light">Salario</th>
+                                                        <th class="table-light">Vacaciones</th>
+                                                        <th class="table-light">XIII Bruto</th>
+                                                       
+                                                        
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for clientes in lista_sipe_import %}
+                                                        <tr>
+                                                            <td>{{ clientes.0 }}</td>
+                                                            <td>{{ clientes.1 }}</td>
+                                                            <td>{{ clientes.2|floatformat:2 }}</td>
+                                                            <td>{{ clientes.3|floatformat:2 }}</td>
+                                                            <td>{{ clientes.4|floatformat:2 }}</td>
+                                                            
+                                                        </tr>
+                                                    {% endfor %}
+                                                    
+                                                    <!-- Agrega más filas según sea necesario -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                  
+                                 
+                                </div>
+                                
+                                
+                            </form>
+                        </div>
+
+
+                    </form>
+                  </div>
+
+              </div>
+          
+
+    
+            
+            
+
+        </div>
+
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        
+        
+  
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+            
+            function convertirAHoras(element) {
+            var valor = parseFloat(element.dataset.value);
+            var horas = valor / 60;
+        
+            if (element.innerText.includes("min")) {
+                element.innerText = horas.toFixed(2) + " HRs.";
+            } else {
+             element.innerText = valor + " min.";
+            }
+            }
+
+            document.querySelectorAll('.valor').forEach(item => {
+            item.addEventListener('click', () => {
+            convertirAHoras(item);
+                });
+            });
+
+            document.getElementById('checkExpand1').addEventListener('change', function() {
+                const expandableInputs = document.getElementById('expandableInputs1');
+                if (this.checked) {
+                    expandableInputs.style.display = 'block';
+                    } else {
+                expandableInputs.style.display = 'none';
+                    }
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

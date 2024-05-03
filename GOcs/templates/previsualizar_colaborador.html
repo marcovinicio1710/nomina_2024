@@ -1,0 +1,124 @@
+
+<!doctype html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Previsualizar Colaboradores</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+  
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        
+        <div class="main-container d-flex">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+            </div>
+
+    
+            
+            
+
+        </div>
+
+        <div class="container-fluid">
+            
+            <div class="table-responsive mt-4 shadow">
+                <table  id="miTabla" class="table table-bordered table-striped table-hover text-center display">
+                    <thead>
+                        <tr>
+                            <th class="table-dark ">#</th>
+                            
+                            <th class="table-dark">Status</th>
+                            <th class="table-dark">Identificacion</th>
+                            <th class="table-dark">Nombre</th>
+                            <th class="table-dark">Apellido</th>
+                            <th class="table-dark">Cargo</th>
+                            <th class="table-dark">Departamento</th>
+                            <th class="table-dark">Tipo Contrato</th>
+                            <th class="table-dark">Tipo Jornada</th>
+                            <th class="table-dark">Sueldo</th>
+                            <th class="table-dark">Telefono</th>
+                            <th class="table-dark">Modificar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for clientes in lista_cliente %}
+                            <tr>
+                                <td>{{ clientes.0 }}</td>
+                                <td>{{ clientes.1 }}</td>
+                                <td>{{ clientes.2 }}</td>
+                                <td><img src="{{ MEDIA_URL }}{{  clientes.11 }}" alt="mdo" width="40" height="40" class="rounded-circle mb-2">  {{ clientes.3 }}</td>
+                                <td>{{ clientes.4 }}</td>
+                                <td>{{ clientes.5 }}</td>
+                                <td>{{ clientes.6 }}</td>
+                                <td>{{ clientes.7 }}</td>
+                                <td>{{ clientes.8 }}</td>
+                                <td>{{ clientes.9 }}</td>
+                                <td>{{ clientes.10 }}</td>
+                                <td><a href="{% url 'modificar-colaborador/' searched=clientes.0  %}"><i class="bi bi-gear-fill"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                        
+                        <!-- Agrega más filas según sea necesario -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        
+  
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        
+        {% endblock %}
+    </body>
+
+</html>

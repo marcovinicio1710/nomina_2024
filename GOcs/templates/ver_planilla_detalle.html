@@ -1,0 +1,928 @@
+
+<!doctype html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Ver Planilla Detalle </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+  
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        
+        <div class="container-fluid">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+              <div class="col-md-8 mt-5 border rounded p-4 shadow">
+                   {% if agregado == 'existo' %}
+                   <h4 class="text-danger">  {{Mensaje}}  </h4>
+                   {% endif %}
+                  <div class="bd-example m-0 border-0">
+                    <form class="row g-3 needs-validation" method="post">
+
+                        <div class="col-md-3">
+                        <div class="card" >
+                            <div class="card-header">
+                              <strong class="text-primary">Planilla Quincenal {{lista_planilla.0}} <i class="bi bi-calendar-check-fill"></i> </strong>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              
+                              <li class="list-group-item"><i class="bi bi-calendar3"></i><strong> Fecha Inicio: </strong> {{lista_planilla.1}}</li>
+                              <li class="list-group-item"><i class="bi bi-calendar3"></i><strong> Fecha Final: </strong> {{lista_planilla.2}}</li>
+                              <li class="list-group-item"><i class="bi bi-calendar-check-fill"></i><strong> Fecha Pago: </strong> {{lista_planilla.3}}</li>
+                              
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4">
+                        <div class="card" >
+                            <div class="card-header">
+                              <strong class="text-primary">Datos Colaborador <i class="bi bi-person-circle"></i> </strong>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              
+                              <li class="list-group-item"><strong> Nombre: </strong> {{ detalle.Colaborador.Colaborador_nombre}}  {{ detalle.Colaborador.Colaborador_apellido}}</li>
+                              <li class="list-group-item"><strong> Cargo: </strong>{{ detalle.Colaborador.Cargo}}</li>
+                              <li class="list-group-item"><strong> Departamento: </strong> {{ detalle.Colaborador.Departamento}} </li>
+                              
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div class="col-md-3">
+                        <div class="card" >
+                            <div class="card-header">
+                              <strong class="text-primary">Datos Colaborador <i class="bi bi-person-circle"></i> </strong>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              
+                              <li class="list-group-item"><strong> Identificacion: </strong> {{ detalle.Colaborador.Nro_Identificacion}}</li>
+                              <li class="list-group-item"><strong> Fecha Ingreso: </strong>{{ detalle.Colaborador.Fecha_Ingreso}}</li>
+                              
+                              <li class="list-group-item"><strong> Rata P/Hr: </strong>{{ detalle.Sueldo_HR|floatformat:2   }} </li>
+                              
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="col-md-2 ">
+                            <img src="{{ MEDIA_URL }}{{ detalle.Colaborador.imagen }}" alt="mdo" width="170" height="170" class="rounded-circle mb-2">
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-check">
+                                <span><strong>Previsualize el desglose de Pagos durante este fecha de corte de Planilla</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla3" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+                                                <th class="table-dark">Base Calculo</th>
+                                                <th class="table-dark col-6">Concepto</th>
+                                                <th class="table-dark">Horas / Dias </th>
+                                                <th class="table-dark">Asignacion</th>
+                                                <th class="table-dark">Deduccion</th>
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                             <!-- Dias trabajo Normal \-->  
+                                            <tr>
+                                                
+                                                    <td class="small">${{ detalle.Sueldo_Diario|floatformat:2   }} /Dia </td>
+                                                    <td class="small ancho-especifico-concepto" > Salario Jornadas Horas Regulares</td>
+                                                    <td class="small">{{ detalle.Dias_Trabajado}} dias</td>
+                                                    <td class="small " >$ {{ detalle.Sueldo_base_quincenal|floatformat:2 }} </td>
+                                                    <td class="small"></td>
+                                                    
+                                            </tr>
+                                             <!-- Dias trabajo Feriado con descanso \-->  
+                                             <tr>
+                                                
+                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr  <strong>x 1.5 x2.5</strong> </td>
+                                                <td class="small ancho-especifico-concepto" > Salario Jornada Dias de Feriado con Dia Descanso</td>
+                                                <td class="small valor" data-value="{{ detalle.Dias_Trabajo_Feriado_descanso }}">{{ detalle.Dias_Trabajo_Feriado_descanso}} min.</td>
+                                                <td class="small">$ {{ detalle.Pago_Dias_Trabajo_Feriado_descanso|floatformat:2 }}</td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Dias trabajo Feriado  \-->  
+                                            <tr>
+                                                
+                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr   <strong>x 2.5</strong> </td>
+                                                <td class="small ancho-especifico-concepto" > Salario Jornada con Dias Feriado </td>
+                                                <td class="small valor" data-value="{{ detalle.Dias_Trabajo_Feriado }}">{{ detalle.Dias_Trabajo_Feriado }} min.</td>
+                                                <td class="small">$ {{ detalle.Pago_Dias_Trabajo_Feriado|floatformat:2 }}</td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Dias trabajo Descanso  \-->  
+                                            <tr>
+                                                
+                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr  x <strong>1.5</strong></td>
+                                                <td class="small ancho-especifico-concepto"> Salario Jornada con Dias Descanso</td>
+                                                <td class="small valor" data-value="{{ detalle.Dias_Trabajo_Descanso }}">{{ detalle.Dias_Trabajo_Descanso}} min</td>
+                                                <td class="small">$ {{ detalle.Pago_Dias_Trabajo_Descanso|floatformat:2 }}</td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Dias trabajo Horas Regulares adicional  \-->  
+                                            <tr>
+                                                
+                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr  </td>
+                                                <td class="small ancho-especifico-concepto"> Salario Jornada con Dias en Minutos  Adicionales</td>
+                                                
+                                                <td class="small valor" data-value="{{ detalle.Dias_Trabajo_HR_Regulares_Adicionales }}">{{ detalle.Dias_Trabajo_HR_Regulares_Adicionales }} min.</td>
+                                                <td class="small">$ {{ detalle.Pago_Dias_Trabajo_HR_Regulares_Adicionales|floatformat:2 }}</td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            
+                                            <!-- Incapacidad  \-->  
+                                            <tr>
+                                                
+                                                <td class="small">${{ detalle.Sueldo_Diario |floatformat:2   }} /Hr  </td>
+                                                <td class="small ancho-especifico-concepto"> Incapacidad</td>
+                                                <td class="small">{{ detalle.Dias_Incapacidad}} Dias. </td>
+                                                <td class="small">$ {{ detalle.Pago_Incapacidad|floatformat:2 }}</td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Licencia Paga  \-->  
+                                            <tr>
+                                                
+                                                <td class="small">${{ detalle.Sueldo_Diario |floatformat:2   }} /Hr  </td>
+                                                <td class="small ancho-especifico-concepto"> Licencia Paga </td>
+                                                <td class="small">{{ detalle.Dias_Licencia_Paga}} Dias. </td>
+                                                <td class="small">$ {{ detalle.Pago_Licencia_paga|floatformat:2 }}</td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Total de SobreTiempo \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> </td>
+                                                <td class="small ancho-especifico-concepto"> Total de Sobretiempo</td>
+                                                <td class="small"> </td>
+                                                <td class="small">$ {{ detalle.Pago_Total_Sobretiempo_quincenal|floatformat:2 }}</td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- bonos con impuesto  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> </td>
+                                                <td class="small ancho-especifico-concepto"> Bonificaciones</td>
+                                                <td class="small"> </td>
+                                                <td class="small">$ {{ detalle.Pago_Bono_con_Impuesto|floatformat:2 }}</td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Dias Ausencia  \-->  
+                                            <tr>
+                                                
+                                                <td class="small">${{ detalle.Sueldo_Diario |floatformat:2   }} /Dia  </td>
+                                                <td class="small ancho-especifico-concepto"> Dias en Ausencia</td>
+                                                <td class="small">{{ detalle.Dia_ausencia}} dias</td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Pago_Dia_ausencia|floatformat:2 }}</td>
+                                                
+                                            </tr>
+                                            <!-- ausencia min jornada  \-->  
+                                            <tr>
+                                                
+                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr  </td>
+                                                <td class="small ancho-especifico-concepto"> Ausencia en Minutos en Jornadas Laborales</td>
+                                                <td class="small valor" data-value="{{ detalle.MIN_Ausencia }}">{{ detalle.MIN_Ausencia}} min. </td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Pago_MIN_Ausencia|floatformat:2 }}</td>
+                                                
+                                            </tr>
+                                            <!-- deduciones pendientes   \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Deducciones Pendientes</td>
+                                                <td class="small"> </td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Deduccion_con_Impuesto|floatformat:2 }}</td>
+                                                
+                                            </tr>
+                                            <!-- Sueldo_base_quincenal  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> </td>
+                                                <td class="small ancho-especifico-concepto"> Sueldo Base Bruto</td>
+                                                <td class="small"></td>
+                                                <td class="small"><button  class="btn btn-success">$ {{ detalle.Pago_quincena_despues_descuento|floatformat:2 }}</button></td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Seguro Social \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Seguro Social ( 9.75% )</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Deduccion_Seguro_Social|floatformat:2 }}</td>
+                                                
+                                            </tr>
+                                            <!-- Seguro Educacional \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Seguro Educativo ( 1.25% )</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Deduccion_Seguro_Educacional|floatformat:2 }}</td>
+                                                
+                                            </tr>
+                                            <!-- ISLR \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> I.S.L.R</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Deduccion_ISLR|floatformat:2 }}</td>
+                                                
+                                            </tr>
+                                            <!-- TOTAL deducciones ley \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Total Deducciones Ley</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small"><button disabled class="btn btn-danger">$ {{ detalle.Total_deduciones_Ley|floatformat:2 }}</button> </td>
+                                                
+                                            </tr>
+                                            <!-- Acreedores \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Descuento Directo - Acreedor </td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Descuento_Acreedores_Hipotecario|floatformat:2 }} </td>
+                                                
+                                            </tr>
+                                            <!-- Acreedores - Empresa \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Prestamo Personal con la Empresa </td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Descuento_Acreedores_Empresa|floatformat:2 }} </td>
+                                                
+                                            </tr>
+                                            <!-- Bonos sin impuest \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Descuentos sin impuestos </td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Deduccion_sin_Impuesto|floatformat:2 }}</td>
+                                                
+                                            </tr>
+                                            <!-- Sueldo_base_quincenal  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> </td>
+                                                <td class="small ancho-especifico-concepto"> <strong>Sueldo Neto</strong></td>
+                                                <td class="small"></td>
+                                                <td class="small"><button disabled type="button" class="btn btn-success">$ {{ detalle.Pago_Sueldo_neto|floatformat:2 }}</button></td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Bonos sin impuesto a pagar  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> </td>
+                                                <td class="small ancho-especifico-concepto"> Bonificaciones sin Impuesto</td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Pago_Bono_sin_Impuesto|floatformat:2 }}</td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Sueldo_base_quincenal  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> </td>
+                                                <td class="small ancho-especifico-concepto">  Total Bonificaciones sin Impuesto</td>
+                                                <td class="small"></td>
+                                                <td class="small"><button  type="button" class="btn btn-success">$ {{ detalle.Pago_total_bonos_sin_impuesto|floatformat:2 }}</button></td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Vacaciones  \-->  
+                                            <tr>
+                                                
+                                                <td class="small">${{ detalle.Sueldo_Diario |floatformat:2   }} /Hr  </td>
+                                                <td class="small ancho-especifico-concepto"> Vacaciones Brutas</td>
+                                                <td class="small">{{ detalle.Dias_Vacaciones}} Dias. </td>
+                                                
+                                                <td class="small"><button  type="button" class="btn btn-success">$ {{ detalle.Pago_Vacaciones|floatformat:2 }}</button></td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Vacaciones S.S \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Vacaciones Seguro Social ( 9.75% )</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Vacaciones_Seguro_Social|floatformat:2 }}</td>
+                                                
+                                            </tr>
+                                            <!-- Vacaciones S.E \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Vacaciones Seguro Educativo ( 1.25% )</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Vacaciones_Seguro_educacion|floatformat:2 }}</td>
+                                                
+                                            </tr>
+                                            <!-- Vacaciones ISLR \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Vacaciones I.S.L.R. </td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Vacaciones_ISLR|floatformat:2 }}</td>
+                                                
+                                            </tr>
+                                            <!-- TOTAL deducciones ley vacas \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Total Deducciones Ley de Vacaciones</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small"><button disabled class="btn btn-danger">$ {{ detalle.Deducion_Vacaciones_Totales|floatformat:2 }}</button> </td>
+                                                
+                                            </tr>
+                                            <!-- Vacas netas  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> </td>
+                                                <td class="small ancho-especifico-concepto">  Vacaciones Netas</td>
+                                                <td class="small"></td>
+                                                <td class="small"><button disabled type="button" class="btn btn-success">$ {{ detalle.Pago_Vacaciones_Neto|floatformat:2 }}</button></td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                             <!-- Xiii bruto \-->  
+                                             <tr>
+                                                
+                                                <td class="small"> </td>
+                                                <td class="small"> XIII Mes Bruto de la quincena</td>
+                                                <td class="small"></td>
+                                                <td class="small"><button  type="button" class="btn btn-success">$ {{ detalle.Pago_XIII_periodo_Bruto|floatformat:2 }}</button></td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Seguro Social Xiii \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Seguro Social XIII Mes de la Quincena ( 7.25% ) </td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Pago_XIII_periodo_Seguro_Social|floatformat:2 }} </td>
+                                                
+                                            </tr>
+                                            <!-- ISLR Xiii \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> I.S.L.R XIII Mes de la Quincena </td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Pago_XIII_periodo_ISLR|floatformat:2 }} </td>
+                                                
+                                            </tr>
+                                            <!-- Xiii neto \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> </td>
+                                                <td class="small"> XIII Mes Neto de la Quincena</td>
+                                                <td class="small"></td>
+                                                <td class="small"><button disabled type="button" class="btn btn-success">$ {{ detalle.Pago_XIII_periodo_Neto|floatformat:2 }}</button></td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+
+                                            <!-- Xiii bruto PROVISIONES\-->  
+                                            <tr>
+                                                
+                                                <td class="small"> </td>
+                                                <td class="small"> <strong>Provisiones</strong> XIII  de la quincena</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small"><button disabled class="btn btn-danger">$ {{ detalle.Decimo_xiii_quincena_Bruto|floatformat:2 }}</button> </td>
+                                                
+                                                
+                                            </tr>
+                                            <!-- Provision Xiii S S Patron \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> </td>
+                                                <td class="small"> <strong>Provisiones</strong> XIII Seguro Social Patronal ( 10.75% )</td>
+                                                <td class="small"></td>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Deduccion_Seg_social_decimo_Patron|floatformat:2 }}</td>
+                                                
+                                            </tr>
+                                            <!--  Patron S S  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Seguro Social Patron ( 12.25% ) </td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Deduccion_Seg_social_Patron|floatformat:2 }} </td>
+                                                
+                                            </tr>
+                                            <!--  Patron S S  vacas \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Vacaciones Seguro Social Patron ( 12.25% ) </td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Vacaciones_Seguro_Social_patron|floatformat:2 }} </td>
+                                                
+                                            </tr>
+                                            <!--  Patron S.E \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Seguro Educativo Patron ( 1.5% ) </td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Deduccion_Seguro_Educacional_Patron|floatformat:2 }} </td>
+                                                
+                                            </tr>
+                                            <!--  Patron S.E \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Vacaciones Seguro Educativo Patron ( 1.5% ) </td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Vacaciones_Seguro_educacion_patron|floatformat:2 }} </td>
+                                                
+                                            </tr>
+                                            <!--  Patron Xiii S.S \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Seguro Social del XIII Patron ( 10.75% )</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Deduccion_XIII_periodo_Seguro_social_patron|floatformat:2 }} </td>
+                                                
+                                            </tr>
+                                            
+
+                                            <!--  Prima de Antiguedad \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto">  <strong>Provisiones</strong>  Prima de Antiguedad Patron ( 1.923 % ) </td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Prima_Antiguedad_Patron|floatformat:2 }} </td>
+                                                
+                                            </tr>
+
+                                            <!--  Vacaciones Acumuladas \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto">  <strong>Provisiones</strong>  Vaciones Acumuladas ( Incluidas el S.S & S.E Patronal 12.25% - 1.5%)  </td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Vacacionciones_Acumuladas_Patron|floatformat:2 }} </td>
+                                                
+                                            </tr>
+                                             <!--  Riesgo Profesional \-->  
+                                             <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Riesgo Profesional ( 2.1 % )</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small">$ {{ detalle.Riesgo_Profesional_Patron|floatformat:2 }} </td>
+                                                
+                                            </tr>
+                                            <!-- TOTAL deducciones ley \-->  
+                                            <tr>
+                                                
+                                                <td class="small"></td>
+                                                <td class="small ancho-especifico-concepto"> Total Aportes Patronales Ley y Provisiones</td>
+                                                <td class="small"></td>
+                                                <td class="small"></td>
+                                                <td class="small"><button disabled class="btn btn-danger">$ {{ detalle.Totales_patronales|floatformat:2 }}</button> </td>
+                                                
+                                            </tr>
+                                            <!-- Sueldo_base_quincenal  \-->  
+                                            <tr>
+                                                
+                                                <td class="small"> </td>
+                                                <td class="small ancho-especifico-concepto"> <strong>Sueldo Completo </strong></td>
+                                                <td class="small"></td>
+                                                <td class="small"><button type="button" class="btn btn-success">$ {{ detalle.Total_general_sueldo|floatformat:2 }}</button></td>
+                                                <td class="small"></td>
+                                                
+                                            </tr>
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                        </div>
+
+                        <div class="col-md-12   custom-pill-background mt-2">
+                            <form class="row mt-4 g-3 needs-validation d-flex justify-content-center text-primary custom-pill-background mt-2" method="post" >
+                                {% csrf_token %}
+                                
+
+                                <span class=" text-light">Tilda el checkbox para Visualizar Desglose de Horas Extras</span>
+                                
+                                <div>
+                                    <div class="mb-3">
+                                        <input type="checkbox" id="checkExpand1" class="form-check-input" name="Activo1" value="1">
+                                        <label for="checkExpand1" class="form-label"> <span class="fw-bold text-light">Despliegue Horas Extras</span> </label>
+                                    </div>
+                                    <div id="expandableInputs1" style="display: none;">
+                                     
+                                        
+                                        <div class="col-md-12 position-relative">
+                                            
+                                        <div class="col-md-12">
+                                            <div class="form-check">
+                                                <span class="text-light"><strong >Horas Extras del Colaborador : </strong>  {{ detalle.Colaborador.Colaborador_nombre}}  {{ detalle.Colaborador.Colaborador_apellido}}</span>
+                                               
+                                                <div class="table-responsive mt-4 shadow">
+                                                    <table  id="miTabla_3" class="table table-dark table-hover table-bordered table-striped  text-center display ">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="table-dark ">Base Calculo</th>
+                                                                <th class="table-dark col-6">Concepto</th>
+                                                                <th class="table-dark">Minutos</th>
+                                                                <th class="table-dark">Asignacion</th>
+                                                                
+                                                          
+                                                                
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- Hor eXTRA normales -->
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr. <strong>x 1.25</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Diurna</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_diurnas }}">{{ detalle.HR_extras_diurnas}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_diurnas|floatformat:2 }}</td>
+                                                                
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Nocturnas</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_nocturnas }}">{{ detalle.HR_extras_nocturnas}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_nocturnas|floatformat:2 }}</td>
+                                                                
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Mixtas Diurnas</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_diurnas_mixta }}">{{ detalle.HR_extras_diurnas_mixta}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_diurnas_mixta|floatformat:2 }}</td>
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.75</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Mixtas Nocturnas</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_nocturnas_mixta }}">{{ detalle.HR_extras_nocturnas_mixta}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_nocturnas_mixta|floatformat:2 }}</td>
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.25 x 1.75</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Diurna con exceso a 3 Hrs. diarias o 9 Hrs. semanales</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_diurnas_3h }}">{{ detalle.HR_extras_diurnas_3h}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_diurnas_3h|floatformat:2 }}</td>
+                                                                
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.5 x 1.75</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Nocturnas con exceso a 3 Hrs. diarias o 9 Hrs. semanales</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_nocturnas_3h }}">{{ detalle.HR_extras_nocturnas_3h}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_nocturnas_3h|floatformat:2 }}</td>
+                                                                
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.5 x 1.75</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Mixtas Diurnas con exceso a 3 Hrs. diarias o 9 Hrs. semanales</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_diurnas_mixta_3h }}">{{ detalle.HR_extras_diurnas_mixta_3h}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_diurnas_mixta_3h|floatformat:2 }}</td>
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.75 x 1.75</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Mixtas Nocturnas con exceso a 3 Hrs. diarias o 9 Hrs. semanales</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_nocturnas_mixta_3h }}">{{ detalle.HR_extras_nocturnas_mixta_3h}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_nocturnas_mixta_3h|floatformat:2 }}</td>
+                                                                
+                                                            </tr>
+                                                            <!-- Hor eXTRA Feriado -->
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr. <strong>x 1.25 x 2.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Diurna Fiesta Nacional o Duelo Nacional</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_diurnas_Feriado }}">{{ detalle.HR_extras_diurnas_Feriado}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_diurnas_Feriado|floatformat:2 }}</td>
+                                                                
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr. <strong>x 1.5 x 2.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Nocturnas Fiesta Nacional o Duelo Nacional</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_nocturnas_Feriado }}">{{ detalle.HR_extras_nocturnas_Feriado}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_nocturnas_Feriado|floatformat:2 }}</td>
+                                                                
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.5 x 2.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Mixtas Diurnas Fiesta Nacional o Duelo Nacional</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_diurnas_mixta_Feriado }}">{{ detalle.HR_extras_diurnas_mixta_Feriado}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_diurnas_mixta_Feriado|floatformat:2 }}</td>
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.75 x 2.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Mixtas Nocturnas Fiesta Nacional o Duelo Nacional</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_nocturnas_mixta_Feriado }}">{{ detalle.HR_extras_nocturnas_mixta_Feriado}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_nocturnas_mixta_Feriado|floatformat:2 }}</td>
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.25 x 1.75 x 2.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Diurna Fiesta Nacional o Duelo Nacional con exceso a 3 Hrs. diarias o 9 Hrs. semanales </td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_diurnas_3h_Feriado }}">{{ detalle.HR_extras_diurnas_3h_Feriado}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_diurnas_3h_Feriado|floatformat:2 }}</td>
+                                                                
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.5 x 1.75 x 2.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Nocturnas  Fiesta Nacional o Duelo Nacionalcon exceso a 3 Hrs. diarias o 9 Hrs. semanales</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_nocturnas_3h_Feriado }}">{{ detalle.HR_extras_nocturnas_3h_Feriado}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_nocturnas_3h_Feriado|floatformat:2 }}</td>
+                                                                
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.5 x 1.75 x 2.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Mixtas Diurnas Fiesta Nacional o Duelo Nacional con exceso a 3 Hrs. diarias o 9 Hrs. semanales</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_diurnas_mixta_3h_Feriado }}">{{ detalle.HR_extras_diurnas_mixta_3h_Feriado}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_diurnas_mixta_3h_Feriado|floatformat:2 }}</td>
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.75 x 1.75 x 2.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Mixtas Nocturnas Fiesta Nacional o Duelo Nacional con exceso a 3 Hrs. diarias o 9 Hrs. semanales</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_nocturnas_mixta_3h_Feriado }}">{{ detalle.HR_extras_nocturnas_mixta_3h_Feriado}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_nocturnas_mixta_3h_Feriado|floatformat:2 }}</td>
+                                                                
+                                                            </tr>
+                                                            <!-- Hor eXTRA dia descanso  -->
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr. <strong>x 1.25 x 1.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Diurna Domingo o Descanso Semanal</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_diurnas_descanso }}">{{ detalle.HR_extras_diurnas_descanso}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_diurnas_descanso|floatformat:2 }}</td>
+                                                                
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.5 x 1.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Nocturnas Domingo o Descanso Semanal</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_nocturnas_descanso }}">{{ detalle.HR_extras_nocturnas_descanso}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_nocturnas_descanso|floatformat:2 }}</td>
+                                                                
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.5 x 1.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Mixtas Diurnas Domingo o Descanso Semanal</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_diurnas_mixta_descanso }}">{{ detalle.HR_extras_diurnas_mixta_descanso}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_diurnas_mixta_descanso|floatformat:2 }}</td>
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.75 x 1.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Mixtas Nocturnas Domingo o Descanso Semanal</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_nocturnas_mixta_descanso }}">{{ detalle.HR_extras_nocturnas_mixta_descanso}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_nocturnas_mixta_descanso|floatformat:2 }}</td>
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.25 x 1.75 x 1.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Diurna Domingo o Descanso Semanal con exceso a 3 Hrs. diarias o 9 Hrs. semanales</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_diurnas_3h_descanso }}">{{ detalle.HR_extras_diurnas_3h_descanso}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_diurnas_3h_descanso|floatformat:2 }}</td>
+                                                                
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.5 x 1.75 x 1.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Nocturnas Domingo o Descanso Semanal con exceso a 3 Hrs. diarias o 9 Hrs. semanales</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_nocturnas_3h_descanso }}">{{ detalle.HR_extras_nocturnas_3h_descanso}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_nocturnas_3h_descanso|floatformat:2 }}</td>
+                                                                
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.5 x 1.75 x 1.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Mixtas Diurnas Domingo o Descanso Semanal con exceso a 3 Hrs. diarias o 9 Hrs. semanales</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_diurnas_mixta_3h_descanso }}">{{ detalle.HR_extras_diurnas_mixta_3h_descanso}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_diurnas_mixta_3h_descanso|floatformat:2 }}</td>
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                
+                                                                <td class="small">${{ detalle.Sueldo_HR |floatformat:2   }} /Hr.  <strong>x 1.75 x 1.75 x 1.5</strong> </td>
+                                                                <td class="small ancho-especifico-concepto" > Horas Extras Mixtas Nocturnas Domingo o Descanso Semanal con exceso a 3 Hrs. diarias o 9 Hrs. semanales</td>
+                                                                <td class="small valor" data-value="{{ detalle.HR_extras_nocturnas_mixta_3h_descanso }}">{{ detalle.HR_extras_nocturnas_mixta_3h_descanso}} min.</td>
+                                                                <td class="small">$ {{ detalle.Pago_HR_extras_nocturnas_mixta_3h_descanso|floatformat:2 }}</td>
+                                                                
+                                                            </tr>
+                                                            
+                                                            
+                                                            <!-- Agrega más filas según sea necesario -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                
+                                            </div>
+                                              
+                
+                                        </div>
+                                        </div>
+                                    </div>
+                                  
+                                 
+                                </div>
+                                
+                                
+                            </form>
+                        </div>
+
+
+                    </form>
+                  </div>
+
+              </div>
+          
+
+    
+            
+            
+
+        </div>
+
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        
+        
+  
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+            
+            function convertirAHoras(element) {
+            var valor = parseFloat(element.dataset.value);
+            var horas = valor / 60;
+        
+            if (element.innerText.includes("min")) {
+                element.innerText = horas.toFixed(2) + " HRs.";
+            } else {
+             element.innerText = valor + " min.";
+            }
+            }
+
+            document.querySelectorAll('.valor').forEach(item => {
+            item.addEventListener('click', () => {
+            convertirAHoras(item);
+                });
+            });
+
+            document.getElementById('checkExpand1').addEventListener('change', function() {
+                const expandableInputs = document.getElementById('expandableInputs1');
+                if (this.checked) {
+                    expandableInputs.style.display = 'block';
+                    } else {
+                expandableInputs.style.display = 'none';
+                    }
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

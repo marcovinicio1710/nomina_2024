@@ -1,0 +1,658 @@
+
+<!doctype html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Modificar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        
+        <div class="main-container d-flex">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+                <div class="col-md-8 mt-5 border rounded p-4 shadow">
+                  {% if agregado == 'existo' %}
+                  <h4 class="text-danger"> Colaborador {{colaborador}} se ha creado con exitoso.! </h4>
+                  {% endif %}
+                    <div class="bd-example m-0 border-0">
+                        <form class="row g-3 needs-validation" method="post"  enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <input type="text" class="form-control" id="validationCustom01" name="coldaborador_id" value="{{ searched }}" placeholder="Escriba el Número Identificación del colaborador. " hidden >
+                          <div class="col-md-6">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Modificar Datos de Colaborador</strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  <li class="list-group-item">Modifica solo los Campos Necesarios a Cambiar</li>
+                                  <li class="list-group-item">Cuando Haya Cambiado todos los campos necesiarios, Apreta el boton de <strong>"Hacer Cambios"</strong> .</li>
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Datos de Colaborador</strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  <li class="list-group-item"><strong>Nombre y Apellido : </strong> {{Colaborador_obj.Colaborador_nombre}} {{Colaborador_obj.Colaborador_apellido}}  </li>
+                                  <li class="list-group-item"><strong>Fecha Ingreso: </strong> {{Colaborador_obj.Fecha_Ingreso}} </li>
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                          <!--  Tipo de documento  --> 
+                          
+                          {% if nivel < 3 %} 
+                          <div class="col-md-2">
+                            <label for="validationCustom01" class="form-label"><strong>Número Identificación</strong>  </label>
+                            
+                            <input type="text" class="form-control" id="validationCustom01" name="Nro_Identificacion" placeholder="Escriba el Número Identificación del colaborador. " >
+                            <div class="valid-feedback">
+                              Looks good!    
+                            </div>
+                          </div>
+                          {% endif %}
+                          <div class="col-md-4">
+                            <label for="validationCustom01" class="form-label"><strong>Nombre del Colaborador</strong>  </label>
+                            <input type="text" class="form-control" id="validationCustom01" name="name_colaborador" placeholder="Escriba el/los Nombres del colaborador" >
+                            <div class="valid-feedback">
+                              Looks good!    
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustom01" class="form-label"><strong>Apellido del Colaborador</strong>  </label>
+                            <input type="text" class="form-control" id="validationCustom01" name="lastname_colaborador" placeholder="Escriba el/los Apellidos del colaborador" >
+                            <div class="valid-feedback">
+                              Looks good!    
+                            </div>
+                          </div>
+                           <!--  TSeguro Social  --> 
+                          {% if nivel < 3 %} 
+                          <div class="col-md-4">
+                            <label for="validationCustom02" class="form-label"><strong>Número Seguro Social</strong></label>
+                            <input type="text" class="form-control" id="validationCustom02" name="nro_Seguro_Social" placeholder="Escriba Número de Seguro Social." >
+                            <div class="valid-feedback">
+                              Looks good!
+                            </div>
+                          </div>
+                          {% endif %}
+                          <div class="col-md-4">
+                            <label for="validationCustomUsername" class="form-label"><strong>Correo del Colaborador</strong></label>
+                            <div class="input-group has-validation">
+                              <span class="input-group-text" id="inputGroupPrepend">@</span>
+                              <input type="email" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" name="correo" placeholder="Escriba correo electronico del colaborador."  >
+                              <div class="invalid-feedback">
+                                Please choose a username.
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustom05" class="form-label"><strong>Teléfono</strong></label>
+                            <input type="number" class="form-control" name="Telefono_empresa" placeholder="Actualize el Teléfono del Colaborador" >
+                            <div class="invalid-feedback">
+                              Please provide a valid phone.
+                            </div>
+                          </div>
+                           <!--  Sexo  --> 
+                      
+
+                          <div class="col-md-2">
+                            <label for="validationdate" class="form-label"><strong>Fecha Nacimiento</strong></label>
+                            <br><input type="date" name="fecha_nacimiento" id="validationdate"  >
+                            
+                          </div>
+                          <div class="col-md-2">
+                            <label for="validationCustom04" class="form-label"><strong>Estado Civil</strong></label>
+                            <select class="form-select" id="validationCustom04" name="estado_civil" >
+                              <option value="Seleccione">Seleccione</option>
+                              <option value="Soltero(a)">Soltero(a)</option>
+                              <option value="Casado(a)">Casado(a)</option>
+                              <option value="Divorciado(a)">Divorciado(a)</option>
+                              <option value="Viudo(a)">Viudo(a)</option>
+                              <option value="Concubino(a)">Concubino(a)</option>
+                              <option value="Otros">Otros</option>
+                              
+                            </select>
+                            
+                          </div>
+
+                          <div class="col-md-2">
+                            <label for="validationCustom04" class="form-label"><strong>Hijos</strong></label>
+                            <select class="form-select" id="validationCustom04" name="hijos" >
+                              <option value="Seleccione">Seleccione</option>
+                              <option value="0">0 hijos</option>
+                              <option value="1">1 hijos</option>
+                              <option value="2">2 hijos</option>
+                              <option value="2">3 hijos</option>
+                              <option value="2">4 hijos</option>
+                              <option value="2">5 hijos</option>
+                              <option value="2">6 hijos</option>
+                              <option value="2">7 hijos</option>
+                              <option value="2">8 hijos</option>
+                              <option value="2">9 hijos</option>
+                              <option value="10">+10 hijos</option>
+                              
+                            </select>
+                            
+                          </div>
+
+                          <div class="col-md-2">
+                            <label for="validationCustom04" class="form-label"><strong>Licencia Conducir</strong></label>
+                            <select class="form-select" id="validationCustom04" name="licencia_conducir" >
+                              <option value="Seleccione">Seleccione</option>
+                              <option value="Si">Si</option>
+                              <option value="No">No</option>
+                              
+                              
+                            </select>
+                            
+                          </div>
+                          <div class="col-md-2">
+                            <label for="validationCustom04" class="form-label"><strong>Posee Vehiculo</strong></label>
+                            <select class="form-select" id="validationCustom04" name="posee_vehiculo" >
+                              <option value="Seleccione">Seleccione</option>
+                              <option value="Si">Si</option>
+                              <option value="No">No</option>
+                              
+                              
+                            </select>
+                            
+                          </div>
+                           <!--  Direccion  --> 
+                          <div class="col-md-6">
+                            <label for="validationCustom03" class="form-label"><strong>Dirección</strong></label>
+                            <input type="text" class="form-control" id="validationCustom03" name="Direccion_empresa" placeholder="Escriba la Dirección de la empresa" >
+                            <div class="invalid-feedback">
+                              Please provide a valid address.
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <label for="validationCustom04" class="form-label"><strong>Estado</strong></label>
+                            <select class="form-select" id="validationCustom04" name="Estado_empresa" >
+                              <option value="Seleccione">Seleccione</option>
+                              <option  value="Panama">Panamá</option>
+                              <option value="Bocas del Toro">Bocas del Toro</option>
+                              <option value="Coclé">Coclé</option>
+                              <option value="Colón">Colón</option>
+                              <option value="Chiriquí">Chiriquí</option>
+                              <option value="Darién">Darién</option>
+                              <option value="Herrera">Herrera</option>
+                              <option value="Los Santos">Los Santos</option>
+                              <option value="Veraguas">Veraguas</option>
+                              <option value="Guna Yala">Guna Yala (anteriormente conocida como la Comarca de San Blas)</option>
+                              <option value="Emberá-Wounaan">Emberá-Wounaan (comarca indígena)</option>
+                              <option value="Ngäbe-Buglé">Ngäbe-Buglé (comarca indígena)</option>
+                            </select>
+                            <div class="invalid-feedback">
+                              Please select a valid state.
+                            </div>
+                          </div>
+                          
+                          <div class="col-md-3">
+                            <label for="validationCustom02" class="form-label"><strong>Profesión</strong></label>
+                            <input type="text" class="form-control" id="validationCustom02" name="profesion" placeholder="Escriba Profesión del colaborador." >
+                            <div class="valid-feedback">
+                              Looks good!
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <label for="validationCustom02" class="form-label"><strong>Cargo</strong></label>
+                            <input type="text" class="form-control" id="validationCustom02" name="cargo" placeholder="Escriba Cargo del Colaborador." >
+                            <div class="valid-feedback">
+                              Looks good!
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <label for="validationCustom04" class="form-label"><strong>Departamento</strong></label>
+                            <select class="form-select" id="validationCustom04" name="departamento" >
+                              <option value="Seleccione">Seleccione</option>
+                              <option  value="Administrativo">Administrativo</option>
+                              <option value="RRHH">Recursos Humanos</option>
+                              <option value="Ruta">Ruta</option>
+                              <option value="Projecto">Projecto</option>
+                              <option value="Otro">Otro</option>
+                              {% for clientes in lista_departamento %}
+                              <option value="{{clientes}}">{{clientes}}</option>
+
+                              {% endfor %}
+                              
+                            </select>
+                            <div class="invalid-feedback">
+                              Please select a valid state.
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                            <label for="validationCustom04" class="form-label"><strong>Tipo Contrato</strong></label>
+                            <select class="form-select" id="validationCustom04" name="tipo_contrato" >
+                              <option value="Seleccione">Seleccione</option>
+                              <option  value="Contrato_Indefinido">Contrato Indefinido</option>
+                              <option value="Contrato_tiempo">Contrato Definido</option>
+                              <option value="Contrato_por_Obra">Contrato por Obra Determinada</option>
+                              
+                              
+                            </select>
+                            <div class="invalid-feedback">
+                              Please select a valid state.
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                            <label for="validationdate" class="form-label"><strong>Fecha Ingreso</strong></label>
+                            <br><input type="date" name="fecha_ingreso" id="validationdate" >
+                            <div class="invalid-feedback">
+                              Please select a valid state.
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                            <label for="validationdate" class="form-label"><strong>Fecha Egreso</strong></label>
+                            <br><input type="date" name="fecha_egreso" id="validationdate"  >
+                            <div class="invalid-feedback">
+                              Please select a valid state.
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                            <label for="validationmin" class="form-label"><strong>Hora Entrada</strong></label>
+                            <br><input type="time" name="hora_entrada" id="validationmin" >
+                            <div class="invalid-feedback">
+                              Please select a valid state.
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                            <label for="validationmin" class="form-label"><strong>Hora Salida</strong></label>
+                            <br><input type="time" name="hora_salida" id="validationmin" >
+                            <div class="invalid-feedback">
+                              Please select a valid state.
+                            </div>
+                          </div>
+                          
+                        
+                          <div class="col-md-2">
+                            <label for="validationCustom04" class="form-label"><strong>Dia Descanso (1) </strong></label>
+                            <select class="form-select" id="validationCustom04" name="dia_descanso_1" >
+                              <option value="Seleccione">Seleccione</option>
+                              <option  value="6">Domingo</option>
+                              <option value="0">Lunes</option>
+                              <option value="1">Martes</option>
+                              <option value="2">Miércoles</option>
+                              <option value="3">Jueves</option>
+                              <option value="4">Viernes</option>
+                              <option value="5">Sábado</option>
+                              <option value="8">No Aplica</option>
+                              
+                            
+                            </select>
+                          
+                          </div>
+                          <div class="col-md-2">
+                            <label for="validationCustom04" class="form-label"><strong>Dia Descanso (2) </strong></label>
+                            <select class="form-select" id="validationCustom04" name="dia_descanso_2" >
+                              <option value="Seleccione">Seleccione</option>
+                              <option  value="8">No Aplica</option>
+                              <option value="0">Lunes</option>
+                              <option value="1">Martes</option>
+                              <option value="2">Miércoles</option>
+                              <option value="3">Jueves</option>
+                              <option value="4">Viernes</option>
+                              <option value="5">Sábado</option>
+                              <option value="6">Domingo</option>
+                              
+                            
+                            </select>
+                          
+                          </div>
+                          <div class="col-md-2">
+                            <label for="validationCustom04" class="form-label"><strong>Aplica Almuerzo</strong></label>
+                            <select class="form-select" id="validationCustom04" name="almuerzo_aplica" >
+                              <option value="Seleccione">Seleccione</option>
+                              <option  value="Si">Si</option>
+                              <option  value="No">No</option>
+                              
+                              
+
+                              
+                              
+                            </select>
+                          
+                          </div>
+                          <div class="col-md-2">
+                            <label for="validationCustom04" class="form-label"><strong>Inicio Almuerzo</strong></label>
+                            <select class="form-select" id="validationCustom04" name="inicio_Almuerzo" >
+                              
+                              <option value="Seleccione">Seleccione</option>
+                              <option value="00">00 AM</option>
+                              <option value="01">01 AM</option>
+                              <option value="02">02 AM</option>
+                              <option value="03">03 AM</option>
+                              <option value="04">04 AM</option>
+                              <option value="05">05 AM</option>
+                              <option value="06">06 AM</option>
+                              <option value="07">07 AM</option>
+                              <option  value="08">08 AM</option>
+                              <option value="09">09 AM</option>
+                              <option value="10">10 AM</option>
+                              <option value="11">11 AM</option>
+                              <option  value="12">12 PM</option>
+                              <option value="13">01 PM</option>
+                              <option value="14">02 PM</option>
+                              <option value="15">03 PM</option>
+                              <option value="16">04 PM</option>
+                              <option value="17">05 PM</option>
+                              <option value="18">06 PM</option>
+                              <option value="19">07 PM</option>
+                              <option value="20">08 PM</option>
+                              <option value="21">09 PM</option>
+                              <option value="22">10 PM</option>
+                              <option value="23">11 PM</option>
+                              
+
+                              
+                              
+                            </select>
+                          
+                          </div>
+                          <!--  Jornada Diaria  --> 
+                          <div class="col-md-2">
+                            <label for="validationCustom02" class="form-label"><strong>HR. Jornada Diaria </strong></label>
+                            <input type="number" class="form-control" id="validationCustom02" name="jornada_diaria" placeholder="Escriba Número horas a trabajar diario." step="0.1" >
+                            <div class="valid-feedback">
+                              Looks good!
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                            <label for="validationCustom02" class="form-label"><strong>HR. Jornada Semanal </strong></label>
+                            <input type="number" class="form-control" id="validationCustom02" name="jornada_semanal" placeholder="Escriba Número horas a trabajar Semanal." >
+                            <div class="valid-feedback">
+                              Looks good!
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                            <label for="validationCustom04" class="form-label"><strong>Tipo Jornada </strong></label>
+                            <select class="form-select" id="validationCustom04" name="tipo_jornada" >
+                              <option value="Seleccione">Seleccione</option>
+                              <option value="Diurna">Jornada Diurna</option>
+                              <option value="Mixta">Jornada Mixta </option>
+                              <option value="Nocturna">Jornada Nocturna</option>
+                              <option value="Media">Media Jornada (Ruta )</option>
+                              
+                            </select>
+                          
+                          </div>
+                          {% if nivel < 2 %} 
+                          <div class="col-md-4">
+                            <label for="validationCustomUsername" class="form-label text-danger"><strong>Sueldo Mensual del Colaborador</strong></label>
+                            <div class="input-group has-validation">
+                              <span class="input-group-text" id="inputGroupPrepend">$</span>
+                              <input type="number" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" name="sueldo" placeholder="Escriba Sueldo Mensual del colaborador."  >
+                              <div class="invalid-feedback">
+                                Please choose a username.
+                              </div>
+                            </div>
+                          </div>
+                          {% endif %}
+
+                          <div class="col-md-2">
+                            <label for="validationCustom04" class="form-label"><strong>Jornada Laboral Equitativa? </strong></label>
+                            <select class="form-select" id="validationCustom04" name="bool_Jornada_HR_Semanal" >
+                              <option value="Seleccione">Seleccione</option>
+                              <option  disabled value="Transferencia Bancaria">SI - si el colaborador trabaja las misma horas diarias semanalmente</option>
+                              <option  disabled value="Transferencia Bancaria">NO - si el colaborador trabaja Diferentes horas diarias semanalmente</option>
+                              <option value="Si">Si</option>
+                              <option value="No">No</option>
+                            
+                            </select>
+                          
+                          </div>
+                          <div class="col-md-2">
+                            <label for="validationCustom04" class="form-label"><strong>Forma Pago </strong></label>
+                            <select class="form-select" id="validationCustom04" name="forma_pago" >
+                              <option value="Seleccione">Seleccione</option>
+                              <option  value="Transferencia Bancaria">Transferencia Bancaria</option>
+                              <option value="Efectivo">Efectivo</option>
+                              <option value="Cheque">Cheque</option>
+                              <option value="Otro">Otro</option>
+                              
+                              
+                            
+                            </select>
+                          
+                          </div>
+                          <!--  nombre de banco  --> 
+                          <div class="col-md-3">
+                            <label for="validationCustom04" class="form-label"><strong>Nombre Banco </strong></label>
+                            <select class="form-select" id="validationCustom04" name="banco_nombre" >
+                              <option value="Seleccione">Seleccione</option>
+                                <option value="HSBC (Panamá)">HSBC (Panamá)</option>
+                                <option value="Banco General (Panamá)">Banco General (Panamá)</option>
+                                <option value="Banco Nacional de Panamá">Banco Nacional de Panamá</option>
+                                <option value="Banesco (Panamá)">Banesco (Panamá)</option>
+                                <option value="PNB Paribas (Panamá)">PNB Paribas (Panamá)</option>
+                                <option value="BAC International (Panamá)">BAC International (Panamá)</option>
+                                <option value="Global Bank (Panamá)">Global Bank (Panamá)</option>
+                                <option value="BBVA Panamá">BBVA Panamá</option>
+                                <option value="Caja de Ahorros">Caja de Ahorros</option>
+                                <option value="Multibank (Panamá)">Multibank (Panamá)</option>
+                                <option value="Citibank (Panamá)">Citibank (Panamá)</option>
+                                <option value="The Bank of Nova Scotia (Panamá)">The Bank of Nova Scotia (Panamá)</option>
+                                <option value="Banco Aliado">Banco Aliado</option>
+                                <option value="Banco Latinoamericano de Exportaciones (BLADEX)">Banco Latinoamericano de Exportaciones (BLADEX)</option>
+                                <option value="Banvivienda">Banvivienda</option>
+                                <option value="Credicorp Bank">Credicorp Bank</option>
+                                <option value="Banco Azteca (Panamá)">Banco Azteca (Panamá)</option>
+                                <option value="Banco Universal">Banco Universal</option>
+                                <option value="St. Georges Bank & Co.">St. Georges Bank & Co.</option>
+                                <option value="Bancolombia (Panamá)">Bancolombia (Panamá)</option>
+                                <option value="Banco de Crédito del Perú (Panamá)">Banco de Crédito del Perú (Panamá)</option>
+                                <option value="Primer Banco del Istmo">Primer Banco del Istmo</option>
+                                <option value="GTC Bank (Panamá)">GTC Bank (Panamá)</option>
+                                <option value="GNB Sudameris Bank">GNB Sudameris Bank</option>
+                                <option value="ES Bank (Panamá)">ES Bank (Panamá)</option>
+                                <option value="Banco Internacional de Costa Rica">Banco Internacional de Costa Rica</option>
+                                <option value="Banco de Bogotá (Panamá)">Banco de Bogotá (Panamá)</option>
+                                <option value="Popular Bank">Popular Bank</option>
+                                <option value="BCT Bank International">BCT Bank International</option>
+                                <option value="Towerbank International">Towerbank International</option>
+                                <option value="Produbank (Panamá)">Produbank (Panamá)</option>
+                                <option value="Banco de Occidente">Banco de Occidente</option>
+                                <option value="Banco Pichincha Panamá">Banco Pichincha Panamá</option>
+                                <option value="Banco de Crédito Helm Financial Services (Panamá)">Banco de Crédito Helm Financial Services (Panamá)</option>
+                                <option value="Bancafé (Panamá)">Bancafé (Panamá)</option>
+                                <option value="Mega International Commercial Bank (Panamá)">Mega International Commercial Bank (Panamá)</option>
+                                <option value="MMG Bank (Panamá)">MMG Bank (Panamá)</option>
+                                <option value="FPB International Bank">FPB International Bank</option>
+                                <option value="Banco Transatlántico">Banco Transatlántico</option>
+                                <option value="Banco del Pacífico (Panamá)">Banco del Pacífico (Panamá)</option>
+                                <option value="Korea Exchange Bank (Panamá)">Korea Exchange Bank (Panamá)</option>
+                                <option value="Bank Leumi Le-Israel (Panamá)">Bank Leumi Le-Israel (Panamá)</option>
+                                <option value="Austrobank Overseas (Panamá)">Austrobank Overseas (Panamá)</option>
+                                <option value="Metrobank">Metrobank</option>
+                                <option value="Banco Santander (Panamá)">Banco Santander (Panamá)</option>
+                                <option value="BHD International Bank (Panamá)">BHD International Bank (Panamá)</option>
+                                <option value="Mercantil Bank">Mercantil Bank</option>
+                                <option value="Banco Lafise Panamá">Banco Lafise Panamá</option>
+                                <option value="Banco Delta">Banco Delta</option>
+                                <option value="Banco Corficolombiana">Banco Corficolombiana</option>
+                                <option value="Bank of China (Panamá)">Bank of China (Panamá)</option>
+                                <option value="International Union Bank">International Union Bank</option>
+                                <option value="Stanford Bank (Panamá)">Stanford Bank (Panamá)</option>
+                                <option value="Blubank">Blubank</option>
+                                <option value="Banco do Brasil (Panamá)">Banco do Brasil (Panamá)</option>
+                                <option value="Atlantic Security Bank">Atlantic Security Bank</option>
+                                <option value="Banco de la Provincia de Buenos Aires (Panamá)">Banco de la Provincia de Buenos Aires (Panamá)</option>
+                                <option value="Banco Hipotecario Nacional">Banco Hipotecario Nacional</option>
+                                <option value="Banco de Guayaquil (Panamá)">Banco de Guayaquil (Panamá)</option>
+                                <option value="Banco Panamá">Banco Panamá</option>
+                                <option value="Capital Bank">Capital Bank</option>
+                                <option value="Banco de la Nación Argentina (Panamá)">Banco de la Nación Argentina (Panamá)</option>
+                                <option value="Banco Credit Andorra (Panamá)">Banco Credit Andorra (Panamá)</option>
+                                <option value="Andorra Banc Agrícol Reig (Panamá)">Andorra Banc Agrícol Reig (Panamá)</option>
+                                <option value="Cayman National Bank (Panamá)">Cayman National Bank (Panamá)</option>
+                                <option value="Société Générale (Panamá)">Société Générale (Panamá)</option>
+                            </select>
+                          </div>
+                          <div class="col-md-3">
+                          <label for="validationCustom04" class="form-label"><strong>Tipo Cuenta Bancaria </strong></label>
+                          <select class="form-select" id="validationCustom04" name="tipo_cuenta" >
+                            <option value="Seleccione">Seleccione</option>>
+                            <option value="Ahorro">Ahorro</option>
+                            <option value="Corriente">Corriente</option>
+                            <option value="Planilla">Planilla</option>
+                            
+                          </select>
+                        
+                          </div>
+                          {% if nivel < 3 %} 
+                          <div class="col-md-3">
+                          <label for="validationCustom02" class="form-label"><strong>Numero Cuenta de Banco </strong></label>
+                          <input type="number" class="form-control" id="validationCustom02" name="nro_cuenta_banco" placeholder="Escriba Número cuenta bancaria." >
+                          <div class="valid-feedback">
+                            Looks good!
+                          </div>
+                          </div>
+                          {% endif %}
+
+                          <div class="col-md-3">
+                          <label for="validationCustom03" class="form-label"><strong>Nombre de Contacto Urgencia</strong></label>
+                          <input type="text" class="form-control" id="validationCustom03" name="nombre_urgencia" placeholder="Escriba el nombre contacto de Urgencia del colaborador" >
+                          
+                          </div>
+                          <!--  telefono Urgencia  --> 
+                          <div class="col-md-3">
+                            <label for="validationCustom03" class="form-label"><strong>Telefono de Contacto Urgencia</strong></label>
+                            <input type="text" class="form-control" id="validationCustom03" name="telefono_urgencia" placeholder="Escriba el Telefono contacto de Urgencia del colaborador" >
+                            
+                            </div>
+                          {% if nivel < 3 %}  
+                          <div class="col-md-3">
+                              <label for="validationCustom04" class="form-label text-danger"><strong>Estado Colaborador</strong></label>
+                              <select class="form-select" id="validationCustom04" name="status" >
+                                <option value="Seleccione">Seleccione</option>
+                                <option value="Activo">Activo</option>
+                                <option value="Vacaciones">Vacaciones</option>
+                                <option value="Incapacitado">Incapacitado</option>
+                                <option value="Pre-aviso">Pre-aviso</option>
+                                <option value="Despido">Despido</option>
+                                <option value="Renuncia">Renuncia</option>
+                                <option value="Jubilado">Jubilado</option>
+                                <option value="Permiso especial">Permiso especial</option>
+                                
+                              </select>
+                            
+                          </div>
+                          {% endif %}
+                          <div class="col-md-3">
+                            <label for="validationCustom04" class="form-label text-danger"><strong>Supervisor</strong></label>
+                            <select class="form-select" id="validationCustom04" name="supervisor" >
+                              <option value="Seleccione">Seleccione</option>
+                              <option value="1">Administrador</option>
+                              {% for colaborador in lista_supervisores %}
+                              <option value="{{ colaborador.0 }}">{{ colaborador.1 }}</option>
+
+                              {% endfor %}
+                              
+                            </select>
+
+                          
+                          
+                          </div>
+
+                          <div class="col-md-6">
+                            <label for="validationCustom02" class="form-label"><strong>Imagen Colaborador</strong></label>
+                            <input type="file" accept=".jpg, .jpeg, .png, " class="form-control" id="validationCustom02" name="archivo" placeholder="Adjute Foto Colaborador . " onchange="validarTamanoArchivo(this)">
+                            <span id="mensaje-error" style="color: red;"></span>
+                            
+                            <div class="valid-feedback">
+                              Looks good!
+                            </div>
+                          </div>
+
+
+                          <div class="col-12">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                              <label class="form-check-label" for="invalidCheck">
+                                Acepto la información suministrada, la cual solo podrá ser modificada unicamente por el administrador o el Representante Legal de la Empresa.
+                              </label>
+                              <div class="invalid-feedback">
+                                You must agree before submitting.
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <button class="btn btn-primary" type="submit">Hacer Cambios</button>
+                          </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            
+
+        </div>
+       
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script>
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+
+            function validarTamanoArchivo(input) {
+              var maxTamano = 5 * 1024 * 1024; // 10 MB en bytes
+              var mensajeError = document.getElementById("mensaje-error");
+  
+              if (input.files.length > 0) {
+                  var tamanoArchivo = input.files[0].size;
+  
+                  if (tamanoArchivo > maxTamano) {
+                      mensajeError.innerHTML = "El archivo excede el tamaño máximo permitido (10 MB).";
+                      input.value = ""; // Limpiar el campo de archivo
+                  } else {
+                      mensajeError.innerHTML = "";
+                  }
+              }
+          }
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

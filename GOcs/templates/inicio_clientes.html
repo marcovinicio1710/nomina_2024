@@ -1,0 +1,227 @@
+
+<!doctype html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Main Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        
+        <div class="main-container d-flex">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+                <div class="col-md-8 mt-5 border rounded p-4 shadow">
+
+                    <div class="bd-example m-0 border-0">
+                        <form class="row g-3 needs-validation" method="post">
+                          {% csrf_token %}
+                          <div class="col-md-4">
+                            <label for="validationCustom01" class="form-label"><strong>Nombre de la Empresa</strong>  </label>
+                            <input type="text" class="form-control" id="validationCustom01" name="name_empresa" placeholder="Escriba el Nombre del Cliente" required>
+                            <div class="valid-feedback">
+                              Looks good!    
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustom02" class="form-label"><strong>Cédula Jurídica</strong></label>
+                            <input type="text" class="form-control" id="validationCustom02" name="cedula_juridica" placeholder="Escriba su numero de Cédula Jurídica del Cliente" required>
+                            <div class="valid-feedback">
+                              Looks good!
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustomUsername" class="form-label"><strong>Correo de la Empresa</strong></label>
+                            <div class="input-group has-validation">
+                              <span class="input-group-text" id="inputGroupPrepend">@</span>
+                              <input type="email" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" name="correo_empresa" placeholder="Escriba correo electronico del Cliente" required >
+                              <div class="invalid-feedback">
+                                Please choose a username.
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <label for="validationCustom03" class="form-label"><strong>Dirección</strong></label>
+                            <input type="text" class="form-control" id="validationCustom03" name="Direccion_empresa" placeholder="Escriba la Dirección del Cliente" required>
+                            <div class="invalid-feedback">
+                              Please provide a valid address.
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <label for="validationCustom04" class="form-label"><strong>Estado</strong></label>
+                            <select class="form-select" id="validationCustom04" name="Estado_empresa" required>
+                              
+                              <option selected value="Panama">Panamá</option>
+                              <option value="Bocas del Toro">Bocas del Toro</option>
+                              <option value="Coclé">Coclé</option>
+                              <option value="Colón">Colón</option>
+                              <option value="Chiriquí">Chiriquí</option>
+                              <option value="Darién">Darién</option>
+                              <option value="Herrera">Herrera</option>
+                              <option value="Los Santos">Los Santos</option>
+                              <option value="Veraguas">Veraguas</option>
+                              <option value="Guna Yala">Guna Yala (anteriormente conocida como la Comarca de San Blas)</option>
+                              <option value="Emberá-Wounaan">Emberá-Wounaan (comarca indígena)</option>
+                              <option value="Ngäbe-Buglé">Ngäbe-Buglé (comarca indígena)</option>
+                            </select>
+                            <div class="invalid-feedback">
+                              Please select a valid state.
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <label for="validationCustom05" class="form-label"><strong>Teléfono</strong></label>
+                            <input type="number" class="form-control" name="Telefono_empresa" placeholder="Escriba el Teléfono del Cliente" required>
+                            <div class="invalid-feedback">
+                              Please provide a valid phone.
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustom01" class="form-label"><strong>Página Web de la Empresa</strong>  </label>
+                            <input type="url" class="form-control" id="validationCustom01" name="web_empresa" placeholder="Escriba su Página web del Cliente con https://www." >
+                            <div class="valid-feedback">
+                              Looks good!    
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustom02" class="form-label"><strong>Representante de la Empresa</strong></label>
+                            <input type="text" class="form-control" id="validationCustom02" name="representante" placeholder="Escriba el nombre Representante del Cliente." required>
+                            <div class="valid-feedback">
+                              Looks good!
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustomUsername" class="form-label"><strong>Correo del Representante</strong></label>
+                            <div class="input-group has-validation">
+                              <span class="input-group-text" id="inputGroupPrepend">@</span>
+                              <input type="email" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" name="correo_representante" placeholder="Escriba correo electronico del Representante del Cliente." required >
+                              <div class="invalid-feedback">
+                                Please choose a username.
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustom02" class="form-label"><strong>Codigo Cliente Interno</strong></label>
+                            <input type="text" class="form-control" id="validationCustom02" name="codigo_cliente" placeholder="Escriba el Codigo Cliente Interno del cliente." required>
+                            <div class="valid-feedback">
+                              Looks good!
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <label for="validationCustom04" class="form-label"><strong>Status</strong></label>
+                            <select class="form-select" id="validationCustom04" name="status" required>
+                              
+                              <option selected value="Pendiente">Pendiente</option>
+                              <option value="Activo">Activo</option>
+                              <option value="Inactivo">Inactivo</option>
+                              <option value="Desinteresado">Desinteresado</option>
+                              <option value="Otro">Otro</option>
+                              
+                            </select>
+                            <div class="invalid-feedback">
+                              Please select a valid state.
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                              <label class="form-check-label" for="invalidCheck">
+                                Confirmo la información suministrada, la cual solo podrá ser modificada unicamente por el administrador o el Representante Legal de la Empresa.
+                              </label>
+                              <div class="invalid-feedback">
+                                You must agree before submitting.
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <button class="btn btn-primary" type="submit">Cargar Cliente</button>
+                          </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+    
+            
+            
+
+        </div>
+
+        <div class="container">
+            
+            <div class="table-responsive mt-4 shadow">
+                <table class="table table-bordered table-striped table-hover text-center">
+                    <thead>
+                        <tr>
+                            <th class="table-dark">#</th>
+                            <th class="table-dark">Codigo</th>
+                            <th class="table-dark">Nombre</th>
+                            <th class="table-dark">Status</th>
+                            
+                            <th class="table-dark">Ajuste</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for clientes in lista_cliente %}
+                            <tr>
+                                <td>{{ clientes.0 }}</td>
+                                <td>{{ clientes.3 }}</td>
+                                <td>{{ clientes.1 }}</td>
+                                <td>{{ clientes.13 }}</td>
+                                <td><a href="#"><i class="bi bi-gear-fill"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                        
+                        <!-- Agrega más filas según sea necesario -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script>
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

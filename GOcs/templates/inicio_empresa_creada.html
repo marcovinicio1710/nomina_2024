@@ -1,0 +1,171 @@
+
+<!doctype html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Main Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        
+        <div class="main-container d-flex">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+                <div class="col-md-8 mt-5 border rounded p-4 shadow">
+
+                    <div class="bd-example m-0 border-0">
+                        <form class="row g-3 needs-validation" method="post">
+                          {% csrf_token %}
+                          <div class="col-12">
+                            <div class="form-check">
+                                <h4 class="text-danger"><strong>Informacion de la Empresa:</strong></h4>
+                              
+                              
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustom01" class="form-label"><strong>Nombre de la Empresa</strong>  </label>
+                            <input type="text" class="form-control" id="validationCustom01" name="name_empresa" value="{{name_empresa}}"  required>
+                            <div class="valid-feedback">
+                              Looks good!    
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustom02" class="form-label"><strong>Cédula Jurídica</strong></label>
+                            <input type="text" class="form-control" id="validationCustom02" name="cedula_juridica" value="{{cedula_juridica}}" required>
+                            <div class="valid-feedback">
+                              Looks good!
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustomUsername" class="form-label"><strong>Correo de la Empresa</strong></label>
+                            <div class="input-group has-validation">
+                              <span class="input-group-text" id="inputGroupPrepend">@</span>
+                              <input type="email" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" name="correo_empresa" value="{{correo_empresa}}" required >
+                              <div class="invalid-feedback">
+                                Please choose a username.
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <label for="validationCustom03" class="form-label"><strong>Dirección</strong></label>
+                            <input type="text" class="form-control" id="validationCustom03" name="Direccion_empresa"  value="{{Direccion_empresa}}" required>
+                            <div class="invalid-feedback">
+                              Please provide a valid address.
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <label for="validationCustom04" class="form-label"><strong>Estado</strong></label>
+                            <input type="text" class="form-control" id="validationCustom03" name="Direccion_empresa"  value="{{Estado_empresa}}" required>
+                            <div class="invalid-feedback">
+                              Please select a valid state.
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <label for="validationCustom05" class="form-label"><strong>Teléfono</strong></label>
+                            <input type="number" class="form-control" name="Telefono_empresa"  value="{{Telefono_empresa}}" required>
+                            <div class="invalid-feedback">
+                              Please provide a valid phone.
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustom01" class="form-label"><strong>Página Web de la Empresa</strong>  </label>
+                            <input type="url" class="form-control" id="validationCustom01" name="web_empresa" value="{{web_empresa}}" required>
+                            <div class="valid-feedback">
+                              Looks good!    
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustom02" class="form-label"><strong>Representante de la Empresa</strong></label>
+                            <input type="text" class="form-control" id="validationCustom02" name="representante" value="{{representante}}" required>
+                            <div class="valid-feedback">
+                              Looks good!
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustomUsername" class="form-label"><strong>Correo del Representante</strong></label>
+                            <div class="input-group has-validation">
+                              <span class="input-group-text" id="inputGroupPrepend">@</span>
+                              <input type="email" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" name="correo_representante" value="{{correo_representante}}"  required >
+                              <div class="invalid-feedback">
+                                Please choose a username.
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustom02" class="form-label"><strong>Representante de RRHH</strong></label>
+                            <input type="text" class="form-control" id="validationCustom02" name="representante_RRHH" value="{{representante_RRHH}}"  required>
+                            <div class="valid-feedback">
+                              Looks good!
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="validationCustomUsername" class="form-label"><strong>Correo del Representante de RRHH</strong></label>
+                            <div class="input-group has-validation">
+                              <span class="input-group-text" id="inputGroupPrepend">@</span>
+                              <input type="email" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" name="correo_representante_RRHH" value="{{correo_representante_RRHH}}"  required >
+                              <div class="invalid-feedback">
+                                Please choose a username.
+                              </div>
+                            </div>
+                          </div>
+                          
+                          
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            
+
+        </div>
+       
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script>
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

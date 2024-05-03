@@ -1,0 +1,10 @@
+.\venv\Scripts\activate
+django-admin --version
+django-admin startproject EasyPayroll .
+python manage.py runserver
+python manage.py startapp GOcs
+
+script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"
+
+python manage.py makemigrations
+python manage.py migrate

@@ -1,0 +1,233 @@
+
+<!doctype html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Analisis por Clientes </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        
+        <div class="main-container d-flex">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+
+            
+
+             
+
+              <div class="container-fluid p-2 text-justify">
+                <nav class="navbar ">
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-12 m-1">
+                        <span><strong>Hola {{name1}} !</strong></span>
+                      </div>
+                      <div class="col-12 m-1">
+                        <span><span>Aquí está lo que está sucediendo con tu negocio hoy. </span></span>
+                      </div>
+                      
+                    </div>
+                    
+                </nav>
+
+
+                <div class="row g-3 mb-3">
+
+
+
+                <div class=" col-12 mx-2 " >
+                  <div class="card h-md-100 ecommerce-card-min-width">
+                    <div class="card-header pb-0">
+                      <div class="row">
+                        <div class="col-6"><h6 class="mb-0  d-flex text-primary "><i class="bi bi-person-fill fs-3"></i>Ultimos {{mensuales}} meses </h6></div>
+                        
+                        <div class="col-2">
+                            <span class="nav-item dropdown">
+                              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                  <span class="">Campos a Filtrar</span>
+                              </a>
+                              <ul class="dropdown-menu dropdown-menu-dark form-check">
+                                {% for clientes in lista_campos_filtrar %} 
+                                    <li><a class="dropdown-item" href="{% url 'analisis-cliente' mensuales=mensuales  cliente=cliente buscador=clientes.0 %}"><span>{{clientes.1}}</span></a></li>
+                                {% endfor %}     
+                                      
+                                   
+                                  
+                              </ul>
+                          </span>
+  
+  
+                        </div>
+                        
+                        <div class="col-2">
+                          <span class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="">Periodo</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark form-check">
+                                <li><a class="dropdown-item" href="{% url 'analisis-cliente' mensuales=1  cliente=cliente buscador=buscador %}"><span>1 Mes</span></a></li>
+                                <li><a class="dropdown-item" href="{% url 'analisis-cliente' mensuales=3  cliente=cliente buscador=buscador %}"><span>3 Mes</span></a></li>
+                                <li><a class="dropdown-item" href="{% url 'analisis-cliente' mensuales=6  cliente=cliente buscador=buscador %}"><span>6 Mes</span></a></li>
+                                <li><a class="dropdown-item" href="{% url 'analisis-cliente' mensuales=9  cliente=cliente buscador=buscador %}"><span>9 Mes</span></a></li>
+                                <li><a class="dropdown-item" href="{% url 'analisis-cliente' mensuales=12  cliente=cliente buscador=buscador %}"><span>12 Mes</span></a></li>
+                                <li><a class="dropdown-item" href="{% url 'analisis-cliente' mensuales=18  cliente=cliente buscador=buscador %}"><span>18 Mes</span></a></li>
+                                <li><a class="dropdown-item" href="{% url 'analisis-cliente' mensuales=24  cliente=cliente buscador=buscador %}"><span>2 Años</span></a></li>
+                                <li><a class="dropdown-item" href="{% url 'analisis-cliente' mensuales=36  cliente=cliente buscador=buscador %}"><span>3 Años</span></a></li>
+                                <li><a class="dropdown-item" href="{% url 'analisis-cliente' mensuales=48  cliente=cliente buscador=buscador %}"><span>4 Años</span></a></li>
+                                <li><a class="dropdown-item" href="{% url 'analisis-cliente' mensuales=60  cliente=cliente buscador=buscador %}"><span>5 Años</span></a></li>
+                                 
+                                
+                            </ul>
+                        </span>
+
+
+                        </div>
+
+
+                        <div class="col-2">
+                            <span class="nav-item dropdown">
+                              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                  <span class="">Clientes</span>
+                              </a>
+                              <ul class="dropdown-menu dropdown-menu-dark form-check">
+                                {% for clientes in lista_completa_cliente %} 
+                                    <li><a class="dropdown-item" href="{% url 'analisis-cliente' mensuales=mensuales  cliente=clientes.0 buscador=buscador %}"><span>{{clientes.1}}</span></a></li>
+                                {% endfor %}     
+                                      
+                                   
+                                  
+                              </ul>
+                          </span>
+  
+  
+                        </div>
+                        
+
+                      </div>
+                        
+                        
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-end">
+                      <div class="row">
+                        {% for clientes in lista_chart %} 
+                        <div class="col col-md-6 col-lg-6 col-xl-4 col-xxl-4 " >
+                        <span>Graficas cliente: <strong> {{ clientes.1 }}</strong></span>
+                          <canvas id="barChart_{{ clientes.0 }}" class="mh-100 mb-2" style="height: 250px;"  ></canvas>
+                        </div>
+                        {% endfor %}
+
+                      </div>
+                    </div>
+                  </div>
+                
+                </div>
+
+               
+            </div>
+
+              </div>
+          </div>
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script>
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+
+
+
+        //grafica 1 
+
+          
+        var data = JSON.parse('{{ data|safe }}');
+        var max_value = {{ max_value }};
+
+        // Inicializar los gráficos de barras
+        data.datasets.forEach((dataset, i) => {
+            var ctx = document.getElementById('barChart_' + (i+1)).getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: dataset.label,
+                        data: dataset.data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 205, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(201, 203, 207, 0.2)'
+                            ]       ,
+                        borderColor: [
+                            'rgb(255, 99, 132)',
+                            'rgb(255, 159, 64)',
+                            'rgb(255, 205, 86)',
+                            'rgb(75, 192, 192)',
+                            'rgb(54, 162, 235)',
+                            'rgb(153, 102, 255)',
+                            'rgb(201, 203, 207)'
+                            ],
+                        borderWidth: 1
+                       
+                    }]
+                },
+                options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: max_value // Establecer el valor máximo en el eje Y
+                }
+            }
+        }
+    });
+});
+     
+        
+
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

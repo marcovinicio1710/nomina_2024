@@ -1,0 +1,569 @@
+
+<!doctype html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Motor de Planilla Paso 9</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+    
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        <br>
+        
+
+        
+        
+        <nav aria-label="Page navigation example">
+            
+                
+            <ul class="pagination justify-content-center ">
+                <li class="page-item ">
+                    <form class="row g-3 needs-validation" method="post" action="{% url 'motor-planilla_p8/' %}" >
+                        {% csrf_token %}
+                        
+                        <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                        <button type="submit" class="btn btn-danger">  <span>Regresar  </span>  </button>
+                    </form>
+                        
+                        
+                </li>
+                <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-arrow-left-circle"></i></a></li>
+                <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-arrow-right-circle"></i></a></li>
+                <li class="page-item">
+                    <form class="row g-3 needs-validation" method="post" action="{% url 'motor-planilla_p10/' %}">
+                        {% csrf_token %}
+                        {% if siguiente_bool %}
+                            <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                            <button type="submit" class="btn btn-success"> Ver Cierre Planilla</button>
+                        {% else %}
+                            <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                            <button type="submit" class="btn btn-success" disabled> Ver Cierre Planilla</button>
+
+                        {% endif %}
+                    </form>
+                </li>
+            </ul>
+        </form>
+        </nav>
+        <div class="main-container d-flex">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+              <div class="col-md-8 mt-5 border rounded p-4 shadow">
+                   {% if agregado == 'existo' %}
+                   <h4 class="text-danger">  {{Mensaje}}  </h4>
+                   {% endif %}
+                  <div class="bd-example m-0 border-0">
+                      <form class="row g-3 needs-validation" method="post">
+                        {% csrf_token %}
+                        {% if siguiente_bool %}
+                            <div class="col-md-12">
+                                <div class="card" >
+                                    <div class="card-header">
+                                        <strong class="fs-4 text-primary"> <i class="bi bi-check-circle-fill"></i> Acciones Confirmadas Presione el botón  de "Siguiente" para continuar con el proceso.
+                                        </strong>
+                                    </div>
+                            
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-md-12">
+                                <div class="card" >
+                                    <div class="card-header">
+                                        <strong class="fs-4 text-danger"> <i class="bi bi-exclamation-octagon-fill"></i> Tienes Acciones Pendientes, Confirmelas para continuar con el proceso.
+                                        </strong>
+                                    </div>
+                        
+                                </div>
+                            </div>
+                        {% endif %}
+                          <div class="col-md-12">
+                            <div class="card" >
+                              <div class="card-header">
+                                <strong class="fs-2">
+                                   <i class="bi bi-1-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-2-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-3-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-4-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-5-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-6-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-7-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-8-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-9-circle-fill"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-1-circle"></i>
+                                   <i class="bi bi-0-circle"></i>
+                                
+                                </strong>
+                              </div>
+                              <ul class="list-group list-group-flush">
+                                <li class="list-group-item text-primary"><strong> Paso 9 </strong> ( Ajuste de Planilla ) </li>
+                        
+                                
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Total Colaboradores <i class="bi bi-people-fill"></i> {{TOTAL_C}}</strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  <li class="list-group-item">Administrativo <i class="bi bi-people-fill"></i> <strong> {{admin}}</strong></li>
+                                  <li class="list-group-item">Produccion <i class="bi bi-people-fill"></i> <strong> {{produccion}}</strong></li>
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                          <div class="col-md-5">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Planilla Quincenal {{lista_planilla.0}} <i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  
+                                  <li class="list-group-item"><i class="bi bi-calendar3"></i><strong> Fecha Inicio: </strong> {{lista_planilla.1}}</li>
+                                  <li class="list-group-item"><i class="bi bi-calendar3"></i><strong> Fecha Final: </strong> {{lista_planilla.2}}</li>
+                                  <li class="list-group-item"><i class="bi bi-calendar-check-fill"></i><strong> Fecha Pago: </strong> {{lista_planilla.3}}</li>
+                                  
+                                </ul>
+                              </div>
+                          </div>
+
+                          <div class="col-md-4">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Confirmar Ajuste de Planilla. </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  <input type="text" name="Actualizar" value="{{lista_planilla.0}}" hidden>
+                                  <li class="list-group-item "><button class="btn btn-secondary fs-5" type="submit"><i class="bi bi-cloud-arrow-up-fill "></i>  Actualizar Ajuste en Base Datos.</button></li>
+                                  
+                                  
+                                </ul>
+                                
+                              </div>
+                          </div>
+
+                          <div class="col-md-12">
+                            <div class="form-check">
+                                <span><strong>Previsualize Ajuste de Planilla en los Colaboradores durante este fecha de corte de Planilla</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+
+                                                <th class="table-dark">Aprobar</th>
+                                                <th class="table-dark">Validar</th>
+
+                                                <th class="table-dark">Status </th>
+                                                <th class="table-dark">Colaborador</th>
+                                                <th class="table-dark">Cargo</th>
+                                                <th class="table-dark">Dpto.</th>
+                                                <th class="table-dark">Monto</th>
+                                                <th class="table-dark">Tipo de Ajuste</th>
+                                                <th class="table-dark">Motivo</th>
+                                                <th class="table-dark">Retiene Imp.</th>
+                                                <th class="table-dark">Cargado por:</th>
+                                                <th class="table-dark">Aprobado por:</th>
+                                                
+                                               
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for clientes in lista_cliente %}
+                                                <tr>
+                                                    
+                                                    <td >
+                                                        {% if clientes.12 %}
+                                                            <div class="form-check form-switch">
+                                                                
+                                                                <input class="form-check-input" type="checkbox" name="switch_aprobar" value="{{clientes.0}}" role="switch" id="flexSwitchCheckChecked" checked>
+                                                                <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                                                            </div>
+
+                                                            
+                                                        {% else %}
+                                                        <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox" name="switch_aprobar" value="{{clientes.0}}" role="switch" id="flexSwitchCheckDefault">
+                                                            <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+                                                        </div>
+                                                       
+                                                        {% endif %}
+                                                        
+                                                    </td>
+
+                                                    <td>
+                                                        
+                                                        <span class="nav-item dropdown">
+                                                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <span class="text-success"><i class="bi bi-pen"></i><br>Validar</span>
+                                                            </a>
+                                                            <ul class="dropdown-menu dropdown-menu-dark form-check">
+                                                                
+                                                                <li>
+                                                                    <form  method="post">
+                                                                        {% csrf_token %}
+                                                                        <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                                                                        {% if  clientes.1  == 'Aprobado' %}
+                                                                                <input type="text" class="form-control" id="validationCustom02" name="Aprobar" value="{{ clientes.0 }}"  hidden>
+                                                                                <button disabled class="btn btn-success" type="submit">Aprobar</button>
+                                                                        {% elif clientes.1  == 'Rechazar' %}
+                                                                                <input type="text" class="form-control" id="validationCustom02" name="Aprobar" value="{{ clientes.0 }}"  hidden>
+                                                                                <button disabled class="btn btn-success" type="submit">Aprobar</button>
+                                                                        {% else %}
+                                                                                <input type="text" class="form-control" id="validationCustom02" name="Aprobar" value="{{ clientes.0 }}"  hidden>
+                                                                                <button class="btn btn-success" type="submit">Aprobar</button>
+                                                                        {% endif %}        
+
+                                                                    </form>
+                                                                </li>
+                                                                <li>
+                                                                    <form  method="post">
+                                                                        {% csrf_token %}
+                                                                        <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                                                                        {% if  clientes.1  == 'Aprobado' %}
+                                                                                <input type="text" class="form-control" id="validationCustom02" name="Rechazar" value="{{ clientes.0 }}"  hidden>
+                                                                                <button disabled class="btn btn-danger" type="submit">Rechazar</button>
+                                                                        {% elif clientes.1  == 'Rechazar' %}
+                                                                                <input type="text" class="form-control" id="validationCustom02" name="Rechazar" value="{{ clientes.0 }}"  hidden>
+                                                                                <button disabled class="btn btn-danger" type="submit">Rechazar</button>
+                                                                        {% else %}
+                                                                                <input type="text" class="form-control" id="validationCustom02" name="Rechazar" value="{{ clientes.0 }}"  hidden>
+                                                                                <button  class="btn btn-danger" type="submit">Rechazar</button>
+                                                                        {% endif %}
+
+                                                                    </form>
+                                                                </li>
+                                                            
+                                                            </ul>
+                                                        </span>
+                                                    </td>
+
+                                                    <td>
+                                                        {% if  clientes.1  == 'Pendiente' %}
+                                                            <span class="text-warning fs-5"><i class="bi bi-exclamation-diamond-fill"></i><br>Pendiente</span>
+                                                        {% elif clientes.1  == 'Aprobado' %}
+                                                            <span class="text-success fs-5"><i class="bi bi-check-circle-fill"></i><br>Aprobado</span>
+                                                            
+                                                        {% else %}
+                                                            <span class="text-danger fs-5"><i class="bi bi-sign-no-parking-fill"></i><br>Cancelado</span>
+                                                            
+                                                        {% endif %}
+                                                        
+                                                    </td>
+                                                    
+                                                    <td class="small"><img src="{{ MEDIA_URL }}{{  clientes.13 }}" alt="mdo" width="32" height="32" class="rounded-circle mb-2">  {{ clientes.2 }}</td>
+                                                    <td class="small">{{ clientes.3 }}</td>
+                                                    <td class="small">{{ clientes.4 }}</td>
+
+                                                    <td class="small">
+                                                        {% if  clientes.6  == 'Suma' %}
+                                                            <span class=" small-text-manual"><button  class="btn btn-success size-font-sm" type="button"><i class="bi bi-plus-circle-fill"></i> {{ clientes.5 }}</button></span>
+                                                        {% else %}
+                                                            <span class=" small-text-manual"><button  class="btn btn-danger size-font-sm" type="button"><i class="bi bi-dash-circle-fill"></i> {{ clientes.5 }}</button></span>
+                                                        {% endif %}
+                                                    </td>
+                                                   
+                                                    <td class="small-text-manual">{{ clientes.7 }} </td>
+                                                    <td class="small-text-manual">{{ clientes.8 }} </td>
+                                                    
+                                                    <td class="small">
+                                                        {% if  clientes.9  %}
+                                                            <span class="text-success fs-5"><i class="bi bi-building-fill-check"></i><br>Si</span>
+                                                        
+                                                        {% else %}
+                                                        <span class="text-danger fs-5"><i class="bi bi-building-fill-x"></i><br>No</span>
+                                                            
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="small">{{ clientes.10 }}</td>
+                                                    <td class="small">{{ clientes.11}}</td>
+                                         
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                          </div>
+                        
+                          <div class="col-md-12 bg-dark">
+                            <form class="row mt-4 g-3 needs-validation d-flex justify-content-center text-primary custom-pill-background mt-2" method="post" >
+                                {% csrf_token %}
+                                
+
+                                <span class=" text-light">Tilda el checkbox para Agregar Ajuste</span>
+                                
+                                <div>
+                                    <div class="mb-3">
+                                        <input type="checkbox" id="checkExpand1" class="form-check-input" name="Activo1" value="1">
+                                        <label for="checkExpand1" class="form-label"> <span class="fw-bold text-light">Despliegue Ajuste</span> </label>
+                                    </div>
+                                    <div id="expandableInputs1" style="display: none;">
+                                     <div class="col-md-12">
+                                        
+                                    <div class="col-md-12 position-relative">
+                                            
+                                        <div class="col-md-12">
+                                            <div class="form-check">
+                                                <span><strong class="text-light">Agregue un (1) solo Colaborador</strong></span>
+                                                <div class="table-responsive mt-4 shadow">
+                                                    <table  id="miTabla_2" class="table table-dark table-hover table-bordered table-striped  text-center display ">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="table-light ">#</th>
+                                                                <th class="table-light">Nombre</th>
+                                                                <th class="table-light">Apellido</th>
+                                                                <th class="table-light">Cargo</th>
+                                                                <th class="table-light">Departamento</th>
+                                                                <th class="table-light">Supervisor</th>
+                                                                <th class="table-light">Sueldo</th>
+                                                                
+                                                                
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for clientes in lista_ajustes %}
+                                                                <tr>
+                                                                    <td> 
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="radio" name="colaborador1" value="{{ clientes.0 }}" id="flexCheckDefault" required>
+                                                                            
+                                                                          </div>
+                                                                              
+                                                                    </td>
+                                                                    <td>{{ clientes.1 }}</td>
+                                                                    <td>{{ clientes.2 }}</td>
+                                                                    <td>{{ clientes.3 }}</td>
+                                                                    <td>{{ clientes.4 }}</td>
+                                                                    <td>{{ clientes.5 }}</td>
+                                                                    <td>{{ clientes.6 }}</td>
+                                                              
+                                                                </tr>
+                                                            {% endfor %}
+                                                            
+                                                            <!-- Agrega más filas según sea necesario -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                
+                                            </div>
+                                              
+                
+                                        </div>
+                                    </div>
+                                    <br>
+                                    
+                                    <div class="col-md-3">
+                                            <label for="validationCustom04" class="form-label text-light"><strong>Tipo de Ajuste</strong></label>
+                                            <select class="form-select" id="validationCustom04" name="tipo_Ajuste" required>
+                                              <option selected disabled value="">Elije un Tipo de Ajuste</option>
+                                              <option value="Suma"><span>Adicion ( + )</span> </option>
+                                              <option value="Resta"><span>Substraccion ( - )</span></option>
+                                            </select>
+                                          
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="validationCustom04" class="form-label text-light"><strong>Concepto de Ajuste</strong></label>
+                                        <select class="form-select" id="validationCustom04" name="concepto_Ajuste" required>
+                                          <option selected disabled value="">Elije un Tipo de Concepto de Ajuste</option>
+                                          <option value="Salario"><span>Salario</span> </option>
+                                          <option value="Horas_extras"><span>Horas Extras</span></option>
+                                          <option value="Viatico"><span>Viatico</span></option>
+                                          <option value="Servicio_Profesionales"><span>Servicios Profecionales</span></option>
+                                          <option value="Representacion Legal"><span>Representacion Legal</span></option>
+                                          <option value="Gasolina"><span>Gasolina</span></option>
+                                          <option value="Ausencia"><span>Ausencia</span></option>
+                                          <option value="Feriado"><span>Feriado Atrasado</span></option>
+                                          <option value="Domingo"><span>Domingo Atrasado</span></option>
+                                          <option value="Propina"><span>Propina</span></option>
+                                          <option value="Otro"><span>Otros</span></option>
+
+                                        </select>
+                                      
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <label for="validationCustom02" class="form-label text-light"><strong>Descripcion</strong></label>
+                                        <input type="text" class="form-control" id="validationCustom02" name="descripcion" placeholder="Escriba la descripcion del ajuste. " >
+                                        <div class="valid-feedback">
+                                          Looks good!
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="validationCustom02" class="form-label text-light"><strong>Monto</strong></label>
+                                        <input type="number"  step="0.01" class="form-control" id="validationCustom02" name="monto" placeholder="Escriba la descripcion del ajuste. " >
+                                        <div class="valid-feedback">
+                                          Looks good!
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <span class="text-light">Reterner Impuesto:</span>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="Retener" value="Si" id="flexRadioDefault1">
+                                            <label class="form-check-label text-light" for="flexRadioDefault1">
+                                              Si
+                                            </label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="Retener" value="No" id="flexRadioDefault2" checked>
+                                            <label class="form-check-label text-light " for="flexRadioDefault2">
+                                              No
+                                            </label>
+                                          </div>
+                                      
+                                    </div>
+                                
+                                <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                                <button class="btn btn-success m-3" type="submit" >Agregar Ajuste de Planilla</button>
+                            </form>
+                          </div>
+
+                          
+
+                          
+                              
+                          
+                          <div class="col-12">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" id="invalidCheck" disabled >
+                              <label class="form-check-label" for="invalidCheck">
+                                  Inicie motor y asistencia de planilla automatizada para sus Colaboradores.
+                              </label>
+                            
+                            </div>
+                          </div>
+                        
+                      </form>
+                  </div>
+
+              </div>
+            </div> 
+
+        </div>
+        <br>
+        <nav aria-label="Page navigation example">
+            
+                
+            <ul class="pagination justify-content-center ">
+                <li class="page-item ">
+                    <form class="row g-3 needs-validation" method="post" action="{% url 'motor-planilla_p8/' %}" >
+                        {% csrf_token %}
+                        
+                        <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                        <button type="submit" class="btn btn-danger">  <span>Regresar  </span>  </button>
+                    </form>
+                        
+                        
+                </li>
+                <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-arrow-left-circle"></i></a></li>
+                <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-arrow-right-circle"></i></a></li>
+                <li class="page-item">
+                    <form class="row g-3 needs-validation" method="post" action="{% url 'motor-planilla_p10/' %}">
+                        {% csrf_token %}
+                        {% if siguiente_bool %}
+                            <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                            <button type="submit" class="btn btn-success"> Ver Cierre Planilla</button>
+                        {% else %}
+                            <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                            <button type="submit" class="btn btn-success" disabled> Ver Cierre Planilla</button>
+
+                        {% endif %}
+                    </form>
+                </li>
+            </ul>
+        </form>
+        </nav>
+        
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        
+        
+  
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        
+        <script>
+
+            document.getElementById('checkExpand1').addEventListener('change', function() {
+                const expandableInputs = document.getElementById('expandableInputs1');
+                if (this.checked) {
+                    expandableInputs.style.display = 'block';
+                    } else {
+                expandableInputs.style.display = 'none';
+                    }
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

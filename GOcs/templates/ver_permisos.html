@@ -1,0 +1,239 @@
+
+<!doctype html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Ver Permisos </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+  
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        
+        <div class="container-fluid">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+              <div class="col-md-8 mt-5 border rounded p-4 shadow">
+                   {% if agregado == 'existo' %}
+                   <h4 class="text-danger">  {{Mensaje}}  </h4>
+                   {% endif %}
+                  <div class="bd-example m-0 border-0">
+                      <form class="row g-3 needs-validation" method="post">
+                        {% csrf_token %}
+                        
+
+                          <div class="col-md-12">
+                            <div class="form-check">
+                                <span><strong>Previsualize Permisos pendiente e Historicos</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+                                                <th class="table-dark ">#</th>
+                                                <th class="table-dark">Nombre Apellido</th>
+                                                
+                                                <th class="table-dark">Cargo</th>
+                                                <th class="table-dark">Supervisor</th>
+                                                <th class="table-dark">Dia Inicio</th>
+                                                <th class="table-dark">Dia Final</th>
+                                                <th class="table-dark">Dias</th>
+                                                <th class="table-dark">Tipo Permiso</th>
+                                                <th class="table-dark">Motivo Permiso</th>
+                                                <th class="table-dark">Agregado por</th>
+                                                <th class="table-dark">Estado Permiso</th>
+                                                <th class="table-dark">Documento</th>
+                                                <th class="table-dark">Aprobado por</th>
+                                                {% if nivel < 3 %} 
+                                                <th class="table-dark">Editar</th>
+                                                <th class="table-dark">Eliminar</th>
+                                                {% endif %}
+                                                
+                                                
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for clientes in lista_cliente %}
+                                                <tr>
+                                                    
+                                                    <td>{{ clientes.0 }}</td>
+                                                    <td>{{ clientes.1 }}</td>
+                                                    <td>{{ clientes.2 }}</td>
+                                                    <td>{{ clientes.3 }}</td>
+                                                    <td>{{ clientes.4 }}</td>
+                                                    <td>{{ clientes.5 }}</td>
+                                                    <td>{{ clientes.6 }}</td>
+                                                    <td>{{ clientes.7 }}</td>
+                                                    <td>{{ clientes.8 }}</td>
+                                                    <td>{{ clientes.9 }}</td>
+                                                    <td>
+                                                        {% if  clientes.10  == 'Pendiente' %}
+                                                            <span class="text-warning"><i class="bi bi-exclamation-diamond-fill"></i><br>Pendiente</span>
+                                                        {% elif clientes.10  == 'Aprobado' %}
+                                                            <span class="text-success"><i class="bi bi-check-circle-fill"></i><br>Aprobado</span>
+                                                            
+                                                        {% else %}
+                                                            <span class="text-danger"><i class="bi bi-ban-fill"></i><br>Cancelado</span>
+                                                            
+                                                        {% endif %}
+                                                        
+                                                    </td>
+                                                    <td>
+                                                        
+                                                        {% if  clientes.11  == '/no_hay_archivo' %}
+                                                        <a disabled class="page-link" target="_blank" href="#"><span ><i class="bi bi-file-arrow-down-fill"></i><br> No hay Archivo</span></a>
+
+                                                        {% else %}
+                                                            <a class="page-link" target="_blank" href="{{ MEDIA_URL }}{{ clientes.11 }}"><span ><i class="bi bi-file-arrow-down-fill"></i><br> Descargar</span></a>
+                                                            
+                                                        {% endif %}
+
+                                                        
+                                                    </td>
+                                                    <td>{{ clientes.12 }}</td>
+                                                    {% if nivel < 3 %} 
+                                                    <td>
+                                                        
+                                                        <span class="nav-item dropdown">
+                                                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <span class="text-success"><i class="bi bi-pen"></i></span>
+                                                            </a>
+                                                            <ul class="dropdown-menu dropdown-menu-dark form-check">
+                                                                
+                                                                <form  method="post">
+                                                                    {% csrf_token %}
+                                                                    <li>
+                                                                        <input type="text" class="form-control" id="validationCustom02" name="Editar" value="{{ clientes.0 }}"  hidden>
+                                                                        <button class="btn btn-primary" type="submit">Confirmar</button>
+                                                                    </li>
+                                                                    <li><a class="dropdown-item" href="#"><span> Cancelar </span></a></li>
+                                                                    
+
+                                                                </form>
+                                                            </ul>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        
+                                                        <span class="nav-item dropdown">
+                                                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <span class="text-danger"><i class="bi bi-trash-fill"></i></span>
+                                                            </a>
+                                                            <ul class="dropdown-menu dropdown-menu-dark form-check">
+                                                                <form  method="post">
+                                                                    {% csrf_token %}
+                                                                    <li>
+                                                                        <input type="text" class="form-control" id="validationCustom02" name="Borrar" value="{{ clientes.0 }}"  hidden>
+                                                                        <button class="btn btn-primary" type="submit">Confirmar</button>
+                                                                    </li>
+                                                                    <li><a class="dropdown-item" href="#"><span> Cancelar </span></a></li>
+                                                                    
+
+                                                                </form>
+                                                                  
+                                                              
+                                                              
+                                                              
+                                                              
+                                                            </ul>
+                                                        </span>
+                                                    </td>
+                                                    {% endif %}
+                                                    
+                                                    
+                                                    
+                                                    
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                          </div>
+                        
+                          
+                          
+                              
+                          </div>
+                        
+                      </form>
+                  </div>
+
+              </div>
+          
+
+    
+            
+            
+
+        </div>
+
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        
+        
+  
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

@@ -1,0 +1,229 @@
+
+<!doctype html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Reporte de Clientes -  Planilla</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        {% load static %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        
+        <div class="main-container d-flex">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+              <div class="col-md-8 mt-5 border rounded p-4 shadow">
+                   {% if agregado == 'existo' %}
+                   <h4 class="text-danger">  {{Mensaje}}  </h4>
+                   {% endif %}
+                  <div class="bd-example m-0 border-0">
+                      <form class="row g-3 needs-validation" method="post" >
+                        {% csrf_token %}
+
+                          
+                          <div class="col-md-3">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Total Clientes <i class="bi bi-people-fill"></i> {{TOTAL_C}}</strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  <li class="list-group-item">Personal Administrativo <i class="bi bi-people-fill"></i> <strong> {{admin}}</strong></li>
+                                  <li class="list-group-item">Personal Produccion <i class="bi bi-people-fill"></i> <strong> {{produccion}}</strong></li>
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                          <div class="col-md-5">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Elija Rango de Fechas de Pago Planilla<i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  
+                                  <li class="list-group-item">
+                                    <div class="col-md-12">
+                                        <label for="validationCustom01" class="form-label"><strong>Desde:</strong>  </label>
+                                        <br><input type="date" name="inicial" id="validationdate" required >
+                                        
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="col-md-12">
+                                        <label for="validationCustom01" class="form-label"><strong>Hasta:</strong>  </label>
+                                        <br><input type="date" name="final" id="validationdate" required >
+                                        
+                                    </div>
+                                  </li>
+                                
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                        
+                          <div class="col-md-4">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Visualizar de Planilla </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  
+                                  <li class="list-group-item"><button class="btn btn-success" type="submit"><i class="bi bi-play-circle-fill"></i>  Generar Reporte Planilla de Clientes</button></li>
+                                  
+                                  
+                                </ul>
+                              </div>
+                          </div>
+
+                          {% if request == 'POST' %}
+                            <div class="col-md-3">
+                            
+                            </div>
+                            <div class="col-md-5">
+                                <div class="card" >
+                                    <div class="card-header">
+                                        <a  class="link-dark text-decoration-none text-success" title="FILE_XLSX" href="{{ MEDIA_URL }}{{ name_1 }}" download>
+                                            <img src="{% static 'logo_excel.png' %}" alt="" class="logo_txt" style="width:60px ;"/>
+                                            <span class="fw-bold fs-6 d-inline-flex p-1 mt-1"> Descargar Estado Completo Planilla  <i class="bi bi-cloud-download-fill "></i></span>
+                                        </a>
+                                     </div>
+                                    
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                            
+                            </div>
+                           
+                        {% endif %}
+
+                          <div class="col-md-12">
+                            <div class="form-check">
+                                <span><strong>Clientes Activos</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+                                                <th class="table-dark ">#</th>
+                                                <th class="table-dark">Codigo Cliente</th>
+                                                <th class="table-dark">Empresa</th>
+                                                <th class="table-dark">Cedula Juridica</th>
+                                                
+                                                
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for clientes in lista_cliente %}
+                                                <tr>
+                                                    <td> {{ clientes.0 }}</td>
+                                                    <td>{{ clientes.1 }}</td>
+                                                    <td>{{ clientes.2 }}</td>
+                                                    <td>{{ clientes.3 }}</td>
+                                                    
+                                                    
+                                                    
+                                                    
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                          </div>
+
+                          
+                              
+                          
+                          <div class="col-12">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" id="invalidCheck" disabled >
+                              <label class="form-check-label" for="invalidCheck">
+                                  Inicie motor y asistencia de planilla automatizada para sus Colaboradores.
+                              </label>
+                            
+                            </div>
+                          </div>
+                        
+                      </form>
+                  </div>
+
+              </div>
+          </div> 
+
+    
+            
+            
+
+        </div>
+
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        
+        
+  
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

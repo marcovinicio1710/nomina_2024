@@ -1,0 +1,207 @@
+
+<!doctype html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Pagina Principal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+ 
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        {% load static %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        {% include 'categoria_2.html' %}
+        
+        <div class="container py-3">
+            <header>
+              <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+                <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="32" class="me-2" viewBox="0 0 118 94" role="img"><title>Bootstrap</title><path fill-rule="evenodd" clip-rule="evenodd" d="M24.509 0c-6.733 0-11.715 5.893-11.492 12.284.214 6.14-.064 14.092-2.066 20.577C8.943 39.365 5.547 43.485 0 44.014v5.972c5.547.529 8.943 4.649 10.951 11.153 2.002 6.485 2.28 14.437 2.066 20.577C12.794 88.106 17.776 94 24.51 94H93.5c6.733 0 11.714-5.893 11.491-12.284-.214-6.14.064-14.092 2.066-20.577 2.009-6.504 5.396-10.624 10.943-11.153v-5.972c-5.547-.529-8.934-4.649-10.943-11.153-2.002-6.484-2.28-14.437-2.066-20.577C105.214 5.894 100.233 0 93.5 0H24.508zM80 57.863C80 66.663 73.436 72 62.543 72H44a2 2 0 01-2-2V24a2 2 0 012-2h18.437c9.083 0 15.044 4.92 15.044 12.474 0 5.302-4.01 10.049-9.119 10.88v.277C75.317 46.394 80 51.21 80 57.863zM60.521 28.34H49.948v14.934h8.905c6.884 0 10.68-2.772 10.68-7.727 0-4.643-3.264-7.207-9.012-7.207zM49.948 49.2v16.458H60.91c7.167 0 10.964-2.876 10.964-8.281 0-5.406-3.903-8.178-11.425-8.178H49.948z" fill="currentColor"></path></svg>
+                  <span class="fs-4">Bienvenido {{user_profile_obj.Colaborador.Colaborador_nombre}} !</span>
+                </a>
+          
+                <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+                  <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url 'comprobantes_pagos/' %}">Comprobante de Pagos</a>
+                  <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url 'planilla-colaborador/' %}" >Planilla</a>
+                  <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url 'planilla-colaborador-fechas/' %}">Planilla Historico</a>
+                  <a class="py-2 link-body-emphasis text-decoration-none" href="{% url 'ver_planificacion/' %}">Ver Planificacion</a>
+                </nav>
+              </div>
+          
+              <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+                <h1 class="display-4 fw-normal text-body-emphasis">Estadísticas en los últimos 30 días</h1>
+                <p class="fs-5 text-body-secondary">Un breve repaso de las contribuciones y actividades de tus colaboradores y tú en los últimos 30 días.</p>
+              </div>
+            </header>
+          
+            <main>
+              <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+                <div class="col">
+                  <div class="card mb-4 rounded-3 shadow-sm">
+                    <div class="card-header py-3">
+                      <h4 class="my-0 fw-normal"><i class="bi bi-person-circle"></i></h4>
+                    </div>
+                    <div class="card-body">
+                      <h1 class="card-title pricing-card-title">{{qty}}<small class="text-body-secondary fw-light"><i class="bi bi-people-fill"></i></small></h1>
+                      <ul class="list-unstyled mt-3 mb-4">
+                        <li>Colaboradores Activos: <strong>{{lista_permisos.0}}</strong></li>
+                        <li>Colaboradores en Vacaciones: <strong>{{lista_permisos.3}}</strong></li>
+                        <li>Colaboradores Incapacitados: <strong>{{lista_permisos.2}}</strong></li>
+                        <li>Colaboradores en Licencia: <strong>{{lista_permisos.1}}</strong></li>
+                        
+                      </ul>
+                      <button type="button" class="w-100 btn btn-lg btn-outline-primary"><a href="{% url 'previsualizar-colaborador-1/' %}" class=" text-decoration-none">Ver Colaboradores</a></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="card mb-4 rounded-3 shadow-sm">
+                    <div class="card-header py-3">
+                      <h4 class="my-0 fw-normal">Tardias U.30 dias</h4>
+                    </div>
+                    <div class="card-body">
+                      <h1 class="card-title pricing-card-title">{{lista_tardia.0}}<small class="text-body-secondary fw-light">/min.</small></h1>
+                      <ul class="list-unstyled mt-3 mb-4">
+                        <li>Horas totales: <strong>{{lista_tardia.4}}</strong> hrs.</li>
+                        <li>Promedio Tardia: <strong>{{lista_tardia.1}}</strong> min.</li>
+                        <li>Dias Tardias: <strong>{{lista_tardia.2}}</strong> dias</li>
+                        <li>Colaboradores en Tardia: <strong>{{lista_tardia.3}}</strong> </li>
+                      </ul>
+                      <button type="button" class="w-100 btn btn-lg btn-primary"><a href="{% url 'ver_jornada/' %}" class=" text-decoration-none text-light">Ver Hoja Tiempo</a></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="card mb-4 rounded-3 shadow-sm border-primary">
+                    <div class="card-header py-3 text-bg-primary border-primary">
+                      <h4 class="my-0 fw-normal">SobreTiempo U. 30 dias</h4>
+                    </div>  
+                    <div class="card-body">
+                      <h1 class="card-title pricing-card-title">{{lista_sobret.0}}<small class="text-body-secondary fw-light">/min.</small></h1>
+                      <ul class="list-unstyled mt-3 mb-4">
+                        <li>Horas totales: <strong>{{lista_sobret.4}}</strong> hrs.</li>
+                        <li>Promedio SobreTiempo: <strong>{{lista_sobret.1}}</strong> min.</li>
+                        <li>Dias SobreTiempo: <strong>{{lista_sobret.2}}</strong> dias</li>
+                        <li>Colaboradores con SobreTiempo: <strong>{{lista_sobret.3}}</strong> </li>
+                      </ul>
+                      <button type="button" class="w-100 btn btn-lg btn-primary"><a href="{% url 'agregar-jornada-individual/' %}" class=" text-decoration-none text-light">Agregar Hoja Tiempo</a></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          
+              
+          
+              
+            </main>
+          
+            
+        </div>
+       
+       
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+          
+            
+
+             document.getElementById('checkExpand1').addEventListener('change', function() {
+                const expandableInputs = document.getElementById('expandableInputs1');
+                if (this.checked) {
+                    expandableInputs.style.display = 'block';
+                    } else {
+                expandableInputs.style.display = 'none';
+                    }
+            });
+
+            document.getElementById('checkExpand2').addEventListener('change', function() {
+                const expandableInputs = document.getElementById('expandableInputs2');
+                if (this.checked) {
+                    expandableInputs.style.display = 'block';
+                    } else {
+                expandableInputs.style.display = 'none';
+                    }
+            });
+
+            document.getElementById('checkExpand3').addEventListener('change', function() {
+                const expandableInputs = document.getElementById('expandableInputs3');
+                if (this.checked) {
+                    expandableInputs.style.display = 'block';
+                    } else {
+                expandableInputs.style.display = 'none';
+                    }
+            });
+
+            document.getElementById('checkExpand4').addEventListener('change', function() {
+                const expandableInputs = document.getElementById('expandableInputs4');
+                if (this.checked) {
+                    expandableInputs.style.display = 'block';
+                    } else {
+                expandableInputs.style.display = 'none';
+                    }
+            });
+
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_1').DataTable();
+            });
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_3').DataTable();
+            });
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_4').DataTable();
+            });
+
+
+
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

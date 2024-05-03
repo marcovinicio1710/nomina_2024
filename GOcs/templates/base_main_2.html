@@ -1,0 +1,424 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="#" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <style>
+
+        
+        /* Establece el ancho de la segunda columna */
+        
+        .action {
+            background-color: #d4e5f4;
+        }
+        .custom-column {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh; /* Ajusta esto según tus necesidades */
+            }
+
+            .custom-pill-background {
+                background: #3d3d3d;
+                border-radius: 25px; /* Controla la forma de la "pill" */
+                padding: 20px; /* Ajusta el espacio interno según tus necesidades */
+                box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2); /* Agrega sombra */
+            }
+        i{
+            width: 5rem;
+        }
+
+        
+        .img-logo{
+            width: 50px;
+        }
+        .barra-search{
+            min-width: 100px;
+            max-width: 500px;
+            width: 100%;
+            
+        }
+        .buscar-btn{
+            margin-left: 0.5rem;            
+        }
+
+        .fila{
+            background-color: aqua;
+            
+        }
+        .fila-1{
+            margin-top: 10px;
+            
+            
+        }
+
+        .categoria{
+            border: 1px black solid;
+        }
+        .margen-cat{
+            margin-top: 0.1rem;
+        }
+
+        .productos{
+        
+        display: grid;
+        grid-template-columns: repeat(5, 1fr );
+        gap: 10px  ;
+        
+        margin: 5px;
+        padding: 5px;
+        
+
+    }
+    .car-align{
+        
+        display: grid;
+        grid-template-columns: repeat(3, 1fr );
+        
+        
+        
+        
+
+    }
+
+    .btn-car{
+        min-width: 40px;
+
+    }
+
+    
+    .producto-indiv{
+        border: 1px gray solid;
+        border-radius: 15px;
+        height: 600px;
+        min-width: 200px;
+        text-align: center;
+    }
+    .rounded-15{border-radius: 15px;}
+    .border_especifo_product{
+        border: 1px red solid;
+        border-radius: 15px;
+    }
+    .valor_detallado{
+        
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+
+    .bi bi-bank{width: 500px;}
+    .btn-search{right: 5px;}
+    .btn-agregar{right: 10px;}
+
+    #side_nav{
+        background: #000;
+        min-width: 250px;
+        max-width: 250px;
+        transition: all 0.3s;
+    }
+
+    .content{
+        min-height: 100vh;
+        width: 100%;
+    }
+
+    hr.h-color{
+        background:#eee;
+    }
+
+    .sidebar li.active{
+        background: blue;
+        border-radius: 8px;
+        
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
+    
+
+    .sidebar li.active a, .sidebar li.active a:hover {
+        color: yellow;
+    }
+
+    .sidebar li a{
+       
+        border-radius: 8px;
+        border: 1px solid grey;
+        margin-top: 4px;
+        margin-bottom: 4px;
+        
+    }
+
+    .padd-10{padding-right: 10px;}
+
+    .size-font-sm{
+        font-size: small;
+    }
+
+    .size-font-m{
+        font-size:small;
+    }
+
+    .small-text-manual {
+        font-size: 11px; /* Puedes ajustar el tamaño del texto según tus necesidades */
+    }
+    .align-items-rightt{
+    float: right;}
+    .texto_responsive:before{
+  content: attr(data-desktoptext);
+    }
+    .img-main-logo{
+        max-height: 80px;
+        min-height: 15px;
+    }
+    .logo-navbar{
+        margin-right: 120px;
+    }
+
+    .smartphone{
+        height: 0;
+        width: 0;
+        image-resolution: 200;
+    }
+    .desktopp{
+        height: auto;
+        width: auto;
+        image-resolution: 200;
+    }
+
+    .contenedor-imagen {
+    width: 330px; /* Ancho deseado del contenedor */
+    height: 330px; /* Altura deseada del contenedor */
+    overflow: hidden; /* Evita que la imagen se desborde del contenedor */
+}
+
+/* Estilo para la imagen */
+.imagen {
+    width: 100%; /* La imagen ocupa todo el ancho del contenedor */
+    height: 100%; /* La imagen ocupa todo el alto del contenedor */
+    object-fit: cover; /* Ajusta la imagen para cubrir el contenedor sin distorsión */
+}
+
+.contenedor-imagen1 {
+    width: 32px; /* Ancho deseado */
+    height: 32px; /* Altura deseada */
+    overflow: hidden; /* Evita que la imagen se desborde */
+}
+
+.imagen1 {
+    width: 100%; /* La imagen ocupa todo el ancho del contenedor */
+    height: auto; /* La altura se ajusta automáticamente para mantener la proporción */
+    display: block; /* La imagen se muestra como un bloque */
+}
+   
+
+    @media(max-width:1300px){
+        .productos{
+            grid-template-columns: repeat(4, 1fr );
+
+        }
+
+     
+    
+    }
+
+    @media(max-width:1100px){
+        .productos{
+            grid-template-columns: repeat(3, 1fr );
+
+        }
+        
+    }
+
+    @media(max-width:900px){
+        .productos{
+            grid-template-columns: repeat(2, 1fr );
+
+        }
+        .texto_responsive:before {
+        content: attr(data-tablettext);
+    }
+    .logo-navbar{
+        margin-right: 3px;
+    }
+
+    .ancho-especifico-concepto {
+                width: 200px;
+                }
+        
+    }
+
+    @media(max-width:767px){
+
+        .desktopp{
+        height: 0;
+        width: 0;
+    }
+    .smartphone{
+        height: auto;
+        width: auto;
+        
+        image-resolution: 200;
+    }
+        #side_nav {margin-left: -250px;
+        position: absolute;
+        min-height: 100vh;
+        z-index: 1;}
+    
+        #side_nav.active{
+            margin-left: 0;
+
+        }
+        .logo-navbar{
+        margin-right: 3px;
+    }
+
+        .productos{
+            grid-template-columns: repeat(1, 1fr );
+
+        }
+        .texto_responsive:before {
+        content: attr(data-phonetext);
+    }
+    .btn-car{
+        min-width: 30px;
+
+    }
+    
+    }
+
+
+
+    
+    </style>
+
+   
+    {% block script %}{% endblock %}
+</head>
+<body>
+    <div class="container-fluid bg-body-tertiary">
+        <div class="row mt-3 mb-4">
+            <span class="mb-3"></span>
+        </div>
+        
+        
+
+        
+
+        <div class="shadow container-fluid bg-body-tertiary mt-2 mb-2  ">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start ">
+              <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+              </a>
+      
+              <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 ">
+                
+                <li><a href="/"><img src="{% static 'logo_payroll.jpg' %}"  width="90" height="64" class="rounded-circle mx-3" alt="logo principal"></a></li>
+                
+                <li><a href="{% url 'main' mensuales=12 liquidacion=12 %}" class="nav-link px-2  text-danger link-primary text-decoration-none  mt-1"><i class="bi bi-house-door-fill "></i> Menu principal</a></li>
+                {% if nivel < 3 %}
+                    <li><a href="{% url 'motor-planilla/' %}" class="nav-link px-2 link-body-emphasis text-dark link-primary text-decoration-none  mt-1"><i class="bi bi-calculator-fill"></i> Calculo de Nómina</a></li>
+                    <li><a href="{% url 'liquidar/' %}" class="nav-link px-2 link-body-emphasis text-dark link-primary text-decoration-none  mt-1"><i class="bi bi-calculator-fill"></i> Calculo de Liquidaciones</a></li>
+                {% endif %}
+                {% if nivel < 4 %}
+                    <li><a href="{% url 'reporte-quincena/' %}" class="nav-link px-2 link-body-emphasis text-dark link-primary text-decoration-none  mt-1"><i class="bi bi-folder-fill"></i> Reportes</a></li>
+                    <li><a href="{% url 'clientes/' %}" class="nav-link px-2 link-body-emphasis text-dark link-primary text-decoration-none  mt-1"><i class="bi bi-buildings-fill"></i> Clientes</a></li>
+                {% endif %}
+
+                {% if nivel > 0 %}
+                    <li><a href="{% url 'previsualizar-colaborador-1/' %}"class="nav-link px-2 link-body-emphasis text-dark link-primary text-decoration-none  mt-1"><i class="bi bi-person-vcard-fill"></i> Colaboradores</a></li>
+                
+                    <li><a href="{% url 'agregar-jornada-individual/' %}" class="nav-link px-2 link-body-emphasis text-dark link-primary text-decoration-none  mt-1"><i class="bi bi-hourglass-split"></i> Hoja de Tiempo</a></li>
+                    <li><a href="{% url 'ver-permisos/' %}" class="nav-link px-2 link-body-emphasis text-dark link-primary text-decoration-none  mt-1"><i class="bi bi-airplane-fill"></i> Permisos</a></li>
+                    <li><a  href="{% url 'Viaticos-supervisor/' %}" class="nav-link px-2 link-body-emphasis text-dark link-primary text-decoration-none  mt-1"><i class="bi bi-fuel-pump-fill"></i>  Viaticos Supervisor</a></li>
+                {% endif %}
+
+              
+                
+            </ul>
+      
+              <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+              </form>
+      
+              <div class="dropdown text-end ">
+                <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% if es_admin %}
+                        <img src="{{ MEDIA_URL }}{{ Pic }}" alt="mdo" width="32" height="32" class="rounded-circle mb-2">
+                    {% else %}
+                        <img src="{{ MEDIA_URL }}{{  user_profile_obj.Colaborador.imagen}}" alt="mdo" width="32" height="32" class="rounded-circle mb-2">
+                    {% endif %}
+                </a>
+                <ul class="dropdown-menu text-small">
+                    {% if user.is_authenticated %}
+                    <li><a class="dropdown-item" href="#">Hola <strong>{{ user.first_name }}!</strong></a></li>
+                    <li><a class="dropdown-item" href="{% url 'change-password' %}">Cambiar Clave</a></li>
+                    <li><a class="dropdown-item" href="{% url 'log-out' %}">Cerrar Sesion</a></li>
+                    
+                  {% else %}
+                    <a href="{% url 'sign-in' %}"><button type="button" class="btn btn-light text-dark me-2">Login</button></a>
+                    <a href="#"><button type="button" class="btn btn-primary">Sign-up</button></a>
+                  {% endif %}
+
+                   
+                  
+                  <li><a class="dropdown-item" href="#">Soporte Tecnico</a></li>
+                  
+                  <li><hr class="dropdown-divider"></li>
+                  
+                  
+                </ul>
+              </div>
+              <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+         
+            </div>
+          </div>
+    </div>
+    {% block content %}
+    {% endblock %}
+    
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+        <div class="row">
+          <div class="col-12 col-md">
+            <img class="mb-2" src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="24" height="19">
+            <small class="d-block mb-3 text-body-secondary">© 2017–2024</small>
+          </div>
+          <div class="col-6 col-md">
+            <h5>Features</h5>
+            <ul class="list-unstyled text-small">
+              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Cool stuff</a></li>
+              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Random feature</a></li>
+              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team feature</a></li>
+              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Stuff for developers</a></li>
+              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another one</a></li>
+              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Last time</a></li>
+            </ul>
+          </div>
+          <div class="col-6 col-md">
+            <h5>Resources</h5>
+            <ul class="list-unstyled text-small">
+              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource</a></li>
+              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource name</a></li>
+              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another resource</a></li>
+              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Final resource</a></li>
+            </ul>
+          </div>
+          <div class="col-6 col-md">
+            <h5>About</h5>
+            <ul class="list-unstyled text-small">
+              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team</a></li>
+              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Locations</a></li>
+              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Privacy</a></li>
+              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Terms</a></li>
+            </ul>
+          </div>
+        </div>
+    </footer>
+</body>
+</html>

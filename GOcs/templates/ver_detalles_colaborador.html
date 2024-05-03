@@ -1,0 +1,623 @@
+
+<!doctype html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Ver Datos Colaborador</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        
+        <div class="main-container d-flex">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+                <div class="col-md-8 mt-5 border rounded p-4 shadow">
+                 
+                    <div class="bd-example m-0 border-0">
+                        <form class="row g-3 needs-validation" method="post">
+                          {% csrf_token %}
+                          <div class="col-md-4">
+                            <div class="contenedor-imagen">
+                                <img src="{{ MEDIA_URL }}{{ foto }}" alt="mdo" class="imagen mb-2">
+                            </div>
+                        </div>
+                          <div class="col-md-4">
+                            <div class="card shadow" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Datos de Colaborador</strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  <li class="list-group-item"><strong>Nombre y Apellido : </strong> {{Colaborador_obj.Colaborador_nombre}} {{Colaborador_obj.Colaborador_apellido}}  </li>
+                                  <li class="list-group-item"><strong>Fecha Ingreso: </strong> {{Colaborador_obj.Fecha_Ingreso}} </li>
+                                  <li class="list-group-item"><strong>Identificacion: </strong> {{Colaborador_obj.Tipo_documento}} {{Colaborador_obj.Nro_Identificacion}}  </li>
+                                  <li class="list-group-item"><strong>Seguro Social: </strong> {{Colaborador_obj.Nro_Seguro_Social}}  </li>
+                                  <li class="list-group-item"><strong>Cargo: </strong> {{Colaborador_obj.Cargo}}  </li>
+                                  <li class="list-group-item"><strong>Departamento: </strong> {{Colaborador_obj.Departamento}}  </li>
+                                  <li class="list-group-item"><strong>Supervisor: </strong> {{Colaborador_obj.Supervisor}}  </li>
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                          <div class="col-md-4 ">
+                            <div class="card shadow" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Datos de Personales</strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  <li class="list-group-item"><strong>Sexo : </strong> {{Colaborador_obj.Sexo}}  </li>
+                                  <li class="list-group-item"><strong>Fecha Nacimiento: </strong> {{Colaborador_obj.Fecha_nacimiento}} </li>
+                                  <li class="list-group-item"><strong>Estado Civil: </strong> {{Colaborador_obj.Estado_civil}}  </li>
+                                  <li class="list-group-item"><strong>Telefono: </strong> {{Colaborador_obj.Telefono}}  </li>
+                                  <li class="list-group-item"><strong>Correo: </strong> {{Colaborador_obj.Correo}}  </li>
+                                  <li class="list-group-item"><strong>Contanto Urgencia: </strong> {{Colaborador_obj.Contanto_Urgencia}}  </li>
+                                  <li class="list-group-item"><strong>Telefono Urgencia: </strong> {{Colaborador_obj.Telefono_Urgencia}}  </li>
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                          <!--  Tipo de documento  --> 
+                          <div class="col-md-4">
+                            <div class="card shadow" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Datos de Personales (2)</strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  <li class="list-group-item"><strong>Direccion : </strong> {{Colaborador_obj.Direccion}}  </li>
+                                  <li class="list-group-item"><strong>Ciudad: </strong> {{Colaborador_obj.Ciudad}} </li>
+                                  <li class="list-group-item"><strong>Pais: </strong> {{Colaborador_obj.Pais}}  </li>
+                                  <li class="list-group-item"><strong>Profesion: </strong> {{Colaborador_obj.Profesion}}  </li>
+                                  <li class="list-group-item"><strong>Hijos: </strong> {{Colaborador_obj.Nro_Hijos}}  Hijos</li>
+                                  <li class="list-group-item"><strong>Licencia_Vehicular: </strong> {{Colaborador_obj.Posee_Licencia_Vehicular}}  </li>
+                                  <li class="list-group-item"><strong>Posee Carro Vehicular: </strong> {{Colaborador_obj.Posee_Carro_Vehicular}}  </li>
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                          
+                          <div class="col-md-4">
+                            <div class="card shadow" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Datos Laborales</strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  {% if Colaborador_obj.Tipo_contrato == "Contrato_Indefinido" %}
+                                      <li class="list-group-item"><strong>Tipo Contrato:</strong> Contrato Indefinido</li>
+                                  {% else %}
+                                     <li class="list-group-item"><strong>Tipo Contrato:</strong> Contrato Definido</li>
+                                  {% endif %}
+                                  <li class="list-group-item"><strong>Status: </strong> {{Colaborador_obj.Status}} </li>
+                                  <li class="list-group-item"><strong>Hora Entrada: </strong> {{Colaborador_obj.Hora_entrada}}  </li>
+                                  <li class="list-group-item"><strong>Hora Salida: </strong> {{Colaborador_obj.Hora_salida}}  </li>
+                                  {% if Colaborador_obj.Dia_descanso_1 == 0 %}
+                                    <li class="list-group-item"><strong>Dia Descanso 1:</strong> Lunes</li>
+                                  {% elif Colaborador_obj.Dia_descanso_1 == 1 %}
+                                    <li class="list-group-item"><strong>Dia Descanso 1:</strong> Martes</li>
+                                  {% elif Colaborador_obj.Dia_descanso_1 == 2 %}
+                                     <li class="list-group-item"><strong>Dia Descanso 1:</strong> Miércoles</li>
+                                  {% elif Colaborador_obj.Dia_descanso_1 == 3 %}
+                                    <li class="list-group-item"><strong>Dia Descanso 1:</strong> Jueves</li>
+                                  {% elif Colaborador_obj.Dia_descanso_1 == 4 %}
+                                     <li class="list-group-item"><strong>Dia Descanso 1:</strong> Viernes</li>
+                                  {% elif Colaborador_obj.Dia_descanso_1 == 5 %}
+                                      <li class="list-group-item"><strong>Dia Descanso 1:</strong> Sábado</li>
+                                  {% elif Colaborador_obj.Dia_descanso_1 == 6 %}
+                                      <li class="list-group-item"><strong>Dia Descanso 1:</strong> Domingo</li>
+                                  {% else %}
+                                     <li class="list-group-item"><strong>Dia Descanso 1:</strong> No aplica</li>
+                                  {% endif %}
+                                  <li class="list-group-item">
+                                    <strong>Dia Descanso 2:</strong>
+                                    {% if Colaborador_obj.Dia_descanso_2 == 0 %}
+                                        Lunes
+                                    {% elif Colaborador_obj.Dia_descanso_2 == 1 %}
+                                        Martes
+                                    {% elif Colaborador_obj.Dia_descanso_2 == 2 %}
+                                        Miércoles
+                                    {% elif Colaborador_obj.Dia_descanso_2 == 3 %}
+                                        Jueves
+                                    {% elif Colaborador_obj.Dia_descanso_2 == 4 %}
+                                        Viernes
+                                    {% elif Colaborador_obj.Dia_descanso_2 == 5 %}
+                                        Sábado
+                                    {% elif Colaborador_obj.Dia_descanso_2 == 6 %}
+                                        Domingo
+                                    {% else %}
+                                        No aplica
+                                    {% endif %}
+                                    
+                                </li>
+                                  <li class="list-group-item"><strong>Almuerza: </strong> {{Colaborador_obj.Almuerzo_bool}} <strong>Hr Almuerzo: </strong>  {{Colaborador_obj.Inicio_Hora_Almuerzo}} </li>
+                                  <li class="list-group-item"><strong>Jornada Diaria Equitativa: </strong> {{Colaborador_obj.Jornada_Laboral_Equitativa_Semanal}} </li>
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                          
+                          <div class="col-md-4">
+                            <div class="card shadow" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Datos Laborales (2)</strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  <li class="list-group-item"><strong>Fecha Ingreso : </strong> {{Colaborador_obj.Fecha_Ingreso}}  </li>
+                                  <li class="list-group-item"><strong>Fecha Egreso: </strong> {{Colaborador_obj.Fecha_Egreso}} </li>
+                                  <li class="list-group-item"><strong>Jornada Diaria: </strong> {{Colaborador_obj.Jornada_diaria}} Hrs. </li>
+                                  <li class="list-group-item"><strong>Jornada Semanal: </strong> {{Colaborador_obj.Jornada_semanal}} Hrs.  </li>
+                                  <li class="list-group-item"><strong>Tipo Jornada: </strong> {{Colaborador_obj.Tipo_Jornada}} </li>
+                                  
+                                  <li class="list-group-item"><strong>Tipo Pago: </strong> {{Colaborador_obj.Tipo_pago}} <strong>Tipo Cta: </strong>  {{Colaborador_obj.Tipo_cuenta}}  </li>
+                                  <li class="list-group-item"><strong>Banco: </strong> {{Colaborador_obj.Nombre_Banco}} <strong>Nro Cta: </strong>  {{Colaborador_obj.Nro_cuenta}} </li>
+                                  <li class="list-group-item"><strong>Permiso Usuario: </strong> {{Colaborador_obj.Usuario_permiso}} <strong> </li>
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                          <br>
+                          <div class="col-md-4">
+                            <div class="card shadow" >
+                                <div class="card-header">
+                                  <a href="{% url 'ver_carta_trabajo/' searched=pk_colaborador  %}"><i class="bi bi-file-earmark-word-fill"></i> Contrato Laboral Colaborador</a>
+                                </div>
+                                
+                              </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="card shadow" >
+                                <div class="card-header">
+                                  <a href="{% url 'ver_constacia_trabajo/' searched=pk_colaborador  %}"><i class="bi bi-file-earmark-word-fill"></i> Carta de Trabajo Colaborador</a>
+                                </div>
+                                
+                              </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="card shadow" >
+                                <div class="card-header">
+                                  <a href="{% url 'modificar-colaborador/' searched=pk_colaborador  %}">Modificar Colaborador</a>
+                                </div>
+                                
+                              </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="card shadow" >
+                                <div class="card-header">
+                                  <a href="{% url 'ver_archivos_colaborador' searched=pk_colaborador  %}"> <i class="bi bi-file-earmark-arrow-up"></i> Ver y Cargar Archivos e Imagenes de Colaborador</a>
+                                </div>
+                                
+                              </div>
+                          </div>
+                          
+                          <br>
+                          <div class="col-md-4">
+                            
+                          </div>
+                          <br>
+                          <div class="col-md-4">
+                           
+                          </div>
+                          <!--  Planilla  --> 
+                          <div class="col-md-12   custom-pill-background mt-2">
+                            <form class="row mt-4 g-3 needs-validation d-flex justify-content-center text-primary custom-pill-background mt-2" method="post" >
+                                {% csrf_token %}
+                                
+
+                                <span class=" text-light">Tilda el checkbox para Visualizar Desglose de Pago Planilla</span>
+                                
+                                <div>
+                                    <div class="mb-3">
+                                        <input type="checkbox" id="checkExpand1" class="form-check-input" name="Activo1" value="1">
+                                        <label for="checkExpand1" class="form-label"> <span class="fw-bold text-light">Despliegue Historico de Pago Planilla</span> </label>
+                                    </div>
+                                    <div id="expandableInputs1" style="display: none;">
+                                     
+                                        
+                                        <div class="col-md-12 position-relative">
+                                            
+                                          <div class="table-responsive mt-4 shadow">
+                                            <table  id="miTabla" class="table table-dark table-hover table-bordered table-striped  text-center display ">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="table-light ">Ver #</th>
+                                                        <th class="table-light">Sueldo Nominal</th>
+                                                        
+                                                        <th class="table-light">Periodo</th>
+                                                        <th class="table-light">Fecha Pago</th>
+                                                        
+                                                        <th class="table-light">Sobretiempo</th>
+                                                        <th class="table-light">Salario Bruto</th>
+                                                        <th class="table-light">Vacaciones</th>
+                                                        <th class="table-light">XIII</th>
+                                                        <th class="table-light">Bonos</th>
+                                                        <th class="table-light">Salario Neto</th>
+                                                        
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for clientes in lista_ajustes %}
+                                                        <tr>
+                                                            
+                                                            <td ><a href="{% url 'planilla-detalles/' searched=clientes.pk  %}" target="blank">{{ clientes.pk  }}</a></td>
+                                                            <td>{{ clientes.Sueldo_quincenal }}</td>
+                                                            <td>{{ clientes.Periodo }}</td>
+                                                            <td>{{ clientes.Fecha_pago_quincena }}</td>
+                                                            
+                                                            <td>{{ clientes.Pago_Total_Sobretiempo_quincenal|floatformat:2 }}</td>
+                                                            <td>{{ clientes.Pago_quincena_despues_descuento|floatformat:2}}</td>
+                                                            <td>{{ clientes.Pago_Vacaciones|floatformat:2}}</td>
+                                                            <td>{{ clientes.Pago_XIII_periodo_Bruto|floatformat:2}}</td>
+                                                            <td>{{ clientes.Pago_Bono_sin_Impuesto|floatformat:2}}</td>
+                                                            <td><span class=" small-text-manual"><button  class="btn btn-success size-font-sm" type="button"><i class="bi bi-plus-circle-fill"></i> {{ clientes.Pago_Sueldo_neto|floatformat:2 }}</button></span></td>
+                                                      
+                                                        </tr>
+                                                    {% endfor %}
+                                                    
+                                                    <!-- Agrega más filas según sea necesario -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        </div>
+                                    </div>
+                                  
+                                 
+                                </div>
+                                
+                                
+                            </form>
+                          </div>
+                          <br>
+                          <!--  Vacaciones  --> 
+                          <div class="col-md-12   custom-pill-background mt-2">
+                            <form class="row mt-4 g-3 needs-validation d-flex justify-content-center text-primary custom-pill-background mt-2" method="post" >
+                                {% csrf_token %}
+                                
+
+                                <span class=" text-light">Tilda el checkbox para Visualizar Desglose de Vacaciones y Permiso</span>
+                                
+                                <div>
+                                    <div class="mb-3">
+                                        <input type="checkbox" id="checkExpand2" class="form-check-input" name="Activo1" value="1">
+                                        <label for="checkExpand2" class="form-label"> <span class="fw-bold text-light">Despliegue Historico de Vacaciones y Permisos</span> </label>
+                                    </div>
+                                    <div id="expandableInputs2" style="display: none;">
+                                     
+                                        
+                                        <div class="col-md-12 position-relative">
+                                            
+                                          <div class="table-responsive mt-4 shadow">
+                                            <table  id="miTabla_1" class="table table-dark table-hover table-bordered table-striped  text-center display ">
+                                                <thead>
+                                                  <tr>
+                                                    <th class="table-light ">Ver #</th>
+                                                    <th class="table-light">Tipo Permiso</th>
+                                                    <th class="table-light">Motivo Permiso</th>
+                                                    <th class="table-light">Estado Permiso</th>
+                                                    <th class="table-light">Fecha Inicio</th>
+                                                    <th class="table-light">Fecha Final</th>
+                                                    <th class="table-light">Dias</th>
+                                                    <th class="table-light">Documento</th>
+                                                   
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for clientes in lista_permiso %}
+                                                        <tr>
+                                                            
+                                                            <td >{{ clientes.pk  }}</td>
+                                                            <td>{{ clientes.Tipo_permiso }}</td>
+                                                            <td>{{ clientes.Comentario_Permiso }}</td>
+                                                            <td>{{ clientes.Estado_Permiso }}</td>
+                                                            <td>{{ clientes.Dia_inicio_permiso }}</td>
+                                                            <td>{{ clientes.Dia_fin_permiso}}</td>
+                                                            <td><span ><button  class="btn btn-success size-font-sm" type="button"><i class="bi bi-plus-circle-fill"></i> {{ clientes.Dias_permiso }}</button></span></td>
+                                                            <td>
+                                                        
+                                                              {% if  clientes.Documento_permiso  == '/no_hay_archivo' %}
+                                                              <a disabled class="page-link" target="_blank" href="#"><span ><i class="bi bi-file-arrow-down-fill"></i><br> No hay Archivo</span></a>
+      
+                                                              {% else %}
+                                                                  <a class="page-link" target="_blank" href="{{ MEDIA_URL }}{{ clientes.Documento_permiso }}"><span ><i class="bi bi-file-arrow-down-fill"></i><br> Descargar</span></a>
+                                                                  
+                                                              {% endif %}
+      
+                                                              
+                                                          </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    
+                                                    <!-- Agrega más filas según sea necesario -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        </div>
+                                    </div>
+                                  
+                                 
+                                </div>
+                                
+                                
+                            </form>
+                          </div>
+                          <br>
+                          <!--  Acreedores  --> 
+                          <div class="col-md-12   custom-pill-background mt-2">
+                            <form class="row mt-4 g-3 needs-validation d-flex justify-content-center text-primary custom-pill-background mt-2" method="post" >
+                                {% csrf_token %}
+                                
+
+                                <span class=" text-light">Tilda el checkbox para Visualizar Desglose de Acreedores</span>
+                                
+                                <div>
+                                    <div class="mb-3">
+                                        <input type="checkbox" id="checkExpand3" class="form-check-input" name="Activo1" value="1">
+                                        <label for="checkExpand3" class="form-label"> <span class="fw-bold text-light">Despliegue Historico de Acreedores</span> </label>
+                                    </div>
+                                    <div id="expandableInputs3" style="display: none;">
+                                     
+                                        
+                                        <div class="col-md-12 position-relative">
+                                            
+                                          <div class="table-responsive mt-4 shadow">
+                                            <table  id="miTabla_3" class="table table-dark table-hover table-bordered table-striped  text-center display ">
+                                                <thead>
+                                                  <tr>
+                                                    <th class="table-light ">Ver #</th>
+                                                    <th class="table-light">Tipo Acreedor</th>
+                                                    <th class="table-light">Nombre Acreedor</th>
+                                                    <th class="table-light">Motivo Acreedor</th>
+                                                    <th class="table-light">Estado Acreedor</th>
+                                                    <th class="table-light">Fecha Inicio</th>
+                                                    <th class="table-light">Fecha Final</th>
+                                                    <th class="table-light">Cuotas</th>
+                                                    <th class="table-light">Monto Mensual</th>
+                                                    <th class="table-light">Documento</th>
+                                                   
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for clientes in lista_acreedor %}
+                                                        <tr>
+                                                            
+                                                            <td >{{ clientes.pk  }}</td>
+                                                            <td >{{ clientes.Tipo_acreeditor }}</td>
+                                                            <td>{{ clientes.Nombre_acreeditor }}</td>
+                                                            <td class="col-3">{{ clientes.Comentario_Permiso }}</td>
+                                                            <td>{{ clientes.Estado_Permiso }}</td>
+                                                            <td>{{ clientes.Dia_inicio_cobro }}</td>
+                                                            <td>{{ clientes.Dia_fin_cobro}}</td>
+                                                            
+                                                            <td><span ><button  class="btn btn-success size-font-sm" type="button"><i class="bi bi-plus-circle-fill"></i> {{ clientes.cuotas_restante }} de  {{ clientes.Meses_de_cobro }} </button></span></td>
+                                                            <td>{{ clientes.Monto_mensual}}</td>
+                                                            <td>
+                                                              {% if  clientes.Documento_permiso  == '/no_hay_archivo' %}
+                                                              <a disabled class="page-link" target="_blank" href="#"><span ><i class="bi bi-file-arrow-down-fill"></i><br> No hay Archivo</span></a>
+      
+                                                              {% else %}
+                                                                  <a class="page-link" target="_blank" href="{{ MEDIA_URL }}{{ clientes.Documento_permiso }}"><span ><i class="bi bi-file-arrow-down-fill"></i><br> Descargar</span></a>
+                                                                  
+                                                              {% endif %}
+      
+                                                              
+                                                          </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    
+                                                    <!-- Agrega más filas según sea necesario -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        </div>
+                                    </div>
+                                  
+                                 
+                                </div>
+                                
+                                
+                            </form>
+                          </div>
+                          <br>
+                          <!--  Sueldop Sipe viejo  --> 
+                          <div class="col-md-12   custom-pill-background mt-2">
+                            <form class="row mt-4 g-3 needs-validation d-flex justify-content-center text-primary custom-pill-background mt-2" method="post" >
+                                {% csrf_token %}
+                                
+
+                                <span class=" text-light">Tilda el checkbox para Visualizar Desglose de Sueldo de Importacion</span>
+                                
+                                <div>
+                                    <div class="mb-3">
+                                        <input type="checkbox" id="checkExpand4" class="form-check-input" name="Activo1" value="1">
+                                        <label for="checkExpand4" class="form-label"> <span class="fw-bold text-light">Despliegue Historico de Sueldo de Importacion</span> </label>
+                                    </div>
+                                    <div id="expandableInputs4" style="display: none;">
+                                     
+                                        
+                                        <div class="col-md-12 position-relative">
+                                            
+                                          <div class="table-responsive mt-4 shadow">
+                                            <table  id="miTabla_4" class="table table-dark table-hover table-bordered table-striped  text-center display ">
+                                                <thead>
+                                                  <tr>
+                                                        <th class="table-light ">Ver #</th>
+                                                        <th class="table-light">Año</th>
+                                                        <th class="table-light">Mes</th>
+                                                        <th class="table-light">Sueldo Bruto</th>
+                                                        <th class="table-light">Vacaciones</th>
+                                                        <th class="table-light">XIII</th>
+                                                        <th class="table-light">Salario Ajustado</th>
+                                                   
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for clientes in lista_sueldo_importaciones %}
+                                                        <tr>
+                                                            
+                                                            <td >{{ clientes.pk  }}</td>
+                                                            <td >{{ clientes.year  }}</td>
+                                                            <td >{{ clientes.mes  }}</td>  
+                                                            <td >{{ clientes.total_sueldo  }}</td>
+                                                            <td >{{ clientes.total_vacaciones  }}</td>
+                                                            <td >{{ clientes.total_xxi  }}</td>
+                                                            <td >{{ clientes.total_sueldo_ajustado  }}</td>
+                                                            
+      
+                                                              
+                                                          </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    
+                                                    <!-- Agrega más filas según sea necesario -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        </div>
+                                    </div>
+                                  
+                                 
+                                </div>
+                                
+                                
+                            </form>
+                          </div>
+                          <br>
+                          
+                          
+
+                          <div class="col-12">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                              <label class="form-check-label" for="invalidCheck">
+                                Acepto la información suministrada, la cual solo podrá ser modificada unicamente por el administrador o el Representante Legal de la Empresa.
+                              </label>
+                              <div class="invalid-feedback">
+                                You must agree before submitting.
+                              </div>
+                            </div>
+                          </div>
+                          
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            
+
+        </div>
+       
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+          
+            
+
+             document.getElementById('checkExpand1').addEventListener('change', function() {
+                const expandableInputs = document.getElementById('expandableInputs1');
+                if (this.checked) {
+                    expandableInputs.style.display = 'block';
+                    } else {
+                expandableInputs.style.display = 'none';
+                    }
+            });
+
+            document.getElementById('checkExpand2').addEventListener('change', function() {
+                const expandableInputs = document.getElementById('expandableInputs2');
+                if (this.checked) {
+                    expandableInputs.style.display = 'block';
+                    } else {
+                expandableInputs.style.display = 'none';
+                    }
+            });
+
+            document.getElementById('checkExpand3').addEventListener('change', function() {
+                const expandableInputs = document.getElementById('expandableInputs3');
+                if (this.checked) {
+                    expandableInputs.style.display = 'block';
+                    } else {
+                expandableInputs.style.display = 'none';
+                    }
+            });
+
+            document.getElementById('checkExpand4').addEventListener('change', function() {
+                const expandableInputs = document.getElementById('expandableInputs4');
+                if (this.checked) {
+                    expandableInputs.style.display = 'block';
+                    } else {
+                expandableInputs.style.display = 'none';
+                    }
+            });
+
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_1').DataTable();
+            });
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_3').DataTable();
+            });
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_4').DataTable();
+            });
+
+
+
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

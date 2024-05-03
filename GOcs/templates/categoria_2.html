@@ -1,0 +1,264 @@
+<nav class="navbar navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#"><i class="bi bi-graph-up-arrow"></i> Total Payroll Pro <i class="bi bi-graph-up-arrow"></i></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Planilla y Recursos Humanos</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+
+            {% if nivel < 3 %}
+            {% endif %}
+
+            {% if nivel < 3 %}
+            
+            
+            <li class="nav-item dropdown">
+                
+
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-buildings-fill"></i> Empresa
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark form-check">
+                      
+                  
+                  <li><a class="dropdown-item" href="{% url 'inicio-empresa/' %}"><span><i class="bi bi-person-fill-add"></i> Informacion Inicial Empresa</span></a></li>
+                  <li><a class="dropdown-item" href="#"><span><i class="bi bi-person-fill-gear"></i> Modificar Informacion Empresa</span></a></li>
+                  <li><a class="dropdown-item" href="{% url 'clientes/' %}"><span><i class="bi bi-person-bounding-box"></i> Lista de Clientes</span></a></li>
+                  <li><a class="dropdown-item" href="{% url 'dias-feriados/' %}"><span><i class="bi bi-airplane-fill"></i> Agregar Fecha de Feriados</span></a></li>
+                  <li><a class="dropdown-item" href="{% url 'Agregar_Departamento' %}"><span><i class="bi bi-building-fill-add"></i> Agregar Departamentos</span></a></li>
+                  <li><a class="dropdown-item" href="#"><span><i class="bi bi-calendar2-heart-fill"></i> Dias de Licencia</span></a></li>
+                  
+                  
+                  
+                </ul>
+            </li>
+            {% endif %}
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-person-vcard-fill"></i> Colaboradores
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark form-check">
+                    
+               
+                <li><a class="dropdown-item" href="{% url 'agregar-colaborador/' %}"><span><i class="bi bi-person-fill-add"></i> Agregar Colaborador</span></a></li>
+                
+                
+               
+                <li><a class="dropdown-item" href="{% url 'previsualizar-colaborador/' %}"><span><i class="bi bi-person-fill-gear"></i> Modificar Colabordor</span></a></li>
+               
+               
+                
+                <li><a class="dropdown-item" href="{% url 'previsualizar-colaborador-1/' %}"><span><i class="bi bi-person-bounding-box"></i> Ver Detalle Colaboradores</span></a></li>
+                {% if nivel < 3 %}
+                <li><a class="dropdown-item" href="{% url 'agregar-acreedores/' %}"><span><i class="bi bi-cash-stack"></i> Préstamos o Retención Acreedores</span></a></li>
+                <li><a class="dropdown-item" href="{% url 'ver-acreedores/' %}"><span><i class="bi bi-search"></i> Previsualizar Acreedores  <span class="badge text-bg-secondary">{{ qty_notificaciones_acreedores }}</span></span></a></li>
+                {% endif %}
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-airplane-fill"></i> Permisos
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark form-check">
+                    
+                <li><a class="dropdown-item" href="{% url 'agregar-permisos/' %}"><span><i class="bi bi-plus-circle"></i> Agregar Permisos o Vacaciones</span></a></li>
+                <li><a class="dropdown-item" href="{% url 'ver-permisos/' %}"><span><i class="bi bi-search"></i> Previsualizar Permisos</span></a></li>
+                    
+                  {% if nivel < 3 %}
+                  <li><a class="dropdown-item" href="{% url 'validar-permisos' %}"><span><i class="bi bi-send-check-fill"></i> Pendientes y Aprobaciones  <span class="badge text-bg-secondary">{{ qty_notificaciones_permisos }}</span> </span></a></li>
+                
+                   {% endif %}
+                
+              </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-fuel-pump-fill"></i> Viaticos y otros Gastos Fijos
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark form-check">
+                    {% if nivel < 3 %} 
+                        <li><a class="dropdown-item" href="{% url 'Viaticos/' %}"><span><i class="bi bi-plus-circle"></i> Agregar Viaticos y Otros Gastos Fijos</span></a></li>  
+                    {% endif %}
+                
+                <li><a class="dropdown-item" href="{% url 'Viaticos-supervisor/' %}"><span><i class="bi bi-plus-circle"></i> Agregar Ajuste Planilla Supervisores</span></a></li>
+                <li><a class="dropdown-item" href="{% url 'ver-viacticos/' %}"><span><i class="bi bi-search"></i> Previsualizar Viaticos y Otros Gastos</span></a></li>
+                
+                
+                
+              </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-calendar-check-fill"></i> Planificacion de Jornadas Laborales
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark form-check">
+                    
+                <li><a class="dropdown-item" href="{% url 'agregar-planificacion/' %}"><span><i class="bi bi-plus-circle"></i> Agregar Planificacion de Jornadas Laborales</span></a></li>
+                
+                <li><a class="dropdown-item" href="{% url 'ver_planificacion/' %}"><span><i class="bi bi-search"></i> Previsualizar Planificacion de Jornadas </span></a></li>
+                
+                
+                
+              </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-hourglass-split"></i> Hoja de Tiempo
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark form-check">
+                      
+                  
+                  <li><a class="dropdown-item" href="{% url 'agregar-jornada-individual/' %}"><span><i class="bi bi-calendar-plus-fill"></i> Agregar Jornadas Laborales Individual</span></a></li>
+                  <li><a class="dropdown-item" href="{% url 'agregar-jornada-masiva' %}" ><span><i class="bi bi-calendar-week-fill"></i> Agregar Jornadas Laborales Masiva</span></a></li>
+                  
+                  <li><a class="dropdown-item" href="{% url 'ver_jornada/' %}"><span><i class="bi bi-person-down"></i> Previsualizar Jornada Colaborador </span></a></li>
+                  
+                  
+                  
+                </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-calculator-fill"></i> Planilla
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark form-check">
+                      
+                     {% if nivel < 3 %}
+                        <li><a class="dropdown-item" href="{% url 'motor-planilla/' %}"><span><i class="bi bi-calculator-fill"></i> <i class="bi bi-coin"></i> Motor de Calculo Nómina </span></a></li>
+                        <li><a class="dropdown-item" href="{% url 'txt-quincena/' %}"><span><i class="bi bi-calculator-fill"></i> <i class="bi bi-file-earmark-font-fill"></i> Descarga .Txt Pago Nomina </span></a></li>
+                        <li><a class="dropdown-item" href="{% url 'planilla-cliente-fechas/' %}"><span><i class="bi bi-calculator-fill"></i> <i class="bi bi-buildings-fill"></i> Previsualizar Planilla por Cliente</span></a></li>
+                      {% endif %}
+                    
+                    <li><a class="dropdown-item" href="{% url 'planilla-colaborador/' %}" ><span><i class="bi bi-calculator-fill"></i> <i class="bi bi-person-circle"></i> Previsualizar Planilla por Colaborador</span></a></li>
+                    <li><a class="dropdown-item" href="{% url 'planilla-colaborador-fechas/' %}" ><span><i class="bi bi-calculator-fill"></i> <i class="bi bi-person-circle"></i>Historico de Planilla por Colaborador</span></a></li>
+                    
+                    
+                    <li><a class="dropdown-item" href="{% url 'comprobantes_pagos/' %}"><span><i class="bi bi-calculator-fill"></i> <i class="bi bi-mailbox2"></i> Comprobante De Pagos </span></a></li>
+                    
+                    
+                  </ul>
+            </li>
+            
+    {% if nivel < 4 %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                 <i class="bi bi-person-fill-x"></i> Liquidaciones
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark form-check">
+                      
+                  
+                <li><a class="dropdown-item" href="{% url 'liquidar/' %}"><span><i class="bi bi-person-fill-x"></i>  Liquidar Colaborador </span></a></li>
+                <li><a class="dropdown-item" href="{% url 'liquidaciones-historico/' %}" ><span><i class="bi bi-person-lines-fill"></i> Historico de Liquidaciones</span></a></li>
+               
+                
+                
+                
+              </ul>
+            </li>
+     
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-bar-chart-line-fill"></i> Estadisticas Individuales
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark form-check">
+                      
+                  
+                <li><a class="dropdown-item" href="{% url 'analisis-fechas-colaborador' %}"><span><i class="bi bi-bar-chart-line-fill"></i> Analisis Individuales Colaborador </span></a></li>
+              
+                
+              </ul>
+            </li>
+    {% endif %}          
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-bar-chart-line-fill"></i> Estadisticas Globales
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark form-check">
+                        
+                  {% if nivel < 3 %} 
+                  <li><a class="dropdown-item" href="{% url 'analisis-quincenas/' %}" ><span><i class="bi bi-hourglass-bottom"></i> Analisis Quincenas </span></a></li>
+                  <li><a class="dropdown-item" href="{% url 'analisis-cliente' mensuales=12 cliente=0 buscador=0 %}"><span><i class="bi bi-briefcase-fill"></i> Analisis Clientes</span></a></li>
+                 
+                  
+                  <li><a class="dropdown-item" href="{% url 'analisis-colaborador' mensuales=12 cliente=0 buscador=0 %}"><span><i class="bi bi-graph-up-arrow"></i> Analisis Colaborador</span></a></li>
+                  {% endif %}
+                  
+                  
+                </ul>
+            </li>
+            {% if nivel < 4 %} 
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-folder-fill"></i> Reportes
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark form-check">
+                        
+                  <li><a class="dropdown-item" href="{% url 'sipe-quincena/' %}"><span><i class="bi bi-hourglass-bottom"></i> SIPE Mensual  </span></a></li> 
+                  <li><a class="dropdown-item" href="{% url 'reporte-quincena/' %}" ><span><i class="bi bi-layout-text-sidebar-reverse"></i> Planilla Colaboradores </span></a></li>
+                  <li><a class="dropdown-item" href="{% url 'reporte-cliente/' %}"><span><i class="bi bi-layout-text-sidebar-reverse"></i> Planilla Clientes</span></a></li>
+                  <li><a class="dropdown-item" href="{% url 'reporte-liquidacion' %}"><span><i class="bi bi-layout-text-sidebar-reverse"></i> Reporte Prestaciones</span></a></li>
+                  <li><a class="dropdown-item" href="{% url 'reporte_novedades' %}"><span><i class="bi bi-newspaper"></i> Novedades </span></a></li>
+                  <li><a class="dropdown-item" href="{% url 'reporte_acreedores' %}"><span><i class="bi bi-newspaper"></i> Acreedores </span></a></li>
+                  
+                  
+                  
+                </ul>
+            </li>
+            {% endif %}
+
+            {% if nivel < 3 %} 
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-cloud-upload-fill"></i> Importaciones
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark form-check">
+                      
+                <li><a class="dropdown-item" href="{% url 'Importar_SIPE_csv' %}"><span><i class="bi bi-filetype-csv"></i> SIPE Mensual .csv </span></a></li> 
+                <li><a class="dropdown-item" href="{% url 'ver_Importar_SIPE' %}" ><span><i class="bi bi-layout-text-sidebar-reverse"></i> Ver Importaciones SIPE </span></a></li>
+                
+                
+                
+                
+              </ul>
+            </li>
+            {% endif %}
+
+            {% if nivel < 3 %} 
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-people-fill"></i> Usuarios
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark form-check">
+                      
+                <li><a class="dropdown-item" href="{% url 'activar_usuarios' %}"><span><i class="bi bi-person-fill-add"></i> Activar Usuario </span></a></li> 
+                <li><a class="dropdown-item" href="{% url 'modificar_usuarios' %}" ><span><i class="bi bi-person-fill-gear"></i> Modifcar Usuario </span></a></li>
+                <li><a class="dropdown-item" href="{% url 'actividad-usuario' %}" ><span><i class="bi bi-person-lines-fill"></i> Ver Actividad Usuario    </span></a></li>
+                
+                
+                
+                
+              </ul>
+            </li>
+
+            {% endif %}
+
+          </ul>
+          
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+</nav>

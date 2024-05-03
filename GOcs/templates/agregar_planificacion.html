@@ -1,0 +1,898 @@
+
+<!doctype html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Agregar Planificacion Jornada  Laboral</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+  
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        
+        <div class="main-container d-flex">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+              <div class="col-md-8 mt-5 border rounded p-4 shadow">
+                   {% if agregado == 'existo' %}
+                   <h4 class="text-danger">  {{Mensaje}}  </h4>
+                   {% endif %}
+                  <div class="bd-example m-0 border-0">
+                      <form class="row g-3 needs-validation" method="post">
+                        {% csrf_token %}
+                        
+                        <div class="col-md-8">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Planificar Horario en Jornada Laboral Diaria por Dia de forma especifica</strong>
+                                </div>
+                                 <ul class="list-group list-group-flush">
+                                  <li class="list-group-item">Solo Llene los dias que se espera que el Colaborador Trabaje durante el rango de fechas a elegir.</li>
+                                  <li class="list-group-item text-danger"> <strong>ATENCION !! </strong>Por favor, Escriba en las celdas Horas con <strong>"0" </strong>  los días que el colaborador tendrá como <STRONg>día de descanso.</STRONg></li>
+                                  <li class="list-group-item">Elija el rango de fechas que se aplicara este horario al trabajador.</li>
+                                  <li class="list-group-item">Si hay un rango de fechas que se superponen, <strong>se elegirá el último creado.</strong></li>
+                                  <li class="list-group-item">Dpto. <strong>Ruta, ni Administracion</strong> podran crear su planificacon de horarios.</li>
+                                 </ul>
+                            </div>
+                        </div>
+
+                          <div class="col-md-8">
+                            <div class="form-check">
+                                
+                                <span><strong>Agregue Colaborador o Colaboradores</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+                                                <th class="table-dark ">#</th>
+                                                <th class="table-dark">Nombre</th>
+                                                <th class="table-dark">Apellido</th>
+                                                <th class="table-dark">Cargo</th>
+                                                <th class="table-dark">Hr. Entrada</th>
+                                                <th class="table-dark">Hr. Salida</th>
+                                                <th class="table-dark">Inicio Almuerzo</th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                  
+
+                                            {% for clientes in lista_cliente %}
+                                                <tr>
+                                                    <td> 
+                                                        <div class="form-check" >
+                                                            <input class="form-check-input" type="checkbox" name="colaborador" value="{{ clientes.0 }}" id="flexCheckDefault"  >
+                                                            
+                                                          </div>
+                                                              
+                                                    </td>
+                                                    
+                                                    <td class="col-3"><img src="{{ MEDIA_URL }}{{  clientes.7 }}" alt="mdo" width="32" height="32" class="rounded-circle mb-2">  {{ clientes.1 }}</td>
+                                                    <td class="col-3">{{ clientes.2 }}</td>
+                                                    <td>{{ clientes.3 }}</td>
+                                                    <td>{{ clientes.4 }}</td>
+                                                    <td>{{ clientes.5 }}</td>
+                                                    <td>{{ clientes.6 }}</td>
+                                                    
+                                                    
+                                                    
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            <!-- Agrega más filas según sea necesario -->
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                          </div>
+
+                          <div class="col-md-4">
+                            <div class="form-check">
+                                <span><strong>Agregue Cliente</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla_2" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+                                                <th class="table-dark ">#</th>
+                                                <th class="table-dark">Codigo</th>
+                                                <th class="table-dark">Cliente</th>
+                                                
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for clientes in lista_empresa %}
+                                                <tr>
+                                                    <td> 
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="empresa" value="{{ clientes.0 }}" id="flexCheckDefault" required>
+                                                            
+                                                          </div>
+                                                              
+                                                    </td>
+                                                    <td>{{ clientes.1 }}</td>
+                                                    <td>{{ clientes.2 }}</td>
+                                                    
+                                                    
+                                                    
+                                                    
+                                                    
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                          </div>
+
+                          <div class="col-md-2">
+                            <label for="validationdate" class="form-label"><strong class="text-primary">Fecha de inicio de la Planificación</strong></label>
+                            <br><input type="date" name="fecha_inicio_Planificacion" id="validationdate"  required>
+                            
+                          </div>
+
+                          <div class="col-md-2">
+                            <label for="validationdate" class="form-label"><strong class="text-primary">Fecha de finalización de la planificación</strong></label>
+                            <br><input type="date" name="fecha_final_Planificacion" id="validationdate"  required>
+                            
+                          </div>
+                        
+                          
+                                <h4 class="text-primary">  Ingresa Lunes: </h4>
+
+
+                                <div class="col-md-2 ">
+                                  <label for="validationCustomUsername" class="form-label "><span > <strong>Hora a Trabajar el dia:</strong></span></label>
+                                  <div class="input-group has-validation">
+                                    <span class="input-group-text " id="inputGroupPrepend">Lunes</span>
+                                    <input type="number"  step="0.01" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" name="Lunes" placeholder="Escriba las horas esperadas para el dia Lunes." required  >
+                                    
+                                  </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                  <label for="validationmin" class="form-label"><strong>Hora Entrada Lunes</strong></label>
+                                  <br><input type="time" name="hora_entrada_Lunes" id="validationmin" required >
+                                  <div class="invalid-feedback">
+                                    Please select a valid state.
+                                  </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                  <label for="validationmin" class="form-label"><strong>Hora Salida Lunes</strong></label>
+                                  <br><input type="time" name="hora_salida_Lunes" id="validationmin"  required>
+                                  <div class="invalid-feedback">
+                                    Please select a valid state.
+                                  </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                  <label for="validationCustom04" class="form-label"><strong>Aplica Almuerzo Lunes</strong></label>
+                                  <select class="form-select" id="validationCustom04" name="almuerzo_aplica_Lunes" required >
+                                    
+                                    <option selected value="Si">Si</option>
+                                    <option  value="No">No</option> 
+                                  </select>
+                                
+                                </div>
+
+                                <div class="col-md-2">
+                                  <label for="validationCustom04" class="form-label"><strong>Inicio Almuerzo Lunes</strong></label>
+                                  <select class="form-select" id="validationCustom04" name="inicio_Almuerzo_Lunes"  required>
+                                    
+                                    
+                                    <option value="00">00 AM</option>
+                                    <option value="01">01 AM</option>
+                                    <option value="02">02 AM</option>
+                                    <option value="03">03 AM</option>
+                                    <option value="04">04 AM</option>
+                                    <option value="05">05 AM</option>
+                                    <option value="06">06 AM</option>
+                                    <option value="07">07 AM</option>
+                                    <option  value="08">08 AM</option>
+                                    <option value="09">09 AM</option>
+                                    <option value="10">10 AM</option>
+                                    <option value="11">11 AM</option>
+                                    <option selected value="12">12 PM</option>
+                                    <option value="13">01 PM</option>
+                                    <option value="14">02 PM</option>
+                                    <option value="15">03 PM</option>
+                                    <option value="16">04 PM</option>
+                                    <option value="17">05 PM</option>
+                                    <option value="18">06 PM</option>
+                                    <option value="19">07 PM</option>
+                                    <option value="20">08 PM</option>
+                                    <option value="21">09 PM</option>
+                                    <option value="22">10 PM</option>
+                                    <option value="23">11 PM</option>
+                                    
+      
+                                    
+                                    
+                                  </select>
+                                
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label for="validationCustom04" class="form-label"><strong>Jornada Nocturna</strong></label>
+                                    <select class="form-select" id="validationCustom04" name="Dia_Siguiente_Lunes"  required>
+                                      
+                                      
+                                      
+                                      <option  disabled value="12">Trabaja hasta el dia Siguiente ?</option>
+                                      <option value="No">No</option>
+                                        <option value="Si">Si</option>
+                                      
+                                      
+        
+                                      
+                                      
+                                    </select>
+                                  
+                                </div>
+ 
+                            <h4 class="text-primary">  Ingresa Martes: </h4>
+                             <!--  Martes  -->
+                             <div class="col-md-2">
+                                <label for="validationCustomUsername" class="form-label "><span > <strong>Hora a Trabajar el dia:</strong></span></label>
+                                <div class="input-group has-validation">
+                                  <span class="input-group-text" id="inputGroupPrepend">Martes</span>
+                                  <input type="number"  step="0.01" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" name="Martes" placeholder="Escriba las horas esperadas para el dia Martes." required >
+                                  
+                                </div>
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationmin" class="form-label"><strong>Hora Entrada Martes</strong></label>
+                                <br><input type="time" name="hora_entrada_Martes" id="validationmin" required  >
+                                <div class="invalid-feedback">
+                                  Please select a valid state.
+                                </div>
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationmin" class="form-label"><strong>Hora Salida Martes</strong></label>
+                                <br><input type="time" name="hora_salida_Martes" id="validationmin" required>
+                                <div class="invalid-feedback">
+                                  Please select a valid state.
+                                </div>
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationCustom04" class="form-label"><strong>Aplica Almuerzo Martes</strong></label>
+                                <select class="form-select" id="validationCustom04" name="almuerzo_aplica_Martes" required >
+                                  
+                                  <option selected value="Si">Si</option>
+                                  <option  value="No">No</option> 
+                                </select>
+                              
+                              </div>
+                              
+                              <div class="col-md-2">
+                                <label for="validationCustom04" class="form-label"><strong>Inicio Almuerzo Martes</strong></label>
+                                <select class="form-select" id="validationCustom04" name="inicio_Almuerzo_Martes" required >
+                                  
+                                  
+                                  <option value="00">00 AM</option>
+                                  <option value="01">01 AM</option>
+                                  <option value="02">02 AM</option>
+                                  <option value="03">03 AM</option>
+                                  <option value="04">04 AM</option>
+                                  <option value="05">05 AM</option>
+                                  <option value="06">06 AM</option>
+                                  <option value="07">07 AM</option>
+                                  <option  value="08">08 AM</option>
+                                  <option value="09">09 AM</option>
+                                  <option value="10">10 AM</option>
+                                  <option value="11">11 AM</option>
+                                  <option selected value="12">12 PM</option>
+                                  <option value="13">01 PM</option>
+                                  <option value="14">02 PM</option>
+                                  <option value="15">03 PM</option>
+                                  <option value="16">04 PM</option>
+                                  <option value="17">05 PM</option>
+                                  <option value="18">06 PM</option>
+                                  <option value="19">07 PM</option>
+                                  <option value="20">08 PM</option>
+                                  <option value="21">09 PM</option>
+                                  <option value="22">10 PM</option>
+                                  <option value="23">11 PM</option>
+                                  
+    
+                                  
+                                  
+                                </select>
+                              
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationCustom04" class="form-label"><strong>Jornada Nocturna Martes</strong></label>
+                                <select class="form-select" id="validationCustom04" name="Dia_Siguiente_Martes"  required>
+                                  
+                                  
+                                  
+                                  <option disabled value="12">Trabaja hasta el dia Siguiente (Miercoles) ?</option>
+                                  <option value="No">No</option>
+                                  <option value="Si">Si</option>
+                                  
+                                  
+    
+                                  
+                                  
+                                </select>
+                              
+                              </div>
+
+                              <!--  Miercoles  -->
+                              <h4 class="text-primary">  Ingresa Miércoles: </h4>
+                              
+                              <div class="col-md-2 ">
+                                <label for="validationCustomUsername" class="form-label "><span > <strong>Hora a Trabajar el dia:</strong></span></label>
+                                <div class="input-group has-validation">
+                                  <span class="input-group-text" id="inputGroupPrepend">Miércoles</span>
+                                  <input type="number"  step="0.01" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" name="Miercoles" placeholder="Escriba las horas esperadas para el dia Miercoles." required >
+                                  
+                                </div>
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationmin" class="form-label"><strong>Hora Entrada Miércoles</strong></label>
+                                <br><input type="time" name="hora_entrada_Miercoles" id="validationmin"  required>
+                                <div class="invalid-feedback">
+                                  Please select a valid state.
+                                </div>
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationmin" class="form-label"><strong>Hora Salida Miércoles</strong></label>
+                                <br><input type="time" name="hora_salida_Miercoles" id="validationmin" required >
+                                <div class="invalid-feedback">
+                                  Please select a valid state.
+                                </div>
+                              </div>
+                              
+                              <div class="col-md-2">
+                                <label for="validationCustom04" class="form-label"><strong>Aplica Almuerzo Miércoles</strong></label>
+                                <select class="form-select" id="validationCustom04" name="almuerzo_aplica_Miercoles"  required>
+                                  
+                                  <option selected value="Si">Si</option>
+                                  <option  value="No">No</option> 
+                                </select>
+                              
+                              </div>
+                              
+                              <div class="col-md-2">
+                                <label for="validationCustom04" class="form-label"><strong>Inicio Almuerzo Miércoles</strong></label>
+                                <select class="form-select" id="validationCustom04" name="inicio_Almuerzo_Miercoles"  required>
+                                  
+                                  
+                                  <option value="00">00 AM</option>
+                                  <option value="01">01 AM</option>
+                                  <option value="02">02 AM</option>
+                                  <option value="03">03 AM</option>
+                                  <option value="04">04 AM</option>
+                                  <option value="05">05 AM</option>
+                                  <option value="06">06 AM</option>
+                                  <option value="07">07 AM</option>
+                                  <option  value="08">08 AM</option>
+                                  <option value="09">09 AM</option>
+                                  <option value="10">10 AM</option>
+                                  <option value="11">11 AM</option>
+                                  <option selected value="12">12 PM</option>
+                                  <option value="13">01 PM</option>
+                                  <option value="14">02 PM</option>
+                                  <option value="15">03 PM</option>
+                                  <option value="16">04 PM</option>
+                                  <option value="17">05 PM</option>
+                                  <option value="18">06 PM</option>
+                                  <option value="19">07 PM</option>
+                                  <option value="20">08 PM</option>
+                                  <option value="21">09 PM</option>
+                                  <option value="22">10 PM</option>
+                                  <option value="23">11 PM</option>
+                                  
+    
+                                  
+                                  
+                                </select>
+                              
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationCustom04" class="form-label"><strong>Jornada Nocturna Miércoles</strong></label>
+                                <select class="form-select" id="validationCustom04" name="Dia_Siguiente_Miercoles"  required>
+                                  
+                                  
+                                  
+                                  <option  disabled value="12">Trabaja hasta el dia Siguiente (Miércoles) ?</option>
+                                  <option value="No">No</option>
+                                  <option value="Si">Si</option>
+                                  
+                                  
+    
+                                  
+                                  
+                                </select>
+                              
+                              </div>
+
+                               <!--  Jueves  -->
+                              <h4 class="text-primary">  Ingresa Jueves: </h4>
+
+                              <div class="col-md-2 ">
+                                <label for="validationCustomUsername" class="form-label "><span > <strong>Hora a Trabajar el dia:</strong></span></label>
+                                <div class="input-group has-validation">
+                                  <span class="input-group-text" id="inputGroupPrepend">Jueves</span>
+                                  <input type="number"  step="0.01" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" name="Jueves" placeholder="Escriba las horas esperadas para el dia Jueves." required >
+                                  
+                                </div>
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationmin" class="form-label"><strong>Hora Entrada Jueves</strong></label>
+                                <br><input type="time" name="hora_entrada_Jueves" id="validationmin" required>
+                                <div class="invalid-feedback">
+                                  Please select a valid state.
+                                </div>
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationmin" class="form-label"><strong>Hora Salida Jueves</strong></label>
+                                <br><input type="time" name="hora_salida_Jueves" id="validationmin" required>
+                                <div class="invalid-feedback">
+                                  Please select a valid state.
+                                </div>
+                              </div>
+
+
+                              <div class="col-md-2">
+                                <label for="validationCustom04" class="form-label"><strong>Aplica Almuerzo Jueves</strong></label>
+                                <select class="form-select" id="validationCustom04" name="almuerzo_aplica_Jueves" required>
+                                  
+                                  <option selected value="Si">Si</option>
+                                  <option  value="No">No</option> 
+                                </select>
+                              
+                              </div>
+                              
+                              <div class="col-md-2">
+                                <label for="validationCustom04" class="form-label"><strong>Inicio Almuerzo Jueves</strong></label>
+                                <select class="form-select" id="validationCustom04" name="inicio_Almuerzo_Jueves" required>
+                                  
+                                  
+                                  <option value="00">00 AM</option>
+                                  <option value="01">01 AM</option>
+                                  <option value="02">02 AM</option>
+                                  <option value="03">03 AM</option>
+                                  <option value="04">04 AM</option>
+                                  <option value="05">05 AM</option>
+                                  <option value="06">06 AM</option>
+                                  <option value="07">07 AM</option>
+                                  <option  value="08">08 AM</option>
+                                  <option value="09">09 AM</option>
+                                  <option value="10">10 AM</option>
+                                  <option value="11">11 AM</option>
+                                  <option selected value="12">12 PM</option>
+                                  <option value="13">01 PM</option>
+                                  <option value="14">02 PM</option>
+                                  <option value="15">03 PM</option>
+                                  <option value="16">04 PM</option>
+                                  <option value="17">05 PM</option>
+                                  <option value="18">06 PM</option>
+                                  <option value="19">07 PM</option>
+                                  <option value="20">08 PM</option>
+                                  <option value="21">09 PM</option>
+                                  <option value="22">10 PM</option>
+                                  <option value="23">11 PM</option>
+                                  
+    
+                                  
+                                  
+                                </select>
+                              
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationCustom04" class="form-label"><strong>Jornada Nocturna Jueves</strong></label>
+                                <select class="form-select" id="validationCustom04" name="Dia_Siguiente_Jueves"  required>
+                                  
+                                  
+                                  
+                                  <option  disabled value="12">Trabaja hasta el dia Siguiente (Viernes) ?</option>
+                                  <option value="No">No</option>
+                                  <option value="Si">Si</option>
+                                  
+                                  
+    
+                                  
+                                  
+                                </select>
+                              
+                              </div>
+
+
+                               <!--  Viernes  -->
+
+                              <h4 class="text-primary">  Ingresa Viernes: </h4>
+
+                              <div class="col-md-2 ">
+                                <label for="validationCustomUsername" class="form-label "><span > <strong>Hora a Trabajar el dia:</strong></span></label>
+                                <div class="input-group has-validation">
+                                  <span class="input-group-text" id="inputGroupPrepend">Viernes</span>
+                                  <input type="number"  step="0.01" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" name="Viernes" placeholder="Escriba las horas esperadas para el dia Viernes." required >
+                                  
+                                </div>
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationmin" class="form-label"><strong>Hora Entrada Viernes</strong></label>
+                                <br><input type="time" name="hora_entrada_Viernes" id="validationmin" required >
+                                <div class="invalid-feedback">
+                                  Please select a valid state.
+                                </div>
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationmin" class="form-label"><strong>Hora Salida Viernes</strong></label>
+                                <br><input type="time" name="hora_salida_Viernes" id="validationmin"  required>
+                                <div class="invalid-feedback">
+                                  Please select a valid state.
+                                </div>
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationCustom04" class="form-label"><strong>Aplica Almuerzo Viernes</strong></label>
+                                <select class="form-select" id="validationCustom04" name="almuerzo_aplica_Viernes" required >
+                                  
+                                  <option selected value="Si">Si</option>
+                                  <option  value="No">No</option> 
+                                </select>
+                              
+                              </div>
+                              
+                              <div class="col-md-2">
+                                <label for="validationCustom04" class="form-label"><strong>Inicio Almuerzo Viernes</strong></label>
+                                <select class="form-select" id="validationCustom04" name="inicio_Almuerzo_Viernes" required>
+                                  
+                                  
+                                  <option value="00">00 AM</option>
+                                  <option value="01">01 AM</option>
+                                  <option value="02">02 AM</option>
+                                  <option value="03">03 AM</option>
+                                  <option value="04">04 AM</option>
+                                  <option value="05">05 AM</option>
+                                  <option value="06">06 AM</option>
+                                  <option value="07">07 AM</option>
+                                  <option  value="08">08 AM</option>
+                                  <option value="09">09 AM</option>
+                                  <option value="10">10 AM</option>
+                                  <option value="11">11 AM</option>
+                                  <option selected value="12">12 PM</option>
+                                  <option value="13">01 PM</option>
+                                  <option value="14">02 PM</option>
+                                  <option value="15">03 PM</option>
+                                  <option value="16">04 PM</option>
+                                  <option value="17">05 PM</option>
+                                  <option value="18">06 PM</option>
+                                  <option value="19">07 PM</option>
+                                  <option value="20">08 PM</option>
+                                  <option value="21">09 PM</option>
+                                  <option value="22">10 PM</option>
+                                  <option value="23">11 PM</option>
+                                  
+    
+                                  
+                                  
+                                </select>
+                              
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationCustom04" class="form-label"><strong>Jornada Nocturna Sabado</strong></label>
+                                <select class="form-select" id="validationCustom04" name="Dia_Siguiente_Viernes"  required>
+                                  
+                                  
+                                  
+                                  <option  disabled value="12">Trabaja hasta el dia Siguiente (Sabado) ?</option>
+                                  <option value="No">No</option>
+                                  <option value="Si">Si</option>
+                                  
+                                  
+    
+                                  
+                                  
+                                </select>
+                              
+                              </div>
+
+                               <!--  Sabado  -->
+                              <h4 class="text-primary">  Ingresa Sábado: </h4>
+
+                              <div class="col-md-2 ">
+                                <label for="validationCustomUsername" class="form-label "><span > <strong>Hora a Trabajar el dia:</strong></span></label>
+                                <div class="input-group has-validation">
+                                  <span class="input-group-text" id="inputGroupPrepend">Sabado</span>
+                                  <input type="number"  step="0.01" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" name="Sabado" placeholder="Escriba las horas esperadas para el dia Sábado." required >
+                                  
+                                </div>
+
+                                
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationmin" class="form-label"><strong>Hora Entrada Sábado</strong></label>
+                                <br><input type="time" name="hora_entrada_Sabado" id="validationmin"  required>
+                                <div class="invalid-feedback">
+                                  Please select a valid state.
+                                </div>
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationmin" class="form-label"><strong>Hora Salida Sábado</strong></label>
+                                <br><input type="time" name="hora_salida_Sabado" id="validationmin" required >
+                                <div class="invalid-feedback">
+                                  Please select a valid state.
+                                </div>
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationCustom04" class="form-label"><strong>Aplica Almuerzo Sábado</strong></label>
+                                <select class="form-select" id="validationCustom04" name="almuerzo_aplica_Sabado"  required>
+                                  
+                                  <option selected value="Si">Si</option>
+                                  <option  value="No">No</option> 
+                                </select>
+                              
+                              </div>
+                              
+                              <div class="col-md-2">
+                                <label for="validationCustom04" class="form-label"><strong>Inicio Almuerzo Sábado</strong></label>
+                                <select class="form-select" id="validationCustom04" name="inicio_Almuerzo_Sabado" required >
+                                  
+                                  
+                                  <option value="00">00 AM</option>
+                                  <option value="01">01 AM</option>
+                                  <option value="02">02 AM</option>
+                                  <option value="03">03 AM</option>
+                                  <option value="04">04 AM</option>
+                                  <option value="05">05 AM</option>
+                                  <option value="06">06 AM</option>
+                                  <option value="07">07 AM</option>
+                                  <option  value="08">08 AM</option>
+                                  <option value="09">09 AM</option>
+                                  <option value="10">10 AM</option>
+                                  <option value="11">11 AM</option>
+                                  <option selected value="12">12 PM</option>
+                                  <option value="13">01 PM</option>
+                                  <option value="14">02 PM</option>
+                                  <option value="15">03 PM</option>
+                                  <option value="16">04 PM</option>
+                                  <option value="17">05 PM</option>
+                                  <option value="18">06 PM</option>
+                                  <option value="19">07 PM</option>
+                                  <option value="20">08 PM</option>
+                                  <option value="21">09 PM</option>
+                                  <option value="22">10 PM</option>
+                                  <option value="23">11 PM</option>
+                                  
+    
+                                  
+                                  
+                                </select>
+                              
+                              </div>
+
+                              <div class="col-md-2">
+                                <label for="validationCustom04" class="form-label"><strong>Jornada Nocturna Domingo</strong></label>
+                                <select class="form-select" id="validationCustom04" name="Dia_Siguiente_Sabado"  required>
+                                  
+                                  
+                                  
+                                  <option  disabled value="12">Trabaja hasta el dia Siguiente (Domingo) ?</option>
+                                  
+                                  <option value="No">No</option>
+                                  <option value="Si">Si</option>
+                                  
+                                  
+    
+                                  
+                                  
+                                </select>
+                              
+                              </div>
+
+                               <!--  Domingo  -->
+                               <h4 class="text-primary">  Ingresa Domingo: </h4>
+
+                               <div class="col-md-2 ">
+                                 <label for="validationCustomUsername" class="form-label "><span > <strong>Hora a Trabajar el dia:</strong></span></label>
+                                 <div class="input-group has-validation">
+                                   <span class="input-group-text" id="inputGroupPrepend">Domingo</span>
+                                   <input type="number"  step="0.01" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" name="Domingo" placeholder="Escriba las horas esperadas para el dia Domingo." required >
+                                   
+                                 </div>
+ 
+                                 
+                               </div>
+ 
+                               <div class="col-md-2">
+                                 <label for="validationmin" class="form-label"><strong>Hora Entrada Domingo</strong></label>
+                                 <br><input type="time" name="hora_entrada_Domingo" id="validationmin"  required>
+                                 <div class="invalid-feedback">
+                                   Please select a valid state.
+                                 </div>
+                               </div>
+ 
+                               <div class="col-md-2">
+                                 <label for="validationmin" class="form-label"><strong>Hora Salida Domingo</strong></label>
+                                 <br><input type="time" name="hora_salida_Domingo" id="validationmin" required >
+                                 <div class="invalid-feedback">
+                                   Please select a valid state.
+                                 </div>
+                               </div>
+ 
+                               <div class="col-md-2">
+                                 <label for="validationCustom04" class="form-label"><strong>Aplica Almuerzo Domingo</strong></label>
+                                 <select class="form-select" id="validationCustom04" name="almuerzo_aplica_Domingo"  required>
+                                   
+                                   <option selected value="Si">Si</option>
+                                   <option  value="No">No</option> 
+                                 </select>
+                               
+                               </div>
+                               
+                               <div class="col-md-2">
+                                 <label for="validationCustom04" class="form-label"><strong>Inicio Almuerzo Domingo</strong></label>
+                                 <select class="form-select" id="validationCustom04" name="inicio_Almuerzo_Domingo" required >
+                                   
+                                   
+                                   <option value="00">00 AM</option>
+                                   <option value="01">01 AM</option>
+                                   <option value="02">02 AM</option>
+                                   <option value="03">03 AM</option>
+                                   <option value="04">04 AM</option>
+                                   <option value="05">05 AM</option>
+                                   <option value="06">06 AM</option>
+                                   <option value="07">07 AM</option>
+                                   <option  value="08">08 AM</option>
+                                   <option value="09">09 AM</option>
+                                   <option value="10">10 AM</option>
+                                   <option value="11">11 AM</option>
+                                   <option selected value="12">12 PM</option>
+                                   <option value="13">01 PM</option>
+                                   <option value="14">02 PM</option>
+                                   <option value="15">03 PM</option>
+                                   <option value="16">04 PM</option>
+                                   <option value="17">05 PM</option>
+                                   <option value="18">06 PM</option>
+                                   <option value="19">07 PM</option>
+                                   <option value="20">08 PM</option>
+                                   <option value="21">09 PM</option>
+                                   <option value="22">10 PM</option>
+                                   <option value="23">11 PM</option>
+                                   
+     
+                                   
+                                   
+                                 </select>
+                               
+                               </div>
+ 
+                               <div class="col-md-2">
+                                 <label for="validationCustom04" class="form-label"><strong>Jornada Nocturna Domingo</strong></label>
+                                 <select class="form-select" id="validationCustom04" name="Dia_Siguiente_Domingo"  required>
+                                   
+                                   
+                                   
+                                   <option  disabled value="12">Trabaja hasta el dia Siguiente (Domingo) ?</option>
+                                   
+                                   <option value="No">No</option>
+                                   <option value="Si">Si</option>
+                                   
+                                   
+     
+                                   
+                                   
+                                 </select>
+                               
+                               </div>
+
+
+                        <div class="col-12">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required >
+                            <label class="form-check-label" for="invalidCheck">
+                              Confirmo la información suministrada, Si ya existia una jornada laboral agregada previamente en el mismo dia sera sustituida por esta actual en dicho colaborador.
+                            </label>
+                            
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <button class="btn btn-primary" type="submit">Cargar Jornada Laboral</button>
+                        </div>
+                      </form>
+                  </div>
+
+              </div>
+          </div> 
+
+    
+            
+            
+
+        </div>
+
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        
+        
+  
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

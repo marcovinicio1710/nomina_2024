@@ -1,0 +1,353 @@
+
+<!doctype html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Agregar Jornada Individual Laboral</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+  
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        
+        <div class="main-container d-flex">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+              <div class="col-md-8 mt-5 border rounded p-4 shadow">
+                   {% if agregado == 'existo' %}
+                   <h4 class="text-danger">  {{Mensaje}}  </h4>
+                   {% endif %}
+                  <div class="bd-example m-0 border-0">
+                      <form class="row g-3 needs-validation" method="post">
+                        {% csrf_token %}
+                        
+
+                          <div class="col-md-8">
+                            <div class="form-check">
+                                <span><strong>Agregue Colaborador</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+                                                <th class="table-dark ">#</th>
+                                                <th class="table-dark">Nombre</th>
+                                                <th class="table-dark">Apellido</th>
+                                                <th class="table-dark">Cargo</th>
+                                                <th class="table-dark">Hr. Entrada</th>
+                                                <th class="table-dark">Hr. Salida</th>
+                                                <th class="table-dark">Inicio Almuerzo</th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for clientes in lista_cliente %}
+                                                <tr>
+                                                    <td> 
+                                                        <div class="form-check" >
+                                                            <input class="form-check-input" type="radio" name="colaborador" value="{{ clientes.0 }}" id="flexCheckDefault" >
+                                                            
+                                                          </div>
+                                                              
+                                                    </td>
+                                                    <td class="col-3"><img src="{{ MEDIA_URL }}{{  clientes.7 }}" alt="mdo" width="32" height="32" class="rounded-circle mb-2">  {{ clientes.1 }}</td>
+                                                    <td class="col-3">{{ clientes.2 }}</td>
+                                                    <td>{{ clientes.3 }}</td>
+                                                    <td>{{ clientes.4 }}</td>
+                                                    <td>{{ clientes.5 }}</td>
+                                                    <td>{{ clientes.6 }}</td>
+                                                    
+                                                    
+                                                    
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                          </div>
+
+                          <div class="col-md-4">
+                            <div class="form-check">
+                                <span><strong>Agregue Cliente</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla_2" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+                                                <th class="table-dark ">#</th>
+                                                <th class="table-dark">Codigo</th>
+                                                <th class="table-dark">Cliente</th>
+                                                
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for clientes in lista_empresa %}
+                                                <tr>
+                                                    <td> 
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="empresa" value="{{ clientes.0 }}" id="flexCheckDefault">
+                                                            
+                                                          </div>
+                                                              
+                                                    </td>
+                                                    <td>{{ clientes.1 }}</td>
+                                                    <td>{{ clientes.2 }}</td>
+                                                    
+                                                    
+                                                    
+                                                    
+                                                    
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                          </div>
+                        
+                          
+                          <h4 class="text-primary">  Ingresa Lunes o cualquier dia de la semana: </h4>
+                          <div class="col-md-3">
+                            <label for="validationCustom01" class="form-label"><strong>Dia Entrada Lunes</strong>  </label>
+                            <br><input type="date" name="dia_entrada" id="validationdate" required >
+                            
+                          </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Hora Entrada Lunes</strong>  </label>
+                              <br><input type="time" name="hora_entrada" id="validationdate" required >
+                              
+                            </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Dia Salida Lunes</strong>  </label>
+                              <br><input type="date" name="dia_salida" id="validationdate" required >
+                              
+                            </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Hora Salida Lunes</strong>  </label>
+                              <br><input type="time" name="hora_salida" id="validationdate" required >
+                              
+                          </div>
+                          <h4 class="text-primary">  Ingresa Dias Opcionales: </h4>
+                          <div class="col-md-3">
+                            <label for="validationCustom01" class="form-label"><strong>Dia Entrada Martes</strong>  </label>
+                            <br><input type="date" name="dia_entrada" id="validationdate"  >
+                            
+                          </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Hora Entrada Martes</strong>  </label>
+                              <br><input type="time" name="hora_entrada" id="validationdate"  >
+                              
+                            </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Dia Salida Martes</strong>  </label>
+                              <br><input type="date" name="dia_salida" id="validationdate"  >
+                              
+                            </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Hora Salida Martes</strong>  </label>
+                              <br><input type="time" name="hora_salida" id="validationdate"  >
+                              
+                          </div>
+
+                          <div class="col-md-3">
+                            <label for="validationCustom01" class="form-label"><strong>Dia Entrada Miercoles</strong>  </label>
+                            <br><input type="date" name="dia_entrada" id="validationdate"  >
+                            
+                          </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Hora Entrada Miercoles</strong>  </label>
+                              <br><input type="time" name="hora_entrada" id="validationdate"  >
+                              
+                            </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Dia Salida Miercoles</strong>  </label>
+                              <br><input type="date" name="dia_salida" id="validationdate"  >
+                              
+                            </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Hora Salida Miercoles</strong>  </label>
+                              <br><input type="time" name="hora_salida" id="validationdate"  >
+                              
+                          </div>
+
+                          <div class="col-md-3">
+                            <label for="validationCustom01" class="form-label"><strong>Dia Entrada Jueves</strong>  </label>
+                            <br><input type="date" name="dia_entrada" id="validationdate"  >
+                            
+                          </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Hora Entrada Jueves</strong>  </label>
+                              <br><input type="time" name="hora_entrada" id="validationdate"  >
+                              
+                            </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Dia Salida Jueves</strong>  </label>
+                              <br><input type="date" name="dia_salida" id="validationdate"  >
+                              
+                            </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Hora Salida Jueves</strong>  </label>
+                              <br><input type="time" name="hora_salida" id="validationdate"  >
+                              
+                          </div>
+
+                          <div class="col-md-3">
+                            <label for="validationCustom01" class="form-label"><strong>Dia Entrada Viernes</strong>  </label>
+                            <br><input type="date" name="dia_entrada" id="validationdate"  >
+                            
+                          </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Hora Entrada Viernes</strong>  </label>
+                              <br><input type="time" name="hora_entrada" id="validationdate"  >
+                              
+                            </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Dia Salida Viernes</strong>  </label>
+                              <br><input type="date" name="dia_salida" id="validationdate"  >
+                              
+                            </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Hora Salida Viernes</strong>  </label>
+                              <br><input type="time" name="hora_salida" id="validationdate"  >
+                              
+                          </div>
+                        
+                          <div class="col-md-3">
+                            <label for="validationCustom01" class="form-label"><strong>Dia Entrada Sabado</strong>  </label>
+                            <br><input type="date" name="dia_entrada" id="validationdate"  >
+                            
+                          </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Hora Entrada Sabado</strong>  </label>
+                              <br><input type="time" name="hora_entrada" id="validationdate"  >
+                              
+                            </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Dia Salida Sabado</strong>  </label>
+                              <br><input type="date" name="dia_salida" id="validationdate"  >
+                              
+                            </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Hora Salida Sabado</strong>  </label>
+                              <br><input type="time" name="hora_salida" id="validationdate"  >
+                              
+                          </div>
+
+                          <div class="col-md-3">
+                            <label for="validationCustom01" class="form-label"><strong>Dia Entrada Domingo</strong>  </label>
+                            <br><input type="date" name="dia_entrada" id="validationdate"  >
+                            
+                          </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Hora Entrada Domingo</strong>  </label>
+                              <br><input type="time" name="hora_entrada" id="validationdate"  >
+                              
+                            </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Dia Salida Domingo</strong>  </label>
+                              <br><input type="date" name="dia_salida" id="validationdate"  >
+                              
+                            </div>
+                          <div class="col-md-3">
+                              <label for="validationCustom01" class="form-label"><strong>Hora Salida Domingo</strong>  </label>
+                              <br><input type="time" name="hora_salida" id="validationdate"  >
+                              
+                          </div>
+                        <div class="col-12">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required >
+                            <label class="form-check-label" for="invalidCheck">
+                              Confirmo la información suministrada, Si ya existia una jornada laboral agregada previamente en el mismo dia sera sustituida por esta actual en dicho colaborador.
+                            </label>
+                            
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <button class="btn btn-primary" type="submit">Cargar Jornada Laboral</button>
+                        </div>
+                      </form>
+                  </div>
+
+              </div>
+          </div> 
+
+    
+            
+            
+
+        </div>
+
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        
+        
+  
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

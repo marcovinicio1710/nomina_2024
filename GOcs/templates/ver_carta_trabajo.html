@@ -1,0 +1,160 @@
+
+<!doctype html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Contrato Laboral</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        {% load static %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        {% include 'categoria_2.html' %}
+        
+        <div class="container mt-5 mb-5">
+          <div class="row">
+            <div class="col-md-4">
+              <a href="{% url 'ver_colaborador_Individual/' searched=pk_colaborador  %}"><button class="btn btn-danger" type="submit"><i class="bi bi-backspace"></i> Regresar</button></a>
+            </div>
+             <div class="col-md-8">
+              <div class="card" >
+                  <div class="card-header">
+                      <a  class="link-dark text-decoration-none text-primary" title="FILE_XLSX" href="{{ MEDIA_URL }}{{ name_1 }}" download>
+                          <img src="{% static 'logo_word.png' %}" alt="" class="logo_txt" style="width:60px ;"/>
+                          <span class="fw-bold fs-6 d-inline-flex p-1 mt-1"> Descargar {{name_file}} </span>
+                      </a>
+                   </div>
+              </div>
+             </div>
+             
+             <div class="col-md-12">
+              <div class="card shadow" >
+                  <div class="card-header">
+                    <strong class="text-primary">Datos de Colaborador</strong>
+                  </div>
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Nombre y Apellido : </strong> {{Colaborador_obj.Colaborador_nombre}} {{Colaborador_obj.Colaborador_apellido}}  </li>
+                    <li class="list-group-item"><strong>Fecha Ingreso: </strong> {{Colaborador_obj.Fecha_Ingreso}} </li>
+                    <li class="list-group-item"><strong>Identificacion: </strong> {{Colaborador_obj.Tipo_documento}} {{Colaborador_obj.Nro_Identificacion}}  </li>
+                    <li class="list-group-item"><strong>Seguro Social: </strong> {{Colaborador_obj.Nro_Seguro_Social}}  </li>
+                    <li class="list-group-item"><strong>Cargo: </strong> {{Colaborador_obj.Cargo}}  </li>
+                    <li class="list-group-item"><strong>Departamento: </strong> {{Colaborador_obj.Departamento}}  </li>
+                    <li class="list-group-item"><strong>Supervisor: </strong> {{Colaborador_obj.Supervisor}}  </li>
+                    
+                  </ul>
+                </div>
+             </div>
+          </div>
+        </div>
+       
+       
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+          
+            
+
+             document.getElementById('checkExpand1').addEventListener('change', function() {
+                const expandableInputs = document.getElementById('expandableInputs1');
+                if (this.checked) {
+                    expandableInputs.style.display = 'block';
+                    } else {
+                expandableInputs.style.display = 'none';
+                    }
+            });
+
+            document.getElementById('checkExpand2').addEventListener('change', function() {
+                const expandableInputs = document.getElementById('expandableInputs2');
+                if (this.checked) {
+                    expandableInputs.style.display = 'block';
+                    } else {
+                expandableInputs.style.display = 'none';
+                    }
+            });
+
+            document.getElementById('checkExpand3').addEventListener('change', function() {
+                const expandableInputs = document.getElementById('expandableInputs3');
+                if (this.checked) {
+                    expandableInputs.style.display = 'block';
+                    } else {
+                expandableInputs.style.display = 'none';
+                    }
+            });
+
+            document.getElementById('checkExpand4').addEventListener('change', function() {
+                const expandableInputs = document.getElementById('expandableInputs4');
+                if (this.checked) {
+                    expandableInputs.style.display = 'block';
+                    } else {
+                expandableInputs.style.display = 'none';
+                    }
+            });
+
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_1').DataTable();
+            });
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_3').DataTable();
+            });
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_4').DataTable();
+            });
+
+
+
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+    
+        </script>
+        
+        {% endblock %}
+    </body>
+
+</html>

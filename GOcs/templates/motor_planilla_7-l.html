@@ -1,0 +1,403 @@
+
+<!doctype html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Motor de Liquidacion Paso 7</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        <br>
+        
+
+        
+        
+        <nav aria-label="Page navigation example">
+            
+                
+            <ul class="pagination justify-content-center ">
+                <li class="page-item ">
+                    <form class="row g-3 needs-validation" method="post" action="{% url 'motor-planilla_p6-l/' %}" >
+                        {% csrf_token %}
+                        
+                        <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                        <input type="text" class="form-control" id="validationCustom01" name="colaborador"  value="{{colaborador}}" hidden>
+                        <input type="text" class="form-control" id="validationCustom01" name="fecha_pago"  value="{{lista_planilla.3}}" hidden>
+                        <button type="submit" class="btn btn-danger">  <span>Regresar  </span>  </button>
+                    </form>
+                        
+                        
+                </li>
+                <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-arrow-left-circle"></i></a></li>
+                <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-arrow-right-circle"></i></a></li>
+                <li class="page-item">
+                    <form class="row g-3 needs-validation" method="post" action="{% url 'motor-planilla_p6-l/' %}">
+                        {% csrf_token %}
+                        {% if siguiente_bool %}
+                            <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                            <input type="text" class="form-control" id="validationCustom01" name="colaborador"  value="{{colaborador}}" hidden>
+                            <input type="text" class="form-control" id="validationCustom01" name="fecha_pago"  value="{{lista_planilla.3}}" hidden>
+                            <button disabled type="submit" class="btn btn-success"> Liquidar</button>
+                        {% else %}
+                            <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                            <input type="text" class="form-control" id="validationCustom01" name="colaborador"  value="{{colaborador}}" hidden>
+                        <input type="text" class="form-control" id="validationCustom01" name="fecha_pago"  value="{{lista_planilla.3}}" hidden>
+                            <button disabled type="submit" class="btn btn-success" disabled> Liquidar</button>
+
+                        {% endif %}
+                    </form>
+                </li>
+            </ul>
+        </form>
+        </nav>
+        <div class="main-container d-flex">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+              <div class="col-md-8 mt-5 border rounded p-4 shadow">
+                   {% if agregado == 'existo' %}
+                   <h4 class="text-danger">  {{Mensaje}}  </h4>
+                   {% endif %}
+                  <div class="bd-example m-0 border-0">
+                      <form class="row g-3 needs-validation" method="post" action="{% url 'motor-planilla_p7-l/' %}">
+                        {% csrf_token %}´
+                        {% if siguiente_bool %}
+                            <div class="col-md-12">
+                                <div class="card" >
+                                    <div class="card-header">
+                                        <strong class="fs-4 text-primary"> <i class="bi bi-check-circle-fill"></i> Acciones Confirmadas Presione el botón  de "Siguiente" para Inicio Liquidacion.
+                                        </strong>
+                                    </div>
+                            
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-md-12">
+                                <div class="card" >
+                                    <div class="card-header">
+                                        <strong class="fs-4 text-danger"> <i class="bi bi-exclamation-octagon-fill"></i> Tienes Acciones Pendientes, Confirmelas para continuar con el proceso.
+                                        </strong>
+                                    </div>
+                        
+                                </div>
+                            </div>
+                        {% endif %}
+                          <div class="col-md-12">
+                            <div class="card" >
+                              <div class="card-header">
+                                <strong class="fs-2">
+                                   <i class="bi bi-1-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-2-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-3-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-4-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-5-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-6-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-7-circle-fill"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-8-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-9-circle"></i>
+                                   <i class="bi bi-arrow-right"></i>
+                                   <i class="bi bi-1-circle"></i>
+                                   <i class="bi bi-0-circle"></i>
+                                
+                                </strong>
+                              </div>
+                              <ul class="list-group list-group-flush">
+                                <li class="list-group-item text-primary"><strong> Paso 6 </strong> ( Validar Planilla Quincenal  ) </li>
+                        
+                                
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Elija el Motivo Liquidacion. <i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  
+                                  <li class="list-group-item">Colaborador:  <strong> {{lista_cliente.0.1}}</strong></li>
+                                  <li class="list-group-item">Total Liquidar:  <strong> $ {{lista_cliente.0.10|floatformat:2}}</strong></li>
+                                  <li class="list-group-item">Fecha Corte Liq. :  <strong> {{lista_cliente.0.14}}</strong></li>
+                                  <li class="list-group-item">Antiguedad: <i class="bi bi-people-fill"></i> <strong> {{lista_datos_liquidar.10}}</strong></li>
+                                    
+                                  <li class="list-group-item">Nota: <i class="bi bi-people-fill"></i> <strong> Hacer click en columna Detalle para visualizar desglose.</strong></li>
+                                  
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                        
+                          
+
+                          <div class="col-md-3">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Fecha de Terminación de Labores <i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+
+                                
+                                  <li class="list-group-item">Fecha Ingreso: <i class="bi bi-people-fill"></i> <strong> {{lista_datos_liquidar.0}}</strong></li>
+                                  <li class="list-group-item">Tipo Contrato: <i class="bi bi-briefcase-fill"></i> <strong> {{lista_datos_liquidar.1}}</strong></li>
+                                  <li class="list-group-item">Vacaciones Consumidas: <i class="bi bi-airplane-fill"></i> <strong> {{lista_datos_liquidar.2}}</strong></li>
+                                  <li class="list-group-item">Vacaciones Pendiente: <i class="bi bi-calendar3-range-fill"></i> <strong> {{lista_datos_liquidar.3|floatformat:2}}</strong></li>
+                                  <li class="list-group-item">Antiguedad en Nro.: <i class="bi bi-calendar3-range-fill"></i> <strong> {{lista_datos_liquidar.9|floatformat:4}}</strong></li>
+                                  
+                                  
+                                </ul>
+                              </div>
+                          </div>
+
+                          <div class="col-md-3">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Promedio Salario <i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+
+                                  <li class="list-group-item">Salario Base Mensual: <i class="bi bi-currency-dollar"></i> <strong> {{lista_datos_liquidar.4|floatformat:2}}</strong></li>
+                                  <li class="list-group-item">Ultimos 5 años: <i class="bi bi-people-fill"></i> <strong> {{lista_datos_liquidar.5|floatformat:2}}</strong></li>
+                                  <li class="list-group-item">Ultimos 6 meses: <i class="bi bi-briefcase-fill"></i> <strong> {{lista_datos_liquidar.6|floatformat:2}}</strong></li>
+                                  <li class="list-group-item">Mes Anterior: <i class="bi bi-airplane-fill"></i> <strong> {{lista_datos_liquidar.7|floatformat:2}}</strong></li>
+                                  <li class="list-group-item">Mejor Promedio: <i class="bi bi-calendar3-range-fill"></i> <strong> {{lista_datos_liquidar.8|floatformat:2}}</strong></li>
+                                  
+                                  
+                                  
+                                </ul>
+                              </div>
+                          </div>
+
+                          <div class="col-md-3">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Finalizar Liquidacion Colaborador </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  <input type="text" name="Confirmar_liquidacion" value="{{lista_planilla.0}}" hidden>
+                                  <input type="text" name="id_colaborador" value="{{colaborador}}" hidden>
+                                  <input type="text" name="5_anos" value="{{lista_datos_liquidar.5}}" hidden>
+                                  <input type="text" name="6_meses" value="{{lista_datos_liquidar.6}}" hidden>
+                                  <input type="text" name="mes_anterior" value="{{lista_datos_liquidar.7}}" hidden>
+                                  <input type="text" name="mes_actual" value="{{lista_datos_liquidar.8}}" hidden>
+                                  <input type="text" name="vacaciones" value="{{lista_datos_liquidar.3}}" hidden>
+                                  <input type="text" name="antiguedad" value="{{lista_datos_liquidar.9}}" hidden>
+                                  <input type="text" name="motivo" value="{{tipo_liquidacion}}" hidden>
+                                  <input type="text" name="fecha_salida" value="{{fecha_salida}}" hidden>
+                                  <input type="text" name="pk_acreedor_empresa" value="{{pk_acreedor_empresa}}" hidden>
+
+                                  <li class="list-group-item "><button class="btn btn-secondary fs-5" type="submit"><i class="bi bi-cloud-arrow-up-fill "></i>  Confirmar Liquidacion.</button></li>
+                                  
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                        
+                          
+
+                          <div class="col-md-12">
+                            <div class="form-check">
+                                <span><strong>Previsualize el desglose de Pagos durante este fecha de corte de Planilla</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+                                                <th class="table-dark">Detalle</th>
+                                                <th class="table-dark">Nombre</th>
+                                                <th class="table-dark">Sueldo Nominal</th>
+                                                <th class="table-dark">Tiempo Laborado</th>
+                                                <th class="table-dark">Vacaciones Provisionales</th>
+                                                <th class="table-dark">XIII Provisionales</th>
+                                               
+                                                <th class="table-dark">PA</th>
+                                                <th class="table-dark">I</th>
+                                                <th class="table-dark">C</th>
+                                               
+                                                <th class="table-dark">Deducciones</th>
+                                                
+                                                <th class="table-dark">Neto Pagar</th>
+                                                <th class="table-dark">Gastos Patronales</th>
+                                                <th class="table-dark">Total Liquidaciones Patron</th>
+                                                
+                                                
+                                                
+                                                
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for clientes in lista_cliente %}
+                                                <tr>
+                                                    <td class="small"><a href="{% url 'liquidacion-detalles/' searched=clientes.0 %}" target="blank">Ver</a></td>
+                                                    <td class="small col-4"><img src="{{ MEDIA_URL }}{{  clientes.13 }}" alt="mdo" width="32" height="32" class="rounded-circle mb-2">  {{ clientes.1 }}</td>
+                                                    
+                                                    <td class="small">$ {{ clientes.2 }}</td>
+                                                    <td class="small"> {{ clientes.3 }}</td>
+                                                    <td class="small">$ {{ clientes.4 }}</td>
+                                                    <td class="small">$ {{ clientes.5 }}</td>
+                                                    <td class="small">$ {{ clientes.6 }} </td>
+                                                    <td class="small">$ {{ clientes.7 }}</td>
+                                                    <td class="small">$ {{ clientes.8 }}</td>
+                                                    <td class="small">$ {{ clientes.9 }}</td>
+                                                    <td class="small"> <button  class="btn btn-success size-font-sm" type="button">$ {{ clientes.10 }}</button></td>
+                                                    <td class="small">$ {{ clientes.11 }}</td>
+                                                    <td class="small">$ {{ clientes.12 }}</td>
+                                                  
+                                         
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                          </div>
+
+                          
+                              
+                          
+                          <div class="col-12">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" id="invalidCheck" disabled >
+                              <label class="form-check-label" for="invalidCheck">
+                                  Inicie motor y asistencia de planilla automatizada para sus Colaboradores.
+                              </label>
+                            
+                            </div>
+                          </div>
+                        
+                      </form>
+                  </div>
+
+              </div>
+            </div> 
+
+        </div>
+        <br>
+        <nav aria-label="Page navigation example">
+            
+                
+            <ul class="pagination justify-content-center ">
+                <li class="page-item ">
+                    <form class="row g-3 needs-validation" method="post" action="{% url 'motor-planilla_p6-l/' %}" >
+                        {% csrf_token %}
+                        
+                        <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                        <input type="text" class="form-control" id="validationCustom01" name="colaborador"  value="{{colaborador}}" hidden>
+                        <input type="text" class="form-control" id="validationCustom01" name="fecha_pago"  value="{{lista_planilla.3}}" hidden>
+                        <button type="submit" class="btn btn-danger">  <span>Regresar  </span>  </button>
+                    </form>
+                        
+                        
+                </li>
+                <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-arrow-left-circle"></i></a></li>
+                <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-arrow-right-circle"></i></a></li>
+                <li class="page-item">
+                    <form class="row g-3 needs-validation" method="post" action="{% url 'motor-planilla_p6-l/' %}">
+                        {% csrf_token %}
+                        {% if siguiente_bool %}
+                            <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                            <input type="text" class="form-control" id="validationCustom01" name="colaborador"  value="{{colaborador}}" hidden>
+                            <input type="text" class="form-control" id="validationCustom01" name="fecha_pago"  value="{{lista_planilla.3}}" hidden>
+                            <button disabled type="submit" class="btn btn-success"> Liquidar</button>
+                        {% else %}
+                            <input type="text" name="planilla" value="{{lista_planilla.0}}" hidden>
+                            <input type="text" class="form-control" id="validationCustom01" name="colaborador"  value="{{colaborador}}" hidden>
+                        <input type="text" class="form-control" id="validationCustom01" name="fecha_pago"  value="{{lista_planilla.3}}" hidden>
+                            <button disabled type="submit" class="btn btn-success" disabled> Liquidar</button>
+
+                        {% endif %}
+                    </form>
+                </li>
+            </ul>
+        </form>
+        </nav>
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        
+        
+  
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+
+            
+            window.addEventListener('beforeunload', function(e) {
+                // Cancela el evento de cierre por defecto
+            e.preventDefault();
+            // Mensaje personalizado de advertencia
+            var mensaje = 'Por favor, no cierres esta pestaña. Aún tienes datos por guardar.';
+            // Asigna el mensaje al evento
+             e.returnValue = mensaje;
+                // Devuelve el mensaje para que el navegador lo muestre
+            return mensaje;
+});
+
+    
+        </script>
+       
+        {% endblock %}
+    </body>
+
+</html>

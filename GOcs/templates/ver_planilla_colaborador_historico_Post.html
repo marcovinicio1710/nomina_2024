@@ -1,0 +1,317 @@
+
+<!doctype html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset=»utf-8»>
+
+    <title>Ver Planilla Colaboradores</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+   
+    
+
+</head>
+
+    <body>
+        
+        {% extends 'base_main_2.html' %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        
+        {% block content %}
+        <br>
+        
+
+        
+        
+        
+        <div class="main-container d-flex">
+            <!--  {% include 'categoria_2.html' %}  --> 
+            {% include 'categoria_2.html' %}
+            <div class="row justify-content-center">
+
+              <div class="col-md-8 mt-5 border rounded p-4 shadow">
+                   {% if agregado == 'existo' %}
+                   <h4 class="text-danger">  {{Mensaje}}  </h4>
+                   {% endif %}
+                  <div class="bd-example m-0 border-0">
+                      <form class="row g-3 needs-validation" method="post">
+                        {% csrf_token %}´
+                        
+                            <div class="col-md-12">
+                                <div class="card" >
+                                    <div class="card-header">
+                                        <strong class="fs-4 text-primary"> <i class="bi bi-check-circle-fill"></i> Previsualizacion de Planilla en periodo exacto.
+                                        </strong>
+                                    </div>
+                            
+                                </div>
+                            </div>
+                        
+                           
+                        
+                         
+                          <div class="col-md-3">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Total Colaboradores <i class="bi bi-people-fill"></i> {{TOTAL_C}}</strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  <li class="list-group-item">Administrativo <i class="bi bi-people-fill"></i> <strong> {{admin}}</strong></li>
+                                  <li class="list-group-item">Produccion <i class="bi bi-people-fill"></i> <strong> {{produccion}}</strong></li>
+                                  
+                                </ul>
+                              </div>
+                          </div>
+
+                          <div class="col-md-5">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Elija Rango de Fechas de Pago Planilla<i class="bi bi-calendar-check-fill"></i> </strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  
+                                  <li class="list-group-item">
+                                    <div class="col-md-12">
+                                        <label for="validationCustom01" class="form-label"><strong>Desde:</strong>  </label>
+                                        <br><input type="date" name="inicial" id="validationdate" value="{{inicio}}" required >
+                                        
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item">
+                                    <div class="col-md-12">
+                                        <label for="validationCustom01" class="form-label"><strong>Hasta:</strong>  </label>
+                                        <br><input type="date" name="final" id="validationdate" value="{{final}}" required >
+                                        
+                                    </div>
+                                  </li>
+                                
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                        
+                          <div class="col-md-4">
+                            <div class="card" >
+                                <div class="card-header">
+                                  <strong class="text-primary">Visualizar todos los Pagos entre rango de Pagos</strong>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  
+                                  <li class="list-group-item"><button class="btn btn-success" type="submit"><i class="bi bi-play-circle-fill"></i>  Iniciar Previsualizacion Planilla</button></li>
+                                  
+                                  
+                                </ul>
+                              </div>
+                          </div>
+                        
+                          <div class="col-md-12">
+                            <div class="form-check">
+                                <span><strong>Previsualize Totales  de Pagos durante estas fechas de corte de Planilla</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla4" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+                                                
+                                                
+                                                <th class="table-dark">Qty Pagos</th>
+                                                <th class="table-dark">Salario Completo</th>
+                                                <th class="table-dark">Salario</th>
+                                                <th class="table-dark">SobreTiempo</th>
+                                                <th class="table-dark">Deducciones de Ley</th>
+                                                <th class="table-dark">Acreedores</th>
+                                                <th class="table-dark">Bonos sin Impuesto</th>
+                                                <th class="table-dark">Vacaciones</th>
+                                                <th class="table-dark">Salario Neto</th>
+                                                <th class="table-dark">Xiii Bruto</th>
+                                                <th class="table-dark">Aportes Patronales Ley</th>
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                                <tr>
+                                                  
+                                                    
+                                                    <td class="small"> {{ lista_totales.0 }}</td>
+                                                    <td class="small"><button disabled class="btn btn-success">$ {{ lista_totales.1|floatformat:2 }}</button></td>
+                                                    
+                                                    <td class="small">$ {{ lista_totales.2 }}</td>
+                                                    <td class="small">$ {{ lista_totales.3 }}</td>
+                                                    <td class="small">$ {{ lista_totales.4 }}</td>
+                                                    <td class="small">$ {{ lista_totales.5 }}</td>
+                                                    <td class="small">$ {{ lista_totales.6 }}</td>
+                                                
+                                                    <td class="small">$ {{ lista_totales.7 }}</td>
+                                                    <td class="small">$ {{ lista_totales.8 }}</td>
+                                                    <td class="small">$ {{ lista_totales.9 }}</td>
+                                                    <td class="small">$ {{ lista_totales.10 }}</td>
+                                                    
+                                                    
+                                                    
+                                                    
+                                                    
+                                                    
+                                         
+                                                </tr>
+                                            
+                                            
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                          </div>
+
+                          <div class="col-md-12">
+                            <div class="form-check">
+                                <span><strong>Previsualize el desglose de Pagos durante este fecha de corte de Planilla</strong></span>
+                                <div class="table-responsive mt-4 shadow">
+                                    <table  id="miTabla" class="table table-bordered table-striped table-hover text-center display">
+                                        <thead>
+                                            <tr>
+                                                <th class="table-dark">Detalle</th>
+                                                <th class="table-dark">Periodo</th>
+                                                <th class="table-dark">Nombre</th>
+                                                <th class="table-dark">Salario Completo</th>
+                                                <th class="table-dark">Salario</th>
+                                                <th class="table-dark">SobreTiempo</th>
+                                                <th class="table-dark">Salario Bruto</th>
+                                                <th class="table-dark">Deducciones de Ley</th>
+                                                
+                                                <th class="table-dark">Acreedores</th>
+                                                <th class="table-dark">Bonos sin Impuesto</th>
+                                                <th class="table-dark">Vacaciones</th>
+                                                <th class="table-dark">Salario Neto</th>
+                                                <th class="table-dark">Xiii Bruto</th>
+                                                <th class="table-dark">Aportes Patronales Ley</th>
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for clientes in lista_cliente %}
+                                                <tr>
+                                                    <td class="small"><a href="{% url 'planilla-detalles/' searched=clientes.11 %}" target="blank">Ver</a></td>
+                                                    <td class="small"> {{ clientes.13}}</td>
+                                                    <td class="small col-4"><img src="{{ MEDIA_URL }}{{  clientes.14 }}" alt="mdo" width="32" height="32" class="rounded-circle mb-2">  {{ clientes.0 }}</td>
+                                                    <td class="small"><button disabled class="btn btn-success">$ {{ clientes.10|floatformat:2 }}</button></td>
+                                                    <td class="small">$ {{ clientes.1 }}</td>
+                                                    <td class="small">$ {{ clientes.2 }}</td>
+                                                    <td class="small">$ {{ clientes.3 }}</td>
+                                                    <td class="small">$ {{ clientes.4 }}</td>
+                                                    <td class="small">$ {{ clientes.5 }}</td>
+                                                    <td class="small">$ {{ clientes.6 }}</td>
+                                                    <td class="small">$ {{ clientes.12 }}</td>
+                                                    <td class="small">$ {{ clientes.7 }}</td>
+                                                    <td class="small">$ {{ clientes.8 }}</td>
+                                                    <td class="small">$ {{ clientes.9 }}</td>
+                                                    
+                                                    
+                                                    
+                                                    
+                                                    
+                                         
+                                                </tr>
+                                            {% endfor %}
+                                            
+                                            <!-- Agrega más filas según sea necesario -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                              
+
+                          </div>
+
+                          
+                              
+                          
+                          <div class="col-12">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" id="invalidCheck" disabled >
+                              <label class="form-check-label" for="invalidCheck">
+                                  Inicie motor y asistencia de planilla automatizada para sus Colaboradores.
+                              </label>
+                            
+                            </div>
+                          </div>
+                        
+                      </form>
+                  </div>
+
+              </div>
+            </div> 
+
+        </div>
+        <br>
+        
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        
+        
+  
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla').DataTable();
+            });
+
+            $(document).ready(function () {
+                // Inicializar DataTables después de cargar los datos
+                $('#miTabla_2').DataTable();
+            });
+
+
+            $("#navbarTogglerDemo03").on('show.bs.collapse', function() {
+                $('a.nav-link').click(function() {
+                    $("#navbarTogglerDemo03").collapse('hide');
+                    });
+                });
+
+            $(".sidebar ul li").on('click' , function(){
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).addClass('active');
+            });
+    
+                $('.open-btn').on('click' , function(){
+                $('.sidebar').addClass('active');
+                
+            });
+    
+            $('.close-btn').on('click' , function(){
+                $('.sidebar').removeClass('active');
+                
+            });
+
+            
+            
+
+    
+        </script>
+       
+        {% endblock %}
+    </body>
+
+</html>
