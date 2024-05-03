@@ -12662,6 +12662,7 @@ def motor_planilla_p3(request):
                     fin_cierre=False            
                 
             if error:
+                 a=1
                  #print('render con msj error')
                  #print(msj_Error)
                 
@@ -12970,6 +12971,7 @@ def motor_planilla_p4(request):
                        
                 
             if error:
+                 a=1
                  #print('render con msj error')
                  ##print(msj_Error)
                 
@@ -13267,6 +13269,7 @@ def motor_planilla_p9(request):
 
 
             if error:
+                 a=1
                  #print('render con msj error')
                  ##print(msj_Error)
                 
@@ -13739,6 +13742,7 @@ def motor_planilla_p5(request):
                  
 
             if error:
+                 a=1
                  #print('render con msj error')
                  ##print(msj_Error)
                 
@@ -13901,6 +13905,7 @@ def motor_planilla_p6(request):
 
             
             if error:
+                 a=1
                  #print('render con msj error')
                  ##print(msj_Error)
                 
@@ -14179,6 +14184,7 @@ def motor_planilla_p7(request):
                     fin_cierre=False            
                 
             if error:
+                 a=1
                  #print('render con msj error')
                  #print(msj_Error)
                 
@@ -14462,6 +14468,7 @@ def motor_planilla_p8(request):
                     fin_cierre=False            
                 
             if error:
+                 a=1
                  #print('render con msj error')
                  ##print(msj_Error)
                 
@@ -20855,6 +20862,7 @@ def motor_planilla_p3_l(request):
                     fin_cierre=False            
                 
             if error:
+                 a=1
                  #print('render con msj error')
                  #print(msj_Error)
                 
@@ -21140,8 +21148,9 @@ def motor_planilla_p4_l(request):
                     fin_cierre=False            
                 
             if error:
+                 a=1
                  #print('render con msj error')
-                 ##print(msj_Error)
+                 #print(msj_Error)
                 
                 
         
@@ -21397,6 +21406,7 @@ def motor_planilla_p5_l(request):
 
 
             if error:
+                 a=1
                  #print('render con msj error')
                  ##print(msj_Error)
                 
