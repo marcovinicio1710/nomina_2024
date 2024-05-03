@@ -6062,6 +6062,10 @@ def agregar_colaborador(request):
 
 
             if supervisor==1:
+                print('estoy en supervisor')
+                if True:
+                    print('Jornada_Laboral_Equitativa_Semanal',bool_Jornada_HR_Semanal, 'imagen',archivo_guardado, 'Colaborador_nombre',name_colaborador, 'Colaborador_apellido', lastname_colaborador, 'Tipo_documento',tipo_documento,'Nro_Identificacion', nro_Identificacion,'Nro_Seguro_Social',nro_Seguro_Social, 'Direccion' , direccion_empresa,'Ciudad' , estado_empresa, 'Telefono' , Telefono_empresa, 'Correo' , correo, 'Profesion' , profesion, 'Cargo',cargo, 'Departamento',departamento,'Tipo_contrato',tipo_contrato, 'Tipo_pago',forma_pago, 'Sueldo',sueldo,'Nombre_Banco',banco_nombre,'Tipo_cuenta',tipo_cuenta,'Nro_cuenta',nro_cuenta_banco,'Fecha_Ingreso',fecha_ingreso,'Fecha_Egreso',fecha_egreso,'Contanto_Urgencia' , nombre_urgencia,'Telefono_Urgencia' , telefono_urgencia, 'Status' , status,'Hora_entrada',hora_entrada,'Hora_salida',hora_salida,'Dia_descanso_1', dia_descanso_1,'Dia_descanso_2', dia_descanso_2,'Almuerzo_bool', almuerzo_aplica, 'Inicio_Hora_Almuerzo',inicio_Almuerzo,'Jornada_diaria',jornada_diaria,'Jornada_semanal',jornada_semanal,'Tipo_Jornada',tipo_jornada,'Sexo',sexo,'Fecha_nacimiento',fecha_nacimiento,'Estado_civil',estado_civil, 'Nro_Hijos',hijos, 'Posee_Licencia_Vehicular',licencia_conducir,'Posee_Carro_Vehicular',posee_vehiculo)
+            
             
                 created = Colaboradores.objects.create(Jornada_Laboral_Equitativa_Semanal=bool_Jornada_HR_Semanal, imagen=archivo_guardado, Colaborador_nombre=name_colaborador, Colaborador_apellido= lastname_colaborador, Tipo_documento=tipo_documento,Nro_Identificacion= nro_Identificacion,Nro_Seguro_Social=nro_Seguro_Social, Direccion = direccion_empresa,Ciudad = estado_empresa, Telefono = Telefono_empresa, Correo = correo, Profesion = profesion, Cargo=cargo, Departamento=departamento,Tipo_contrato=tipo_contrato, Tipo_pago=forma_pago, Sueldo=sueldo,Nombre_Banco=banco_nombre,Tipo_cuenta=tipo_cuenta,Nro_cuenta=nro_cuenta_banco,Fecha_Ingreso=fecha_ingreso,Fecha_Egreso=fecha_egreso,Contanto_Urgencia = nombre_urgencia,Telefono_Urgencia = telefono_urgencia, Status = status,Hora_entrada=hora_entrada,Hora_salida=hora_salida,Dia_descanso_1= dia_descanso_1,Dia_descanso_2= dia_descanso_2,Almuerzo_bool= almuerzo_aplica, Inicio_Hora_Almuerzo=inicio_Almuerzo,Jornada_diaria=jornada_diaria,Jornada_semanal=jornada_semanal,Tipo_Jornada=tipo_jornada,Sexo=sexo,Fecha_nacimiento=fecha_nacimiento,Estado_civil=estado_civil, Nro_Hijos=hijos, Posee_Licencia_Vehicular=licencia_conducir,Posee_Carro_Vehicular=posee_vehiculo)
             
@@ -6108,6 +6112,8 @@ def agregar_colaborador(request):
         except Exception as e:
             print("Se produjo una excepción:", type(e).__name__, "-", e)
             # Imprimir la información de la traza de la excepción
+            traceback.print_exc()
+            print(traceback.print_exc(), 'print')
             print("Archivo:", e.__traceback__.tb_frame.f_code.co_filename)
             print("Línea:", e.__traceback__.tb_lineno)
 
