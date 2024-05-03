@@ -5980,130 +5980,133 @@ def agregar_colaborador(request):
         
         return render(request, "agregar_colaborador.html", {'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'lista_departamento':lista_departamento, 'lista_supervisores':lista_supervisores, 'qty_notificaciones_permisos':qty_notificaciones_permisos, 'qty_notificaciones_acreedores':qty_notificaciones_acreedores})
     elif request.method=='POST':
-        print(request.POST)
-        
-        id_empresa=1
-        lista_departamento=Departamento_Empresa.objects.filter(Empresa_id=id_empresa)
-        values= list(request.POST.keys())
-
-        tipo_documento=request.POST["tipo_documento"]
-        nro_Identificacion=request.POST["Nro_Identificacion"]
-        nro_Identificacion=nro_Identificacion.replace(' ','')
-        name_colaborador=request.POST["name_colaborador"]
-        lastname_colaborador=request.POST["lastname_colaborador"]
-        nro_Seguro_Social=request.POST["nro_Seguro_Social"]
-        correo=request.POST["correo"]
-        Telefono_empresa=request.POST["Telefono_empresa"]
-        sexo=request.POST["sexo"]
-        fecha_nacimiento=request.POST["fecha_nacimiento"]
-        estado_civil=request.POST["estado_civil"]
-        hijos=int(request.POST["hijos"])
-        licencia_conducir=request.POST["licencia_conducir"]
-        posee_vehiculo=request.POST["posee_vehiculo"]
-        direccion_empresa=request.POST["Direccion_empresa"]
-        estado_empresa=request.POST["Estado_empresa"]
-        profesion=request.POST["profesion"]
-        cargo=request.POST["cargo"]
-        departamento=request.POST["departamento"]
-        tipo_contrato=request.POST["tipo_contrato"]
-        fecha_ingreso=request.POST["fecha_ingreso"]
-        fecha_egreso=request.POST["fecha_egreso"]
-        hora_entrada=request.POST["hora_entrada"]
-        hora_salida=request.POST["hora_salida"]
-        dia_descanso_1=int(request.POST["dia_descanso_1"])
-        dia_descanso_2=int(request.POST["dia_descanso_2"])
-        almuerzo_aplica=request.POST["almuerzo_aplica"]
-        if almuerzo_aplica=='Si':
-            almuerzo_aplica=True
-        else:
-            almuerzo_aplica=False
-        inicio_Almuerzo=request.POST["inicio_Almuerzo"]
-        jornada_diaria=float(request.POST["jornada_diaria"])
-        jornada_semanal=int(request.POST["jornada_semanal"])
-        tipo_jornada=request.POST["tipo_jornada"]
-        forma_pago=request.POST["forma_pago"]
-        tipo_cuenta=request.POST["tipo_cuenta"]
-        banco_nombre=request.POST["banco_nombre"]
-        nro_cuenta_banco=int(request.POST["nro_cuenta_banco"])
-        nombre_urgencia=request.POST["nombre_urgencia"]
-        telefono_urgencia=request.POST["telefono_urgencia"]
-        status=request.POST["status"]
-        sueldo=float(request.POST["sueldo"])
-        supervisor=int(request.POST["supervisor"])
-        archivos = list(request.FILES.keys())
-        bool_Jornada_HR_Semanal=request.POST["bool_Jornada_HR_Semanal"]
-        if bool_Jornada_HR_Semanal=='Si':
-            bool_Jornada_HR_Semanal=True
-        else:
-            bool_Jornada_HR_Semanal=False
-        
-        if 'archivo' in archivos :
-            colaborador_id=len(Colaboradores.objects.all())
+        try:
+            print(request.POST)
             
-            archivo_imagen = request.FILES["archivo"]
-            # Generar un nuevo nombre de archivo utilizando el nombre original
-            nombre_original, extension = os.path.splitext(archivo_imagen.name)
-            empresa='GoCleaning/'
-            subpath=empresa+'Colaborador/imagen/'
-            # Generar un nuevo nombre de archivo utilizando el nombre original sin la extensión
-            nombre_archivo = f'{subpath}{slugify(nombre_original)}_{colaborador_id}{extension}'  # Cambia 'carpeta' por el nombre de tu subcarpeta
+            id_empresa=1
+            lista_departamento=Departamento_Empresa.objects.filter(Empresa_id=id_empresa)
+            values= list(request.POST.keys())
 
-            archivo_guardado = default_storage.save(nombre_archivo, archivo_imagen)
-            #archivo_url = default_storage.url(archivo_guardado)
-        
-           
-
-        
-        else:
-            archivo_guardado='no_hay_archivo.jpg'
-            
-
-
-        if supervisor==1:
-        
-            created = Colaboradores.objects.create(Jornada_Laboral_Equitativa_Semanal=bool_Jornada_HR_Semanal, imagen=archivo_guardado, Colaborador_nombre=name_colaborador, Colaborador_apellido= lastname_colaborador, Tipo_documento=tipo_documento,Nro_Identificacion= nro_Identificacion,Nro_Seguro_Social=nro_Seguro_Social, Direccion = direccion_empresa,Ciudad = estado_empresa, Telefono = Telefono_empresa, Correo = correo, Profesion = profesion, Cargo=cargo, Departamento=departamento,Tipo_contrato=tipo_contrato, Tipo_pago=forma_pago, Sueldo=sueldo,Nombre_Banco=banco_nombre,Tipo_cuenta=tipo_cuenta,Nro_cuenta=nro_cuenta_banco,Fecha_Ingreso=fecha_ingreso,Fecha_Egreso=fecha_egreso,Contanto_Urgencia = nombre_urgencia,Telefono_Urgencia = telefono_urgencia, Status = status,Hora_entrada=hora_entrada,Hora_salida=hora_salida,Dia_descanso_1= dia_descanso_1,Dia_descanso_2= dia_descanso_2,Almuerzo_bool= almuerzo_aplica, Inicio_Hora_Almuerzo=inicio_Almuerzo,Jornada_diaria=jornada_diaria,Jornada_semanal=jornada_semanal,Tipo_Jornada=tipo_jornada,Sexo=sexo,Fecha_nacimiento=fecha_nacimiento,Estado_civil=estado_civil, Nro_Hijos=hijos, Posee_Licencia_Vehicular=licencia_conducir,Posee_Carro_Vehicular=posee_vehiculo)
-        
-        else:
-            supervisor_instance= Colaboradores.objects.get(pk=supervisor)
-            created = Colaboradores.objects.create(Jornada_Laboral_Equitativa_Semanal=bool_Jornada_HR_Semanal, imagen=archivo_guardado, Colaborador_nombre=name_colaborador, Colaborador_apellido= lastname_colaborador, Tipo_documento=tipo_documento,Nro_Identificacion= nro_Identificacion,Nro_Seguro_Social=nro_Seguro_Social, Direccion = direccion_empresa,Ciudad = estado_empresa, Telefono = Telefono_empresa, Correo = correo, Profesion = profesion, Cargo=cargo, Departamento=departamento,Tipo_contrato=tipo_contrato, Tipo_pago=forma_pago, Sueldo=sueldo,Nombre_Banco=banco_nombre,Tipo_cuenta=tipo_cuenta,Nro_cuenta=nro_cuenta_banco,Fecha_Ingreso=fecha_ingreso,Fecha_Egreso=fecha_egreso,Contanto_Urgencia = nombre_urgencia,Telefono_Urgencia = telefono_urgencia, Status = status,Hora_entrada=hora_entrada,Hora_salida=hora_salida,Dia_descanso_1= dia_descanso_1,Dia_descanso_2= dia_descanso_2,Almuerzo_bool= almuerzo_aplica, Inicio_Hora_Almuerzo=inicio_Almuerzo,Jornada_diaria=jornada_diaria,Jornada_semanal=jornada_semanal,Tipo_Jornada=tipo_jornada,Sexo=sexo,Fecha_nacimiento=fecha_nacimiento,Estado_civil=estado_civil, Nro_Hijos=hijos, Posee_Licencia_Vehicular=licencia_conducir,Posee_Carro_Vehicular=posee_vehiculo, Supervisor=supervisor_instance)
-        
-        if True: #guardar Novedades
-            tipo_seguimiento='Colaborador'
-            sUB_Tipo_seguimiento=' Creacion'
-            comment=' Creacion Colaborador : '+name_colaborador+' '+lastname_colaborador+' Nro Identificacion: '+nro_Identificacion
-            fecha_novedad_date=datetime.now()
-            fecha_novedad=fecha_novedad_date.date()
-            hora_actual = fecha_novedad_date.strftime('%H:%M')
-            
-            if es_admin:
-
-                novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
-                                                            SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
-                                                            comentario= comment ,
-                                                            Fecha_novedad=fecha_novedad ,
-                                                            hora_novedad=hora_actual 
-                                                                                )
+            tipo_documento=request.POST["tipo_documento"]
+            nro_Identificacion=request.POST["Nro_Identificacion"]
+            nro_Identificacion=nro_Identificacion.replace(' ','')
+            name_colaborador=request.POST["name_colaborador"]
+            lastname_colaborador=request.POST["lastname_colaborador"]
+            nro_Seguro_Social=request.POST["nro_Seguro_Social"]
+            correo=request.POST["correo"]
+            Telefono_empresa=request.POST["Telefono_empresa"]
+            sexo=request.POST["sexo"]
+            fecha_nacimiento=request.POST["fecha_nacimiento"]
+            estado_civil=request.POST["estado_civil"]
+            hijos=int(request.POST["hijos"])
+            licencia_conducir=request.POST["licencia_conducir"]
+            posee_vehiculo=request.POST["posee_vehiculo"]
+            direccion_empresa=request.POST["Direccion_empresa"]
+            estado_empresa=request.POST["Estado_empresa"]
+            profesion=request.POST["profesion"]
+            cargo=request.POST["cargo"]
+            departamento=request.POST["departamento"]
+            tipo_contrato=request.POST["tipo_contrato"]
+            fecha_ingreso=request.POST["fecha_ingreso"]
+            fecha_egreso=request.POST["fecha_egreso"]
+            hora_entrada=request.POST["hora_entrada"]
+            hora_salida=request.POST["hora_salida"]
+            dia_descanso_1=int(request.POST["dia_descanso_1"])
+            dia_descanso_2=int(request.POST["dia_descanso_2"])
+            almuerzo_aplica=request.POST["almuerzo_aplica"]
+            if almuerzo_aplica=='Si':
+                almuerzo_aplica=True
             else:
-                novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
-                                                            SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
-                                                            comentario= comment ,
-                                                            Fecha_novedad=fecha_novedad ,
-                                                            hora_novedad=hora_actual ,
-                                                            Colaborador= user_profile_obj.Colaborador
-                                                                                )
-    
+                almuerzo_aplica=False
+            inicio_Almuerzo=request.POST["inicio_Almuerzo"]
+            jornada_diaria=float(request.POST["jornada_diaria"])
+            jornada_semanal=int(request.POST["jornada_semanal"])
+            tipo_jornada=request.POST["tipo_jornada"]
+            forma_pago=request.POST["forma_pago"]
+            tipo_cuenta=request.POST["tipo_cuenta"]
+            banco_nombre=request.POST["banco_nombre"]
+            nro_cuenta_banco=int(request.POST["nro_cuenta_banco"])
+            nombre_urgencia=request.POST["nombre_urgencia"]
+            telefono_urgencia=request.POST["telefono_urgencia"]
+            status=request.POST["status"]
+            sueldo=float(request.POST["sueldo"])
+            supervisor=int(request.POST["supervisor"])
+            archivos = list(request.FILES.keys())
+            bool_Jornada_HR_Semanal=request.POST["bool_Jornada_HR_Semanal"]
+            if bool_Jornada_HR_Semanal=='Si':
+                bool_Jornada_HR_Semanal=True
+            else:
+                bool_Jornada_HR_Semanal=False
+            
+            if 'archivo' in archivos :
+                colaborador_id=len(Colaboradores.objects.all())
+                
+                archivo_imagen = request.FILES["archivo"]
+                # Generar un nuevo nombre de archivo utilizando el nombre original
+                nombre_original, extension = os.path.splitext(archivo_imagen.name)
+                empresa='GoCleaning/'
+                subpath=empresa+'Colaborador/imagen/'
+                # Generar un nuevo nombre de archivo utilizando el nombre original sin la extensión
+                nombre_archivo = f'{subpath}{slugify(nombre_original)}_{colaborador_id}{extension}'  # Cambia 'carpeta' por el nombre de tu subcarpeta
+
+                archivo_guardado = default_storage.save(nombre_archivo, archivo_imagen)
+                #archivo_url = default_storage.url(archivo_guardado)
+            
+            
+
+            
+            else:
+                archivo_guardado='no_hay_archivo.jpg'
+                
+
+
+            if supervisor==1:
+            
+                created = Colaboradores.objects.create(Jornada_Laboral_Equitativa_Semanal=bool_Jornada_HR_Semanal, imagen=archivo_guardado, Colaborador_nombre=name_colaborador, Colaborador_apellido= lastname_colaborador, Tipo_documento=tipo_documento,Nro_Identificacion= nro_Identificacion,Nro_Seguro_Social=nro_Seguro_Social, Direccion = direccion_empresa,Ciudad = estado_empresa, Telefono = Telefono_empresa, Correo = correo, Profesion = profesion, Cargo=cargo, Departamento=departamento,Tipo_contrato=tipo_contrato, Tipo_pago=forma_pago, Sueldo=sueldo,Nombre_Banco=banco_nombre,Tipo_cuenta=tipo_cuenta,Nro_cuenta=nro_cuenta_banco,Fecha_Ingreso=fecha_ingreso,Fecha_Egreso=fecha_egreso,Contanto_Urgencia = nombre_urgencia,Telefono_Urgencia = telefono_urgencia, Status = status,Hora_entrada=hora_entrada,Hora_salida=hora_salida,Dia_descanso_1= dia_descanso_1,Dia_descanso_2= dia_descanso_2,Almuerzo_bool= almuerzo_aplica, Inicio_Hora_Almuerzo=inicio_Almuerzo,Jornada_diaria=jornada_diaria,Jornada_semanal=jornada_semanal,Tipo_Jornada=tipo_jornada,Sexo=sexo,Fecha_nacimiento=fecha_nacimiento,Estado_civil=estado_civil, Nro_Hijos=hijos, Posee_Licencia_Vehicular=licencia_conducir,Posee_Carro_Vehicular=posee_vehiculo)
+            
+            else:
+                supervisor_instance= Colaboradores.objects.get(pk=supervisor)
+                created = Colaboradores.objects.create(Jornada_Laboral_Equitativa_Semanal=bool_Jornada_HR_Semanal, imagen=archivo_guardado, Colaborador_nombre=name_colaborador, Colaborador_apellido= lastname_colaborador, Tipo_documento=tipo_documento,Nro_Identificacion= nro_Identificacion,Nro_Seguro_Social=nro_Seguro_Social, Direccion = direccion_empresa,Ciudad = estado_empresa, Telefono = Telefono_empresa, Correo = correo, Profesion = profesion, Cargo=cargo, Departamento=departamento,Tipo_contrato=tipo_contrato, Tipo_pago=forma_pago, Sueldo=sueldo,Nombre_Banco=banco_nombre,Tipo_cuenta=tipo_cuenta,Nro_cuenta=nro_cuenta_banco,Fecha_Ingreso=fecha_ingreso,Fecha_Egreso=fecha_egreso,Contanto_Urgencia = nombre_urgencia,Telefono_Urgencia = telefono_urgencia, Status = status,Hora_entrada=hora_entrada,Hora_salida=hora_salida,Dia_descanso_1= dia_descanso_1,Dia_descanso_2= dia_descanso_2,Almuerzo_bool= almuerzo_aplica, Inicio_Hora_Almuerzo=inicio_Almuerzo,Jornada_diaria=jornada_diaria,Jornada_semanal=jornada_semanal,Tipo_Jornada=tipo_jornada,Sexo=sexo,Fecha_nacimiento=fecha_nacimiento,Estado_civil=estado_civil, Nro_Hijos=hijos, Posee_Licencia_Vehicular=licencia_conducir,Posee_Carro_Vehicular=posee_vehiculo, Supervisor=supervisor_instance)
+            
+            if True: #guardar Novedades
+                tipo_seguimiento='Colaborador'
+                sUB_Tipo_seguimiento=' Creacion'
+                comment=' Creacion Colaborador : '+name_colaborador+' '+lastname_colaborador+' Nro Identificacion: '+nro_Identificacion
+                fecha_novedad_date=datetime.now()
+                fecha_novedad=fecha_novedad_date.date()
+                hora_actual = fecha_novedad_date.strftime('%H:%M')
+                
+                if es_admin:
+
+                    novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
+                                                                SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
+                                                                comentario= comment ,
+                                                                Fecha_novedad=fecha_novedad ,
+                                                                hora_novedad=hora_actual 
+                                                                                    )
+                else:
+                    novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
+                                                                SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
+                                                                comentario= comment ,
+                                                                Fecha_novedad=fecha_novedad ,
+                                                                hora_novedad=hora_actual ,
+                                                                Colaborador= user_profile_obj.Colaborador
+                                                                                    )
         
+            
+                
+
+            lista_supervisores=[]
+            lista_clientes=Colaboradores.objects.all()
+            for lista in lista_clientes:
+                value=lista.pk
+                nombre=lista.Colaborador_nombre+' '+lista.Colaborador_apellido
+                lista_supervisores.append([value,nombre])
+
+            return render(request, "agregar_colaborador.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'agregado':'existo','colaborador':name_colaborador+' '+lastname_colaborador, 'lista_departamento':lista_departamento, 'lista_supervisores':lista_supervisores, 'qty_notificaciones_permisos':qty_notificaciones_permisos, 'qty_notificaciones_acreedores':qty_notificaciones_acreedores})
+        except Exception as e:
+             print(e)
              
-
-        lista_supervisores=[]
-        lista_clientes=Colaboradores.objects.all()
-        for lista in lista_clientes:
-             value=lista.pk
-             nombre=lista.Colaborador_nombre+' '+lista.Colaborador_apellido
-             lista_supervisores.append([value,nombre])
-
-        return render(request, "agregar_colaborador.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'agregado':'existo','colaborador':name_colaborador+' '+lastname_colaborador, 'lista_departamento':lista_departamento, 'lista_supervisores':lista_supervisores, 'qty_notificaciones_permisos':qty_notificaciones_permisos, 'qty_notificaciones_acreedores':qty_notificaciones_acreedores})
-
 def previsualisar_colaboradores(request):
     if True: #Autenticacion
         if not request.user.is_authenticated:
