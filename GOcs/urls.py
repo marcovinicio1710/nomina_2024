@@ -88,6 +88,8 @@ urlpatterns = [
     path('Cleaning_Go/Pagina_no_Permitida/', views.pagina_no_permitida, name='pagina_no_permitida'),
     path('Cleaning_Go/Planilla_Cerrada/', views.pagina_planilla_cerrada, name='pagina_planilla_cerrada'),
     path('Cleaning_Go/Planilla_Creada/', views.pagina_planilla_creada, name='pagina_planilla_creada'),
+    path('Cleaning_Go/crear_admin/', views.crear_admin, name='crear_admin'),
+    
     
     
     
