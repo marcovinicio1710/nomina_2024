@@ -5980,6 +5980,8 @@ def agregar_colaborador(request):
         
         return render(request, "agregar_colaborador.html", {'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'lista_departamento':lista_departamento, 'lista_supervisores':lista_supervisores, 'qty_notificaciones_permisos':qty_notificaciones_permisos, 'qty_notificaciones_acreedores':qty_notificaciones_acreedores})
     elif request.method=='POST':
+        print(request.POST)
+        
         id_empresa=1
         lista_departamento=Departamento_Empresa.objects.filter(Empresa_id=id_empresa)
         values= list(request.POST.keys())
