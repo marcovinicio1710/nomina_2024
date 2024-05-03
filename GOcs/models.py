@@ -71,7 +71,7 @@ class Colaboradores(models.Model):
     Sueldo=models.FloatField(help_text="como se va pagar el sueldo " )
     Nombre_Banco=models.CharField(max_length=100,help_text="como se va pagar el sueldo " )
     Tipo_cuenta=models.CharField(max_length=100,help_text="como se va pagar el sueldo " )
-    Nro_cuenta=models.IntegerField(help_text="solo en numero el numero de cuenta " )
+    Nro_cuenta=models.BigIntegerField(help_text="solo en numero el numero de cuenta " )
     Fecha_Ingreso=models.DateField( help_text="fecha ingreso")
     Fecha_Egreso=models.DateField( help_text="fecha egreso",default="9999-12-31")
     Contanto_Urgencia = models.CharField(max_length=60, help_text="The number of the RIF.", default='Sin contacto')
