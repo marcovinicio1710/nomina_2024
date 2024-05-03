@@ -6106,8 +6106,10 @@ def agregar_colaborador(request):
 
             return render(request, "agregar_colaborador.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'agregado':'existo','colaborador':name_colaborador+' '+lastname_colaborador, 'lista_departamento':lista_departamento, 'lista_supervisores':lista_supervisores, 'qty_notificaciones_permisos':qty_notificaciones_permisos, 'qty_notificaciones_acreedores':qty_notificaciones_acreedores})
         except Exception as e:
-            print(e)
-            traceback.print_exc()
+            print("Se produjo una excepción:", type(e).__name__, "-", e)
+            # Imprimir la información de la traza de la excepción
+            print("Archivo:", e.__traceback__.tb_frame.f_code.co_filename)
+            print("Línea:", e.__traceback__.tb_lineno)
 
 def previsualisar_colaboradores(request):
     if True: #Autenticacion
