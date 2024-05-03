@@ -7635,8 +7635,10 @@ def ver_carta_trabajo(request,  searched='1'):
 
             paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
 
-            paragraph1 = doc.add_paragraph('\n\n\n_________________________________\n'+user_profile_obj.Colaborador.Colaborador_nombre+' '+user_profile_obj.Colaborador.Colaborador_apellido+'\n'+user_profile_obj.Colaborador.Departamento+'\nGO SERVICES, S.A. - Tel. 391-6290/ 6711-3149'+'\nCorreo: Info@go-cleaning.com - Visítenos en www.go-cleaning.com')
-        
+            try:
+                paragraph1 = doc.add_paragraph('\n\n\n_________________________________\n'+user_profile_obj.Colaborador.Colaborador_nombre+' '+user_profile_obj.Colaborador.Colaborador_apellido+'\n'+user_profile_obj.Colaborador.Departamento+'\nGO SERVICES, S.A. - Tel. 391-6290/ 6711-3149'+'\nCorreo: Info@go-cleaning.com - Visítenos en www.go-cleaning.com')
+            except:
+                paragraph1 = doc.add_paragraph('\n\n\n_________________________________\n'+user_profile_obj.user.first_name+' '+user_profile_obj.user.last_name+'\n'+'Gerencia General'+'\nGO SERVICES, S.A. - Tel. 391-6290/ 6711-3149'+'\nCorreo: Info@go-cleaning.com - Visítenos en www.go-cleaning.com')
         empresa='GoCleaning/' 
         path=empresa+'archivos/' 
         
@@ -7661,6 +7663,7 @@ def ver_carta_trabajo(request,  searched='1'):
         
         
         return render(request, "ver_carta_trabajo.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'name_file':name_file, 'MEDIA_URL':settings.MEDIA_URL, 'name_1':nombre_archivo_WORD, 'lista_cliente':lista_final, 'qty_notificaciones_permisos':qty_notificaciones_permisos, 'qty_notificaciones_acreedores':qty_notificaciones_acreedores, 'Colaborador_obj':Colaborador_obj, 'pk_colaborador':searched, })
+     
      except Exception as e:
             print("Se produjo una excepción:", type(e).__name__, "-", e)
             # Imprimir la información de la traza de la excepción
@@ -7668,6 +7671,7 @@ def ver_carta_trabajo(request,  searched='1'):
             print(traceback.print_exc(), 'print')
             print("Archivo:", e.__traceback__.tb_frame.f_code.co_filename)
             print("Línea:", e.__traceback__.tb_lineno)
+
 def ver_archivos_colaborador(request,  searched='1'):
     if True: #Autenticacion
         if not request.user.is_authenticated:
