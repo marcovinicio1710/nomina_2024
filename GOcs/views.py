@@ -11772,35 +11772,43 @@ def motor_planilla(request):
     lista_planilla=[codigo_planilla,fecha_inicial_corte,fecha_final_corte,fecha_pago]     
 
     if request.method=='GET':
-        
-        lista_final=[]
-        palabra_a_excluir = "Administrativo"
-        lista_colaboradores=Colaboradores.objects.filter(Status__icontains='Activo')
-        lista_administrativo=lista_colaboradores.filter(Departamento__icontains='Administrativo')
-        lista_produccion=lista_colaboradores.exclude(Departamento__icontains=palabra_a_excluir)
-        
-        lista_clientes=Acreedores.objects.all()
-
-        #palabra_a_excluir = "excluir_palabra"
-
-# Filtrar los objetos excluyendo aquellos que contienen la palabra a excluir
-        #resultados_filtrados = TuModelo.objects.exclude(nombre__icontains=palabra_a_excluir)
-        for i in range(len(lista_colaboradores)):
+        try:    
+            lista_final=[]
+            palabra_a_excluir = "Administrativo"
+            lista_colaboradores=Colaboradores.objects.filter(Status__icontains='Activo')
+            lista_administrativo=lista_colaboradores.filter(Departamento__icontains='Administrativo')
+            lista_produccion=lista_colaboradores.exclude(Departamento__icontains=palabra_a_excluir)
             
-            lista=[lista_colaboradores[i].pk,
-                   lista_colaboradores[i].Nro_Identificacion,
-                   lista_colaboradores[i].Colaborador_nombre,
-                   lista_colaboradores[i].Colaborador_apellido,
-                   lista_colaboradores[i].Cargo,
-                   lista_colaboradores[i].Departamento,
-                   lista_colaboradores[i].Supervisor
-                   ]
-              
-                        
-            lista_final.append(lista)
-        
-        
-        return render(request, "motor_planilla.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'lista_cliente':lista_final,'qty_notificaciones_permisos':qty_notificaciones_permisos,'qty_notificaciones_acreedores':qty_notificaciones_acreedores, 'TOTAL_C':len(lista_administrativo)+len(lista_produccion),'admin':len(lista_administrativo), 'produccion':len(lista_produccion),'lista_planilla':lista_planilla})
+            lista_clientes=Acreedores.objects.all()
+
+            #palabra_a_excluir = "excluir_palabra"
+
+            # Filtrar los objetos excluyendo aquellos que contienen la palabra a excluir
+            #resultados_filtrados = TuModelo.objects.exclude(nombre__icontains=palabra_a_excluir)
+            for i in range(len(lista_colaboradores)):
+                
+                lista=[lista_colaboradores[i].pk,
+                    lista_colaboradores[i].Nro_Identificacion,
+                    lista_colaboradores[i].Colaborador_nombre,
+                    lista_colaboradores[i].Colaborador_apellido,
+                    lista_colaboradores[i].Cargo,
+                    lista_colaboradores[i].Departamento,
+                    lista_colaboradores[i].Supervisor
+                    ]
+                
+                            
+                lista_final.append(lista)
+            
+            
+            return render(request, "motor_planilla.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'lista_cliente':lista_final,'qty_notificaciones_permisos':qty_notificaciones_permisos,'qty_notificaciones_acreedores':qty_notificaciones_acreedores, 'TOTAL_C':len(lista_administrativo)+len(lista_produccion),'admin':len(lista_administrativo), 'produccion':len(lista_produccion),'lista_planilla':lista_planilla})
+        except Exception as e:
+            print("Se produjo una excepción:", type(e).__name__, "-", e)
+            # Imprimir la información de la traza de la excepción
+            traceback.print_exc()
+            print(traceback.print_exc(), 'print')
+            print("Archivo:", e.__traceback__.tb_frame.f_code.co_filename)
+            print("Línea:", e.__traceback__.tb_lineno)
+    
     elif request.method=='POST':
         #print(request.POST)
         # #print(request.FILES['archivo'])
