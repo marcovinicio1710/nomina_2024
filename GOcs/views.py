@@ -18767,7 +18767,7 @@ def comprobantes_pagos(request):
                     final_corte=25
                     mes_inicial=mes
                     year_inicial=year
-                    fecha_pago = calendar.monthrange(fecha_final_corte.year, fecha_final_corte.month)[1]
+                    fecha_pago = calendar.monthrange(year_inicial, mes_inicial)[1]
 
             
                 fecha_pago_date=datetime(year, mes, fecha_pago)    
