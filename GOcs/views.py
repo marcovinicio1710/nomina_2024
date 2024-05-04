@@ -17080,7 +17080,7 @@ def txt_quincena(request):
              
 
               archivo_bonos = BytesIO()
-              archivo_bonos.write(string_transf_xiii.encode())
+              archivo_bonos.write(string_transf_bonos.encode())
               archivo_bonos.seek(0)
               archivo_temporal = File(archivo_bonos, name=nombre_archivo_bono)
               try:
