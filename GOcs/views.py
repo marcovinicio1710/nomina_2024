@@ -17177,7 +17177,7 @@ def txt_quincena(request):
                     excel_buffer.close()
 
         
-        return render(request, "ver_txt.html",{"name": 'Descargue TXT para pago de nomina quincela', 'MEDIA_URL':settings.MEDIA_URL, 'name_1':nombre_archivo_quincena ,'name_xiii':nombre_archivo_bono, 'name_bonos':nombre_archivo_bono , 'name_xlsx':nombre_archivo_excel, 'request':request.method , 'lista_cliente':lista_final,'qty_notificaciones_permisos':qty_notificaciones_permisos,'qty_notificaciones_acreedores':qty_notificaciones_acreedores, 'TOTAL_C':len(lista_administrativo)+len(lista_produccion),'admin':len(lista_administrativo), 'produccion':len(lista_produccion)})
+        return render(request, "ver_txt.html",{"name": 'Descargue TXT para pago de nomina quincela', 'MEDIA_URL':settings.MEDIA_URL, 'name_1':nombre_archivo_quincena ,'name_xiii':nombre_archivo_xiii, 'name_bonos':nombre_archivo_bono , 'name_xlsx':nombre_archivo_excel, 'request':request.method , 'lista_cliente':lista_final,'qty_notificaciones_permisos':qty_notificaciones_permisos,'qty_notificaciones_acreedores':qty_notificaciones_acreedores, 'TOTAL_C':len(lista_administrativo)+len(lista_produccion),'admin':len(lista_administrativo), 'produccion':len(lista_produccion)})
 
 def sipe_quincena(request):
     if True: #Autenticacion
@@ -18735,325 +18735,337 @@ def comprobantes_pagos(request):
         return render(request, "comprobantes_pagos.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'lista_cliente':lista_final,'qty_notificaciones_permisos':qty_notificaciones_permisos,'request':request.method , 'qty_notificaciones_acreedores':qty_notificaciones_acreedores, 'TOTAL_C':len(lista_administrativo)+len(lista_produccion),'admin':len(lista_administrativo), 'produccion':len(lista_produccion),'lista_planilla':lista_planilla})
     
     elif request.method=='POST':
+
         #print(request.POST)
         # #print(request.FILES['archivo'])
         values= list(request.POST.keys()) 
-        if 'mes' in values: #planilla sacar periodo 
-            Quater=request.POST["quincena"]
-            month=request.POST["mes"]
-            year=request.POST["year"]
-            planilla=Quater+'-'+month+'-'+year
-            lista_planilla=planilla.split('-')
-            Quater=lista_planilla[0]
-            Quater=Quater.replace('Q','')
-            Quater=int(Quater)
-            mes=int(lista_planilla[1])
-            year=int(lista_planilla[2])
-            if Quater==1:
-                inicio_corte=26
-                final_corte=10
-                fecha_pago=15
-                if mes==1:
-                    mes_inicial=12
-                    year_inicial=year-1
+        try:
+            if 'mes' in values: #planilla sacar periodo 
+                Quater=request.POST["quincena"]
+                month=request.POST["mes"]
+                year=request.POST["year"]
+                planilla=Quater+'-'+month+'-'+year
+                lista_planilla=planilla.split('-')
+                Quater=lista_planilla[0]
+                Quater=Quater.replace('Q','')
+                Quater=int(Quater)
+                mes=int(lista_planilla[1])
+                year=int(lista_planilla[2])
+                if Quater==1:
+                    inicio_corte=26
+                    final_corte=10
+                    fecha_pago=15
+                    if mes==1:
+                        mes_inicial=12
+                        year_inicial=year-1
+                    else:
+                        mes_inicial=mes-1
+                        year_inicial=year
+                    
                 else:
-                    mes_inicial=mes-1
+                    inicio_corte=11
+                    final_corte=25
+                    mes_inicial=mes
                     year_inicial=year
+                    fecha_pago = calendar.monthrange(fecha_final_corte.year, fecha_final_corte.month)[1]
+
+            
+                fecha_pago_date=datetime(year, mes, fecha_pago)    
+
+                fecha_inicial_corte_str=str(inicio_corte)+'-'+str(mes_inicial)+'-'+str(year_inicial)
+                fecha_final_corte_str=str(final_corte)+'-'+str(mes)+'-'+str(year)
                 
-            else:
-                inicio_corte=11
-                final_corte=25
-                mes_inicial=mes
-                year_inicial=year
-                fecha_pago = calendar.monthrange(fecha_final_corte.year, fecha_final_corte.month)[1]
 
+                fecha_inicial_corte = datetime(year_inicial, mes_inicial, inicio_corte)      # Ejemplo: 10 de julio de 2024
+                fecha_final_corte = datetime(year, mes, final_corte)        # Ejemplo: 20 de julio de 2024
+                
+                
+                fecha_pago_str=str(fecha_pago)+'-'+str(mes)+'-'+str(year)
+                lista_planilla=[planilla,fecha_inicial_corte_str,fecha_final_corte_str,fecha_pago_str] 
+
+                
+
+                if nivel >3:
+                    lista_supervisor= Panilla_por_periodo_quincenal.objects.filter(Colaborador__pk= user_profile_obj.Colaborador.pk , Periodo=planilla)
+                    lista_planilla1=Panilla_por_periodo_quincenal.objects.filter(Periodo=planilla , Colaborador__Supervisor__pk=user_profile_obj.Colaborador.pk ) | lista_supervisor
+                else:
+                    lista_planilla1=Panilla_por_periodo_quincenal.objects.filter(Periodo=planilla)
+                
+
+                lista_ausencia_final=[]
+                Empresa= "Go Services S.A"
+                Quincena_str="PERIODO: "+planilla
+                rango='DEL '+fecha_inicial_corte_str+' AL '+fecha_final_corte_str
+                EMISION='FECHA EMISION: '+fecha_pago_str
+
+                lista_excel=[]
+                lista_vacaciones=[]
+                lista_Bonos=[]
+                lista_XIII=[]
+
+                for plan_quincena in lista_planilla1:
+                        nombre=plan_quincena.Colaborador.Colaborador_nombre+' '+plan_quincena.Colaborador.Colaborador_apellido
+                        nombre=nombre.upper()
+                        cedula= plan_quincena.Colaborador.Nro_Identificacion
+                        cargo=plan_quincena.Colaborador.Cargo.upper()
+                        Sueldo_nominal= round(plan_quincena.Sueldo_quincenal,2)
+                        Rata_por_HR= round(plan_quincena.Sueldo_HR,2)
+                        Sueldo_base_quincenal = round(plan_quincena.Pago_quincena_despues_descuento - (plan_quincena.Pago_Dias_Trabajo_Feriado_descanso+plan_quincena.Pago_Dias_Trabajo_Feriado_descanso+plan_quincena.Pago_Dias_Trabajo_Descanso+plan_quincena.Pago_Dias_Trabajo_HR_Regulares_Adicionales+plan_quincena.Pago_Incapacidad+plan_quincena.Pago_Licencia_paga+plan_quincena.Pago_Total_Sobretiempo_quincenal+plan_quincena.Pago_Bono_con_Impuesto)+plan_quincena.Pago_Dia_ausencia+plan_quincena.Pago_MIN_Ausencia ,2)
+                        Pago_Dias_Trabajo_Feriado_descanso  = round(plan_quincena.Pago_Dias_Trabajo_Feriado_descanso,2)
+                        Pago_Dias_Trabajo_Feriado  =round(plan_quincena.Pago_Dias_Trabajo_Feriado_descanso,2)
+                        Pago_Dias_Trabajo_Descanso  = round(plan_quincena.Pago_Dias_Trabajo_Descanso,2)
+                        Pago_Dias_Trabajo_HR_Regulares_Adicionales  = round(plan_quincena.Pago_Dias_Trabajo_HR_Regulares_Adicionales,2)
+                        Pago_Incapacidad  = round(plan_quincena.Pago_Incapacidad,2)
+                        Pago_Licencia_paga  = round(plan_quincena.Pago_Licencia_paga,2)
+                        Pago_Total_Sobretiempo_quincenal  = round(plan_quincena.Pago_Total_Sobretiempo_quincenal,2)
+                        Pago_Bono_con_Impuesto  = round(plan_quincena.Pago_Bono_con_Impuesto,2)
+                        Pago_Dia_ausencia  = round(plan_quincena.Pago_Dia_ausencia,2)
+                        Pago_MIN_Ausencia  = round(plan_quincena.Pago_MIN_Ausencia,2)
+                        Deduccion_con_Impuesto  = round(plan_quincena.Deduccion_con_Impuesto,2)
+                        Pago_quincena_despues_descuento  = round(plan_quincena.Pago_quincena_despues_descuento,2)
+                        Deduccion_Seguro_Social  = round(plan_quincena.Deduccion_Seguro_Social,2)
+                        Deduccion_Seguro_Educacional  = round(plan_quincena.Deduccion_Seguro_Educacional,2)
+                        Deduccion_ISLR  = round(plan_quincena.Deduccion_ISLR,2)
+                        Total_deduciones_Ley  = round(plan_quincena.Total_deduciones_Ley,2)
+                        Descuento_Acreedores_Hipotecario  = round(plan_quincena.Descuento_Acreedores_Hipotecario,2)
+                        Descuento_Acreedores_Empresa  = round(plan_quincena.Descuento_Acreedores_Empresa,2)
+                        Deduccion_sin_Impuesto  = round(plan_quincena.Deduccion_sin_Impuesto,2)
+                        Pago_Sueldo_neto = round(plan_quincena.Pago_Sueldo_neto,2)
+                        Pago_total_bonos_sin_impuesto  = round(plan_quincena.Pago_total_bonos_sin_impuesto,2)
+                        Pago_Vacaciones  = round(plan_quincena.Pago_Vacaciones,2)
+                        Vacaciones_Seguro_Social  = round(plan_quincena.Vacaciones_Seguro_Social,2)
+                        Vacaciones_Seguro_educacion  = round(plan_quincena.Vacaciones_Seguro_educacion,2)
+                        Vacaciones_ISLR  = round(plan_quincena.Vacaciones_ISLR,2)
+                        Deducion_Vacaciones_Totales  = round(plan_quincena.Deducion_Vacaciones_Totales,2)
+                        Pago_Vacaciones_Neto  = round(plan_quincena.Pago_Vacaciones_Neto,2)
+                        Decimo_xiii_quincena_Bruto  = round(plan_quincena.Pago_XIII_periodo_Bruto,2)
+                        Deduccion_Seg_social_decimo  = round(plan_quincena.Pago_XIII_periodo_Seguro_Social,2)
+                        Deduccion_ISLR_Decimmo_xiii  = round(plan_quincena.Pago_XIII_periodo_ISLR,2)
+                        Decimo_xiii_quincena_Neto  = round(plan_quincena.Pago_XIII_periodo_Neto,2)
+                        dias_Vacas=plan_quincena.Dias_Vacaciones
+
+                        #empezar agregar lista para excel 
+                        if True: #lista excel
+                            lista_excel.append(['','','','','','','','','','','','','',''])
+                            lista_excel.append(['','',Empresa,'','','','','','','Planilla Quincenal','','','',''])
+                            lista_excel.append(['','','','','','COMPROBANTE DE PAGO','','','','','','','',''])
+                            lista_excel.append(['','','','','',Quincena_str,'','','','','','','',''])
+                            lista_excel.append(['','','','','',rango,'','','','','','','',''])
+                            lista_excel.append(['','','','','','','','','','','','','',''])
+                            lista_excel.append(['','','','','',EMISION,'','','','','','','',''])
+                            lista_excel.append(['','','','','','','','','','','','','',''])
+                            lista_excel.append(['','','EMPLEADO:','','',nombre,'','','Nro. IDENTIFICACION:',cedula,'','','',''])
+                            lista_excel.append(['','','CARGO DESEMPEÑADO:','','',cargo,'','','','','','',''])
+                            lista_excel.append(['','','SALARIO NOMINAL:','','','$'+str(Sueldo_nominal*2),'','','POR HORA:',Rata_por_HR,'','','',''])
+                            lista_excel.append(['','','','','','','','','','','','','',''])
+                            lista_excel.append(['','','<<CONCEPTO>>','','','<<INGRESOS>>','<<DEDUCCIONES>>','','<<DESCUENTOS>>','','','','',''])
+                            lista_excel.append(['','','SALARIO REGULAR:','','',Sueldo_base_quincenal,'','','SEGURO SOCIAL 9.75% :','','','',Deduccion_Seguro_Social,''])
+                            lista_excel.append(['','','FERIADOS C/ DIA DESCANSO:','','',Pago_Dias_Trabajo_Feriado_descanso,'','','SEGURO EDUCATIVO 1.25% :','','','',Deduccion_Seguro_Educacional,''])
+                            lista_excel.append(['','','FERIADOS: ','','',Pago_Dias_Trabajo_Feriado,'','','ISLR','','','',Deduccion_ISLR,''])
+                            lista_excel.append(['','','DOMINGO O DIA DE DESCANSO:','','',Pago_Dias_Trabajo_Descanso,'','','ACREEDORES ( BANCOS ):','','','',Descuento_Acreedores_Hipotecario,''])
+                            lista_excel.append(['','','SALARIO HORAS ADICIONAL:','','',Pago_Dias_Trabajo_HR_Regulares_Adicionales,'','','ACREEDORES ( EMPRESA ):','','','',Descuento_Acreedores_Empresa,''])
+                            lista_excel.append(['','','INCAPACIDAD:','','',Pago_Incapacidad,'','','OTRAS DEDUCCIONES:','','','',Deduccion_sin_Impuesto,''])
+                            lista_excel.append(['','','LICENCIA PAGA:','','',Pago_Licencia_paga,'','','','','','','',''])
+                            lista_excel.append(['','','SOBRETIEMPO:','','',Pago_Total_Sobretiempo_quincenal,'','','','','','','',''])
+                            lista_excel.append(['','','VIATICOS/BONOS:','','',Pago_Bono_con_Impuesto,'','','','','','','',''])
+                            lista_excel.append(['','','AUSENCIAS:','','','',round(Pago_Dia_ausencia+Pago_MIN_Ausencia,2),'','','','','','',''])
+                            lista_excel.append(['','','OTROS DESCUENTOS:','','','',Deduccion_con_Impuesto,'','','','','','',''])
+                            lista_excel.append(['','','','','','','','','','','','','',''])
+                            lista_excel.append(['','','TOTAL INGRESOS:','','',Pago_quincena_despues_descuento,'','','TOTAL DESCUENTOS:','','','',round(Pago_quincena_despues_descuento-Pago_Sueldo_neto,2),''])
+                            lista_excel.append(['','','','','','','','','','','','','',''])
+                            lista_excel.append(['','','','','','','','','NETO A PAGAR:','','','$'+str(Pago_Sueldo_neto),'',''])
+                            lista_excel.append(['','','','','','','','','','','','','',''])
+                            lista_excel.append(['','','','','','','','','','','','','',''])
+                        
+                        if dias_Vacas>0:
+                            
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                            lista_vacaciones.append(['','',Empresa,'','','','','','','Planilla Quincenal','','','',''])
+                            lista_vacaciones.append(['','','','','','COMPROBANTE DE PAGO VACACIONES','','','','','','','',''])
+                            lista_vacaciones.append(['','','','','',Quincena_str,'','','','','','','',''])
+                            lista_vacaciones.append(['','','','','',rango,'','','','','','','',''])
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                            lista_vacaciones.append(['','','','','',EMISION,'','','','','','','',''])
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                            lista_vacaciones.append(['','','EMPLEADO:','','',nombre,'','','Nro. IDENTIFICACION:',cedula,'','','',''])
+                            lista_vacaciones.append(['','','CARGO DESEMPEÑADO:','','',cargo,'','','','','','',''])
+                            lista_vacaciones.append(['','','SALARIO NOMINAL:','','','$'+str(Sueldo_nominal*2),'','','POR HORA:',Rata_por_HR,'','','',''])
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                            lista_vacaciones.append(['','','<<CONCEPTO>>','','','<<INGRESOS>>','<<DEDUCCIONES>>','','<<DESCUENTOS>>','','','','',''])
+                            lista_vacaciones.append(['','','VACACIONES ( '+str(dias_Vacas)+' DIAS ):','','',Pago_Vacaciones,'','','SEGURO SOCIAL 9.75% :','','','',Vacaciones_Seguro_Social,''])
+                            lista_vacaciones.append(['','','','','','','','','SEGURO EDUCATIVO 1.25% :','','','',Vacaciones_Seguro_educacion,''])
+                            lista_vacaciones.append(['','','','','','','','','ISLR','','','',Vacaciones_ISLR,''])
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                            lista_vacaciones.append(['','','TOTAL INGRESOS:','','',Pago_Vacaciones,'','','TOTAL DESCUENTOS:','','','',Deducion_Vacaciones_Totales,''])
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                            lista_vacaciones.append(['','','','','','','','','NETO A PAGAR:','','','$'+str(Pago_Vacaciones_Neto),'',''])
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                            lista_vacaciones.append(['','','','','','','','','','','','','',''])
+                        
+                        if Pago_total_bonos_sin_impuesto>0:
+                            
+                            
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','',Empresa,'','','','','','','Planilla Quincenal','','','',''])
+                            lista_Bonos.append(['','','','','','COMPROBANTE DE PAGO BONOS','','','','','','','',''])
+                            lista_Bonos.append(['','','','','',Quincena_str,'','','','','','','',''])
+                            lista_Bonos.append(['','','','','',rango,'','','','','','','',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','','','',EMISION,'','','','','','','',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','EMPLEADO:','','',nombre,'','','Nro. IDENTIFICACION:',cedula,'','','',''])
+                            lista_Bonos.append(['','','CARGO DESEMPEÑADO:','','',cargo,'','','','','','',''])
+                            lista_Bonos.append(['','','SALARIO NOMINAL:','','','$'+str(Sueldo_nominal*2),'','','POR HORA:',Rata_por_HR,'','','',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','<<CONCEPTO>>','','','<<INGRESOS>>','<<DEDUCCIONES>>','','<<DESCUENTOS>>','','','','',''])
+                            lista_Bonos.append(['','','BONOS/VIATICOS/OTROS PAGOS:','','',Pago_total_bonos_sin_impuesto,'','','','','','','',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','TOTAL INGRESOS:','','',Pago_total_bonos_sin_impuesto,'','','TOTAL DESCUENTOS:','','','','0.00',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','','','','','','','NETO A PAGAR:','','','$'+str(Pago_total_bonos_sin_impuesto),'',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                            lista_Bonos.append(['','','','','','','','','','','','','',''])
+                        
+                        if Decimo_xiii_quincena_Bruto>0:
+                            
+                            
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','',Empresa,'','','','','','','Planilla Quincenal','','','',''])
+                            lista_XIII.append(['','','','','','COMPROBANTE DE PAGO XIII','','','','','','','',''])
+                            lista_XIII.append(['','','','','',Quincena_str,'','','','','','','',''])
+                            lista_XIII.append(['','','','','',rango,'','','','','','','',''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','','','','',EMISION,'','','','','','','',''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','','EMPLEADO:','','',nombre,'','','Nro. IDENTIFICACION:',cedula,'','','',''])
+                            lista_XIII.append(['','','CARGO DESEMPEÑADO:','','',cargo,'','','','','','',''])
+                            lista_XIII.append(['','','SALARIO NOMINAL:','','','$'+str(Sueldo_nominal*2),'','','POR HORA:',Rata_por_HR,'','','',''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','','<<CONCEPTO>>','','','<<INGRESOS>>','<<DEDUCCIONES>>','','<<DESCUENTOS>>','','','','',''])
+                            lista_XIII.append(['','','XIII MES ACUMULADO :','','',Decimo_xiii_quincena_Bruto,'','','SEGURO SOCIAL 7.25% :','','','',Deduccion_Seg_social_decimo,''])
+                            lista_XIII.append(['','','','','','','','','ISLR','','','',Deduccion_ISLR_Decimmo_xiii,''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','','TOTAL INGRESOS:','','',Decimo_xiii_quincena_Bruto,'','','TOTAL DESCUENTOS:','','','',Deduccion_Seg_social_decimo+Deduccion_ISLR_Decimmo_xiii,''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','','','','','','','','NETO A PAGAR:','','','$'+str(Decimo_xiii_quincena_Neto),'',''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                            lista_XIII.append(['','','','','','','','','','','','','',''])
+                        
+                            
+                #HACER EXCEL
+                
+                wb= Workbook()
+                ws=wb.active
+                ws.title='Comprobante Planilla'
+                for i in range(len(lista_excel)):
+                
+                    ROW=i+1
+                    for y in range(len(lista_excel[i])):
+                        COLUMN=y+1
+                        valor=lista_excel[i][y]
+                        ws.cell(row=ROW, column=COLUMN,value=valor) 
+                
+                wb=estetica_comprobantes_pago(wb,'Comprobante Planilla')
+
+                if len(lista_vacaciones)>0:
+                    hoja_2 = wb.create_sheet(title="Comprobantes Vacaciones")
+                    for i in range(len(lista_vacaciones)):
+                
+                        ROW=i+1
+                        for y in range(len(lista_vacaciones[i])):
+                            COLUMN=y+1
+                            valor=lista_vacaciones[i][y]
+                            hoja_2.cell(row=ROW, column=COLUMN,value=valor) 
+                            
+                    wb=estetica_comprobantes_pago(wb,'Comprobantes Vacaciones')
+
+
+                if len(lista_Bonos)>0:
+                    hoja_3 = wb.create_sheet(title="Comprobantes Bonos")
+                    for i in range(len(lista_Bonos)):
+                
+                        ROW=i+1
+                        for y in range(len(lista_Bonos[i])):
+                            COLUMN=y+1
+                            valor=lista_Bonos[i][y]
+                            hoja_3.cell(row=ROW, column=COLUMN,value=valor) 
+                            
+                    wb=estetica_comprobantes_pago(wb,'Comprobantes Bonos')
+
+                if len(lista_XIII)>0:
+                    hoja_4 = wb.create_sheet(title="Comprobantes XIII")
+                    for i in range(len(lista_XIII)):
+                
+                        ROW=i+1
+                        for y in range(len(lista_XIII[i])):
+                            COLUMN=y+1
+                            valor=lista_XIII[i][y]
+                            hoja_4.cell(row=ROW, column=COLUMN,value=valor) 
+                            
+                    wb=estetica_comprobantes_pago(wb,'Comprobantes XIII')
+
+
+                empresa='GoCleaning/' 
+                path=empresa+'archivos/'        
+                
+                nombre_archivo=path+'Comprobantes_del_'+fecha_pago_str+'_.xlsx'
+                excel_buffer = BytesIO()
+                wb.save(excel_buffer)
+                nombre_archivo_excel=nombre_archivo
+                archivo_temporal = File(excel_buffer, name=nombre_archivo_excel)
+
+                    
+                try:
+                            objetc_archivo = Archivos.objects.get(nombre='Archivo Comprobante de Pago COMPLETO' )
+                            objetc_archivo.file=archivo_temporal
+                            objetc_archivo.save()
+                except: 
+                            objetc_archivo = Archivos.objects.create(nombre='Archivo Comprobante de Pago COMPLETO',file=archivo_temporal)
+                
+                excel_buffer.close()
         
-            fecha_pago_date=datetime(year, mes, fecha_pago)    
-
-            fecha_inicial_corte_str=str(inicio_corte)+'-'+str(mes_inicial)+'-'+str(year_inicial)
-            fecha_final_corte_str=str(final_corte)+'-'+str(mes)+'-'+str(year)
-            
-
-            fecha_inicial_corte = datetime(year_inicial, mes_inicial, inicio_corte)      # Ejemplo: 10 de julio de 2024
-            fecha_final_corte = datetime(year, mes, final_corte)        # Ejemplo: 20 de julio de 2024
-            
-            
-            fecha_pago_str=str(fecha_pago)+'-'+str(mes)+'-'+str(year)
-            lista_planilla=[planilla,fecha_inicial_corte_str,fecha_final_corte_str,fecha_pago_str] 
-
-            
-
-            if nivel >3:
-                lista_supervisor= Panilla_por_periodo_quincenal.objects.filter(Colaborador__pk= user_profile_obj.Colaborador.pk , Periodo=planilla)
-                lista_planilla1=Panilla_por_periodo_quincenal.objects.filter(Periodo=planilla , Colaborador__Supervisor__pk=user_profile_obj.Colaborador.pk ) | lista_supervisor
-            else:
-                lista_planilla1=Panilla_por_periodo_quincenal.objects.filter(Periodo=planilla)
-            
-
-            lista_ausencia_final=[]
-            Empresa= "Go Services S.A"
-            Quincena_str="PERIODO: "+planilla
-            rango='DEL '+fecha_inicial_corte_str+' AL '+fecha_final_corte_str
-            EMISION='FECHA EMISION: '+fecha_pago_str
-
-            lista_excel=[]
-            lista_vacaciones=[]
-            lista_Bonos=[]
-            lista_XIII=[]
-
-            for plan_quincena in lista_planilla1:
-                    nombre=plan_quincena.Colaborador.Colaborador_nombre+' '+plan_quincena.Colaborador.Colaborador_apellido
-                    nombre=nombre.upper()
-                    cedula= plan_quincena.Colaborador.Nro_Identificacion
-                    cargo=plan_quincena.Colaborador.Cargo.upper()
-                    Sueldo_nominal= round(plan_quincena.Sueldo_quincenal,2)
-                    Rata_por_HR= round(plan_quincena.Sueldo_HR,2)
-                    Sueldo_base_quincenal = round(plan_quincena.Pago_quincena_despues_descuento - (plan_quincena.Pago_Dias_Trabajo_Feriado_descanso+plan_quincena.Pago_Dias_Trabajo_Feriado_descanso+plan_quincena.Pago_Dias_Trabajo_Descanso+plan_quincena.Pago_Dias_Trabajo_HR_Regulares_Adicionales+plan_quincena.Pago_Incapacidad+plan_quincena.Pago_Licencia_paga+plan_quincena.Pago_Total_Sobretiempo_quincenal+plan_quincena.Pago_Bono_con_Impuesto)+plan_quincena.Pago_Dia_ausencia+plan_quincena.Pago_MIN_Ausencia ,2)
-                    Pago_Dias_Trabajo_Feriado_descanso  = round(plan_quincena.Pago_Dias_Trabajo_Feriado_descanso,2)
-                    Pago_Dias_Trabajo_Feriado  =round(plan_quincena.Pago_Dias_Trabajo_Feriado_descanso,2)
-                    Pago_Dias_Trabajo_Descanso  = round(plan_quincena.Pago_Dias_Trabajo_Descanso,2)
-                    Pago_Dias_Trabajo_HR_Regulares_Adicionales  = round(plan_quincena.Pago_Dias_Trabajo_HR_Regulares_Adicionales,2)
-                    Pago_Incapacidad  = round(plan_quincena.Pago_Incapacidad,2)
-                    Pago_Licencia_paga  = round(plan_quincena.Pago_Licencia_paga,2)
-                    Pago_Total_Sobretiempo_quincenal  = round(plan_quincena.Pago_Total_Sobretiempo_quincenal,2)
-                    Pago_Bono_con_Impuesto  = round(plan_quincena.Pago_Bono_con_Impuesto,2)
-                    Pago_Dia_ausencia  = round(plan_quincena.Pago_Dia_ausencia,2)
-                    Pago_MIN_Ausencia  = round(plan_quincena.Pago_MIN_Ausencia,2)
-                    Deduccion_con_Impuesto  = round(plan_quincena.Deduccion_con_Impuesto,2)
-                    Pago_quincena_despues_descuento  = round(plan_quincena.Pago_quincena_despues_descuento,2)
-                    Deduccion_Seguro_Social  = round(plan_quincena.Deduccion_Seguro_Social,2)
-                    Deduccion_Seguro_Educacional  = round(plan_quincena.Deduccion_Seguro_Educacional,2)
-                    Deduccion_ISLR  = round(plan_quincena.Deduccion_ISLR,2)
-                    Total_deduciones_Ley  = round(plan_quincena.Total_deduciones_Ley,2)
-                    Descuento_Acreedores_Hipotecario  = round(plan_quincena.Descuento_Acreedores_Hipotecario,2)
-                    Descuento_Acreedores_Empresa  = round(plan_quincena.Descuento_Acreedores_Empresa,2)
-                    Deduccion_sin_Impuesto  = round(plan_quincena.Deduccion_sin_Impuesto,2)
-                    Pago_Sueldo_neto = round(plan_quincena.Pago_Sueldo_neto,2)
-                    Pago_total_bonos_sin_impuesto  = round(plan_quincena.Pago_total_bonos_sin_impuesto,2)
-                    Pago_Vacaciones  = round(plan_quincena.Pago_Vacaciones,2)
-                    Vacaciones_Seguro_Social  = round(plan_quincena.Vacaciones_Seguro_Social,2)
-                    Vacaciones_Seguro_educacion  = round(plan_quincena.Vacaciones_Seguro_educacion,2)
-                    Vacaciones_ISLR  = round(plan_quincena.Vacaciones_ISLR,2)
-                    Deducion_Vacaciones_Totales  = round(plan_quincena.Deducion_Vacaciones_Totales,2)
-                    Pago_Vacaciones_Neto  = round(plan_quincena.Pago_Vacaciones_Neto,2)
-                    Decimo_xiii_quincena_Bruto  = round(plan_quincena.Pago_XIII_periodo_Bruto,2)
-                    Deduccion_Seg_social_decimo  = round(plan_quincena.Pago_XIII_periodo_Seguro_Social,2)
-                    Deduccion_ISLR_Decimmo_xiii  = round(plan_quincena.Pago_XIII_periodo_ISLR,2)
-                    Decimo_xiii_quincena_Neto  = round(plan_quincena.Pago_XIII_periodo_Neto,2)
-                    dias_Vacas=plan_quincena.Dias_Vacaciones
-
-                    #empezar agregar lista para excel 
-                    if True: #lista excel
-                        lista_excel.append(['','','','','','','','','','','','','',''])
-                        lista_excel.append(['','',Empresa,'','','','','','','Planilla Quincenal','','','',''])
-                        lista_excel.append(['','','','','','COMPROBANTE DE PAGO','','','','','','','',''])
-                        lista_excel.append(['','','','','',Quincena_str,'','','','','','','',''])
-                        lista_excel.append(['','','','','',rango,'','','','','','','',''])
-                        lista_excel.append(['','','','','','','','','','','','','',''])
-                        lista_excel.append(['','','','','',EMISION,'','','','','','','',''])
-                        lista_excel.append(['','','','','','','','','','','','','',''])
-                        lista_excel.append(['','','EMPLEADO:','','',nombre,'','','Nro. IDENTIFICACION:',cedula,'','','',''])
-                        lista_excel.append(['','','CARGO DESEMPEÑADO:','','',cargo,'','','','','','',''])
-                        lista_excel.append(['','','SALARIO NOMINAL:','','','$'+str(Sueldo_nominal*2),'','','POR HORA:',Rata_por_HR,'','','',''])
-                        lista_excel.append(['','','','','','','','','','','','','',''])
-                        lista_excel.append(['','','<<CONCEPTO>>','','','<<INGRESOS>>','<<DEDUCCIONES>>','','<<DESCUENTOS>>','','','','',''])
-                        lista_excel.append(['','','SALARIO REGULAR:','','',Sueldo_base_quincenal,'','','SEGURO SOCIAL 9.75% :','','','',Deduccion_Seguro_Social,''])
-                        lista_excel.append(['','','FERIADOS C/ DIA DESCANSO:','','',Pago_Dias_Trabajo_Feriado_descanso,'','','SEGURO EDUCATIVO 1.25% :','','','',Deduccion_Seguro_Educacional,''])
-                        lista_excel.append(['','','FERIADOS: ','','',Pago_Dias_Trabajo_Feriado,'','','ISLR','','','',Deduccion_ISLR,''])
-                        lista_excel.append(['','','DOMINGO O DIA DE DESCANSO:','','',Pago_Dias_Trabajo_Descanso,'','','ACREEDORES ( BANCOS ):','','','',Descuento_Acreedores_Hipotecario,''])
-                        lista_excel.append(['','','SALARIO HORAS ADICIONAL:','','',Pago_Dias_Trabajo_HR_Regulares_Adicionales,'','','ACREEDORES ( EMPRESA ):','','','',Descuento_Acreedores_Empresa,''])
-                        lista_excel.append(['','','INCAPACIDAD:','','',Pago_Incapacidad,'','','OTRAS DEDUCCIONES:','','','',Deduccion_sin_Impuesto,''])
-                        lista_excel.append(['','','LICENCIA PAGA:','','',Pago_Licencia_paga,'','','','','','','',''])
-                        lista_excel.append(['','','SOBRETIEMPO:','','',Pago_Total_Sobretiempo_quincenal,'','','','','','','',''])
-                        lista_excel.append(['','','VIATICOS/BONOS:','','',Pago_Bono_con_Impuesto,'','','','','','','',''])
-                        lista_excel.append(['','','AUSENCIAS:','','','',round(Pago_Dia_ausencia+Pago_MIN_Ausencia,2),'','','','','','',''])
-                        lista_excel.append(['','','OTROS DESCUENTOS:','','','',Deduccion_con_Impuesto,'','','','','','',''])
-                        lista_excel.append(['','','','','','','','','','','','','',''])
-                        lista_excel.append(['','','TOTAL INGRESOS:','','',Pago_quincena_despues_descuento,'','','TOTAL DESCUENTOS:','','','',round(Pago_quincena_despues_descuento-Pago_Sueldo_neto,2),''])
-                        lista_excel.append(['','','','','','','','','','','','','',''])
-                        lista_excel.append(['','','','','','','','','NETO A PAGAR:','','','$'+str(Pago_Sueldo_neto),'',''])
-                        lista_excel.append(['','','','','','','','','','','','','',''])
-                        lista_excel.append(['','','','','','','','','','','','','',''])
-                    
-                    if dias_Vacas>0:
-                        
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                        lista_vacaciones.append(['','',Empresa,'','','','','','','Planilla Quincenal','','','',''])
-                        lista_vacaciones.append(['','','','','','COMPROBANTE DE PAGO VACACIONES','','','','','','','',''])
-                        lista_vacaciones.append(['','','','','',Quincena_str,'','','','','','','',''])
-                        lista_vacaciones.append(['','','','','',rango,'','','','','','','',''])
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                        lista_vacaciones.append(['','','','','',EMISION,'','','','','','','',''])
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                        lista_vacaciones.append(['','','EMPLEADO:','','',nombre,'','','Nro. IDENTIFICACION:',cedula,'','','',''])
-                        lista_vacaciones.append(['','','CARGO DESEMPEÑADO:','','',cargo,'','','','','','',''])
-                        lista_vacaciones.append(['','','SALARIO NOMINAL:','','','$'+str(Sueldo_nominal*2),'','','POR HORA:',Rata_por_HR,'','','',''])
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                        lista_vacaciones.append(['','','<<CONCEPTO>>','','','<<INGRESOS>>','<<DEDUCCIONES>>','','<<DESCUENTOS>>','','','','',''])
-                        lista_vacaciones.append(['','','VACACIONES ( '+str(dias_Vacas)+' DIAS ):','','',Pago_Vacaciones,'','','SEGURO SOCIAL 9.75% :','','','',Vacaciones_Seguro_Social,''])
-                        lista_vacaciones.append(['','','','','','','','','SEGURO EDUCATIVO 1.25% :','','','',Vacaciones_Seguro_educacion,''])
-                        lista_vacaciones.append(['','','','','','','','','ISLR','','','',Vacaciones_ISLR,''])
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                        lista_vacaciones.append(['','','TOTAL INGRESOS:','','',Pago_Vacaciones,'','','TOTAL DESCUENTOS:','','','',Deducion_Vacaciones_Totales,''])
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                        lista_vacaciones.append(['','','','','','','','','NETO A PAGAR:','','','$'+str(Pago_Vacaciones_Neto),'',''])
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                        lista_vacaciones.append(['','','','','','','','','','','','','',''])
-                    
-                    if Pago_total_bonos_sin_impuesto>0:
-                        
-                        
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','',Empresa,'','','','','','','Planilla Quincenal','','','',''])
-                        lista_Bonos.append(['','','','','','COMPROBANTE DE PAGO BONOS','','','','','','','',''])
-                        lista_Bonos.append(['','','','','',Quincena_str,'','','','','','','',''])
-                        lista_Bonos.append(['','','','','',rango,'','','','','','','',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','','','',EMISION,'','','','','','','',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','EMPLEADO:','','',nombre,'','','Nro. IDENTIFICACION:',cedula,'','','',''])
-                        lista_Bonos.append(['','','CARGO DESEMPEÑADO:','','',cargo,'','','','','','',''])
-                        lista_Bonos.append(['','','SALARIO NOMINAL:','','','$'+str(Sueldo_nominal*2),'','','POR HORA:',Rata_por_HR,'','','',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','<<CONCEPTO>>','','','<<INGRESOS>>','<<DEDUCCIONES>>','','<<DESCUENTOS>>','','','','',''])
-                        lista_Bonos.append(['','','BONOS/VIATICOS/OTROS PAGOS:','','',Pago_total_bonos_sin_impuesto,'','','','','','','',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','TOTAL INGRESOS:','','',Pago_total_bonos_sin_impuesto,'','','TOTAL DESCUENTOS:','','','','0.00',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','','','','','','','NETO A PAGAR:','','','$'+str(Pago_total_bonos_sin_impuesto),'',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                        lista_Bonos.append(['','','','','','','','','','','','','',''])
-                    
-                    if Decimo_xiii_quincena_Bruto>0:
-                        
-                        
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','',Empresa,'','','','','','','Planilla Quincenal','','','',''])
-                        lista_XIII.append(['','','','','','COMPROBANTE DE PAGO XIII','','','','','','','',''])
-                        lista_XIII.append(['','','','','',Quincena_str,'','','','','','','',''])
-                        lista_XIII.append(['','','','','',rango,'','','','','','','',''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','','','','',EMISION,'','','','','','','',''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','','EMPLEADO:','','',nombre,'','','Nro. IDENTIFICACION:',cedula,'','','',''])
-                        lista_XIII.append(['','','CARGO DESEMPEÑADO:','','',cargo,'','','','','','',''])
-                        lista_XIII.append(['','','SALARIO NOMINAL:','','','$'+str(Sueldo_nominal*2),'','','POR HORA:',Rata_por_HR,'','','',''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','','<<CONCEPTO>>','','','<<INGRESOS>>','<<DEDUCCIONES>>','','<<DESCUENTOS>>','','','','',''])
-                        lista_XIII.append(['','','XIII MES ACUMULADO :','','',Decimo_xiii_quincena_Bruto,'','','SEGURO SOCIAL 7.25% :','','','',Deduccion_Seg_social_decimo,''])
-                        lista_XIII.append(['','','','','','','','','ISLR','','','',Deduccion_ISLR_Decimmo_xiii,''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','','TOTAL INGRESOS:','','',Decimo_xiii_quincena_Bruto,'','','TOTAL DESCUENTOS:','','','',Deduccion_Seg_social_decimo+Deduccion_ISLR_Decimmo_xiii,''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','','','','','','','','NETO A PAGAR:','','','$'+str(Decimo_xiii_quincena_Neto),'',''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                        lista_XIII.append(['','','','','','','','','','','','','',''])
-                    
-                        
-            #HACER EXCEL
-            
-            wb= Workbook()
-            ws=wb.active
-            ws.title='Comprobante Planilla'
-            for i in range(len(lista_excel)):
-            
-                ROW=i+1
-                for y in range(len(lista_excel[i])):
-                    COLUMN=y+1
-                    valor=lista_excel[i][y]
-                    ws.cell(row=ROW, column=COLUMN,value=valor) 
-            
-            wb=estetica_comprobantes_pago(wb,'Comprobante Planilla')
-
-            if len(lista_vacaciones)>0:
-                hoja_2 = wb.create_sheet(title="Comprobantes Vacaciones")
-                for i in range(len(lista_vacaciones)):
-            
-                    ROW=i+1
-                    for y in range(len(lista_vacaciones[i])):
-                        COLUMN=y+1
-                        valor=lista_vacaciones[i][y]
-                        hoja_2.cell(row=ROW, column=COLUMN,value=valor) 
-                        
-                wb=estetica_comprobantes_pago(wb,'Comprobantes Vacaciones')
-
-
-            if len(lista_Bonos)>0:
-                hoja_3 = wb.create_sheet(title="Comprobantes Bonos")
-                for i in range(len(lista_Bonos)):
-            
-                    ROW=i+1
-                    for y in range(len(lista_Bonos[i])):
-                        COLUMN=y+1
-                        valor=lista_Bonos[i][y]
-                        hoja_3.cell(row=ROW, column=COLUMN,value=valor) 
-                        
-                wb=estetica_comprobantes_pago(wb,'Comprobantes Bonos')
-
-            if len(lista_XIII)>0:
-                hoja_4 = wb.create_sheet(title="Comprobantes XIII")
-                for i in range(len(lista_XIII)):
-            
-                    ROW=i+1
-                    for y in range(len(lista_XIII[i])):
-                        COLUMN=y+1
-                        valor=lista_XIII[i][y]
-                        hoja_4.cell(row=ROW, column=COLUMN,value=valor) 
-                        
-                wb=estetica_comprobantes_pago(wb,'Comprobantes XIII')
-
-
-            empresa='GoCleaning/' 
-            path=empresa+'archivos/'        
-            
-            nombre_archivo=path+'Comprobantes_del_'+fecha_pago_str+'_.xlsx'
-            excel_buffer = BytesIO()
-            wb.save(excel_buffer)
-            nombre_archivo_excel=nombre_archivo
-            archivo_temporal = File(excel_buffer, name=nombre_archivo_excel)
-
-                  
-            try:
-                        objetc_archivo = Archivos.objects.get(nombre='Archivo Comprobante de Pago COMPLETO' )
-                        objetc_archivo.file=archivo_temporal
-                        objetc_archivo.save()
-            except: 
-                        objetc_archivo = Archivos.objects.create(nombre='Archivo Comprobante de Pago COMPLETO',file=archivo_temporal)
-            
-            excel_buffer.close()
-           
 
                    
         
-        return render(request, "comprobantes_pagos.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'lista_cliente':lista_ausencia_final,'MEDIA_URL':settings.MEDIA_URL, 'name_1':nombre_archivo , 'request':request.method ,'qty_notificaciones_permisos':qty_notificaciones_permisos,'qty_notificaciones_acreedores':qty_notificaciones_acreedores, 'TOTAL_C':len(lista_administrativo)+len(lista_produccion),'admin':len(lista_administrativo), 'produccion':len(lista_produccion),'lista_planilla':lista_planilla,})
- 
+            return render(request, "comprobantes_pagos.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'lista_cliente':lista_ausencia_final,'MEDIA_URL':settings.MEDIA_URL, 'name_1':nombre_archivo , 'request':request.method ,'qty_notificaciones_permisos':qty_notificaciones_permisos,'qty_notificaciones_acreedores':qty_notificaciones_acreedores, 'TOTAL_C':len(lista_administrativo)+len(lista_produccion),'admin':len(lista_administrativo), 'produccion':len(lista_produccion),'lista_planilla':lista_planilla,})
+
+        
+        except Exception as e:
+            print("Se produjo una excepción:", type(e).__name__, "-", e)
+            # Imprimir la información de la traza de la excepción
+            traceback.print_exc()
+            print(traceback.print_exc(), 'print')
+            print("Archivo:", e.__traceback__.tb_frame.f_code.co_filename)
+            print("Línea:", e.__traceback__.tb_lineno)   
+
+
 def reporte_cliente(request):
     if True: #Autenticacion
         if not request.user.is_authenticated:
