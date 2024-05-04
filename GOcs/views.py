@@ -11427,28 +11427,21 @@ def agregar_acreedores(request):
             Mensaje='Error.! Selecciona una cantidad a descontar no mayor a 20% de sueldo bruto para deduccion Prestamo u Otras deduciones, Por favor Agrega correctamente el descuento en la Asignacion de Acreeditores.'
             return render(request, "agregar_prestamos.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'lista_cliente':lista_final, 'agregado1':'existo','agregado':'existo', 'Mensaje': Mensaje , 'qty_notificaciones_permisos':qty_notificaciones_permisos, 'qty_notificaciones_acreedores':qty_notificaciones_acreedores})     
     
-        
-       
-        if 'archivo' in archivos:
+        if 'archivo' in archivos :
+            archivo_imagen = request.FILES["archivo"]
+            nombre_original, extension = os.path.splitext(archivo_imagen.name)
+            empresa='GoCleaning/'
+            subpath=empresa+'Colaborador/Acreedores/'
+            searched=str(el_colaborador.pk)
+            colaborador_id=el_colaborador.Colaborador_nombre+'_CIP_'+el_colaborador.Nro_Identificacion+'_'+searched
+            colaborador_id=colaborador_id.replace(' ','_')
+            # Generar un nuevo nombre de archivo utilizando el nombre original sin la extensión
+            nombre_archivo = f'{subpath}{slugify(nombre_original)}_{colaborador_id}{extension}'  # Cambia 'carpeta' por el nombre de tu subcarpeta
+            nombre_archivo=nombre_archivo.replace(' ','_')
+            archivo_guardado = default_storage.save(nombre_archivo, archivo_imagen)
+            #archivo_url = default_storage.url(archivo_guardado)
+            created= Acreedores.objects.get_or_create(Documento_permiso=archivo_guardado,Dia_inicio_cobro=date_dia_inicio,Dia_fin_cobro=fecha_final_date,Meses_de_cobro=cuotas_mensuales,Monto_total=total_deuda,Monto_mensual= total_cobro_mensual, Colaborador=el_colaborador,Tipo_acreeditor=tipo_Permiso,Nombre_acreeditor= acreedor_otros, Comentario_Permiso=motivo, Estado_Permiso='Pendiente',Quien_agrego_Jornada=quien_agrego_Jornada)
             
-                    save_path = os.path.join(settings.MEDIA_ROOT, 'Permisos\\'+request.FILES["archivo"].name)
-
-                    with open(save_path, "wb") as output_file:
-
-                        for chunk in request.FILES["archivo"].chunks():
-
-                            output_file.write(chunk)
-
-                    bool_archivo=True
-                    archivo = request.FILES['archivo']
-                    
-                    subcarpeta = 'Permisos\\'
-        
-                    # Utiliza FileSystemStorage para guardar el archivo en la subcarpeta
-                   
-            
-                    created= Acreedores.objects.get_or_create(Documento_permiso=subcarpeta+archivo.name,Dia_inicio_cobro=date_dia_inicio,Dia_fin_cobro=fecha_final_date,Meses_de_cobro=cuotas_mensuales,Monto_total=total_deuda,Monto_mensual= total_cobro_mensual, Colaborador=el_colaborador,Tipo_acreeditor=tipo_Permiso,Nombre_acreeditor= acreedor_otros, Comentario_Permiso=motivo, Estado_Permiso='Pendiente',Quien_agrego_Jornada=quien_agrego_Jornada)
-                    
 
         else:
                      bool_archivo=False
