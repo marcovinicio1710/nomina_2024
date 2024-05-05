@@ -24313,7 +24313,7 @@ def ver_viaticos(request):
                     rechazar_permiso.Estado_Permiso='Aprobado'
                     rechazar_permiso.Aprobado_por= Aprobado_por
                     rechazar_permiso.save()
-                    Mensaje='Validado Viaticos para: '+rechazar_permiso.Colaborador.Colaborador_nombre+' '+rechazar_permiso.Colaborador.Colaborador_apellido+' Monto por '+rechazar_permiso.Monto+' Periodo: '+rechazar_permiso.Etapa
+                    Mensaje='Validado Viaticos para: '+rechazar_permiso.Colaborador.Colaborador_nombre+' '+rechazar_permiso.Colaborador.Colaborador_apellido+' Monto por '+str(rechazar_permiso.Monto)+' Periodo: '+rechazar_permiso.Etapa
                     existo='existo'
 
             elif 'Borrar' in values:
