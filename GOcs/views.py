@@ -23222,6 +23222,10 @@ def motor_planilla_p7_l(request):
                     total_vacas = suma_total_salario_bruto_1['total_salario_colaboradores']
                     total_sueldo_impo=suma_total_salario_bruto_2['total_salario_colaboradores_2']
                     total_vacas_impo=suma_total_salario_bruto_3['total_salario_colaboradores_3']
+                    print(total, type(total))
+                    print(total_vacas, type(total_vacas))
+                    print(total_sueldo_impo, type(total_sueldo_impo))
+                    print(total_vacas_impo, type(total_vacas_impo))
                     Total_neto=total+total_vacas+total_sueldo_impo+total_vacas_impo
 
 
