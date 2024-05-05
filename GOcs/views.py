@@ -24251,135 +24251,142 @@ def ver_viaticos(request):
         
         values= list(request.POST.keys())
         archivos=list(request.FILES.keys())
-        if es_admin:
-            Aprobado_por='Administrador'
-        else:
-            Aprobado_por=user_profile_obj.Colaborador.Colaborador_nombre+' '+user_profile_obj.Colaborador.Colaborador_apellido
-        if 'Actualizar' in values:
-                 if 'switch_aprobar' in values:
-                      lista_ausencia_aprobar=request.POST.getlist("switch_aprobar")
-                      for id in  lista_ausencia_aprobar:
-                           jornada= Ajuste_Planilla.objects.get(pk=int(id))
-                           jornada.Aprobado_bool=True
-                           jornada.Aprobado_por= Aprobado_por
-                           jornada.save()
-                           if True: #guardar Novedades
-                        
+        try:
+            if es_admin:
+                Aprobado_por='Administrador'
+            else:
+                Aprobado_por=user_profile_obj.Colaborador.Colaborador_nombre+' '+user_profile_obj.Colaborador.Colaborador_apellido
+            if 'Actualizar' in values:
+                    if 'switch_aprobar' in values:
+                        lista_ausencia_aprobar=request.POST.getlist("switch_aprobar")
+                        for id in  lista_ausencia_aprobar:
+                            jornada= Ajuste_Planilla.objects.get(pk=int(id))
+                            jornada.Aprobado_bool=True
+                            jornada.Aprobado_por= Aprobado_por
+                            jornada.save()
+                            if True: #guardar Novedades
+                            
 
-                                                tipo_seguimiento='Viaticos / Ajuste '
-                                                sUB_Tipo_seguimiento=' Aprobado '
-                                                comment=' Apobado Viaticos / Ajuste: '+jornada.Tipo_Ajuste+' , Periodo: '+str(jornada.Etapa)+' Monto: '+str(jornada.Monto)+' Colaborador: '+jornada.Colaborador.Colaborador_nombre+' '+jornada.Colaborador.Colaborador_apellido+' Nro Ident.: '+jornada.Colaborador.Nro_Identificacion
-                                                fecha_novedad_date=datetime.now()
-                                                fecha_novedad=fecha_novedad_date.date()
-                                                hora_actual = fecha_novedad_date.strftime('%H:%M')
-                                                
-                                                if es_admin:
+                                                    tipo_seguimiento='Viaticos / Ajuste '
+                                                    sUB_Tipo_seguimiento=' Aprobado '
+                                                    comment=' Apobado Viaticos / Ajuste: '+jornada.Tipo_Ajuste+' , Periodo: '+str(jornada.Etapa)+' Monto: '+str(jornada.Monto)+' Colaborador: '+jornada.Colaborador.Colaborador_nombre+' '+jornada.Colaborador.Colaborador_apellido+' Nro Ident.: '+jornada.Colaborador.Nro_Identificacion
+                                                    fecha_novedad_date=datetime.now()
+                                                    fecha_novedad=fecha_novedad_date.date()
+                                                    hora_actual = fecha_novedad_date.strftime('%H:%M')
+                                                    
+                                                    if es_admin:
 
-                                                    novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
-                                                                                                SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
-                                                                                                comentario= comment ,
-                                                                                                Fecha_novedad=fecha_novedad ,
-                                                                                                hora_novedad=hora_actual 
-                                                                                                                    )
-                                                else:
-                                                    novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
-                                                                                                SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
-                                                                                                comentario= comment ,
-                                                                                                Fecha_novedad=fecha_novedad ,
-                                                                                                hora_novedad=hora_actual ,
-                                                                                                Colaborador= user_profile_obj.Colaborador
-                                                                                                                    )
-             
-
-                      Mensaje='Aprobado Viaticos para: '+str(lista_ausencia_aprobar)+' Viaticos por: '+Aprobado_por
-                      existo='existo'
-
-                           
-            #### fecha de comparacion terminadas
-        
-        elif 'Rechazar' in values:
-                 rechazar_permiso=Ajuste_Planilla.objects.get(pk=int(request.POST["Rechazar"]))
-                 permiso_aprobado_Q=rechazar_permiso.Estado_Permiso
-                 rechazar_permiso.Estado_Permiso='Rechazar'
-                 rechazar_permiso.Aprobado_por= Aprobado_por
-                 
-                 rechazar_permiso.save()
-                 Mensaje='Rechazado Viaticos para: '+rechazar_permiso.Colaborador.Colaborador_nombre+' '+rechazar_permiso.Colaborador.Colaborador_apellido+' Monto por '+rechazar_permiso.Monto+' Periodo: '+rechazar_permiso.Etapa
-                 existo='existo'
-
-        elif 'Aprobar' in values:
-                 rechazar_permiso=Ajuste_Planilla.objects.get(pk=int(request.POST["Aprobar"]))
-                 rechazar_permiso.Estado_Permiso='Aprobado'
-                 rechazar_permiso.Aprobado_por= Aprobado_por
-                 rechazar_permiso.save()
-                 Mensaje='Validado Viaticos para: '+rechazar_permiso.Colaborador.Colaborador_nombre+' '+rechazar_permiso.Colaborador.Colaborador_apellido+' Monto por '+rechazar_permiso.Monto+' Periodo: '+rechazar_permiso.Etapa
-                 existo='existo'
-
-        elif 'Borrar' in values:
-                a_borrar=Ajuste_Planilla.objects.get(pk=int(request.POST["Borrar"]))
+                                                        novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
+                                                                                                    SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
+                                                                                                    comentario= comment ,
+                                                                                                    Fecha_novedad=fecha_novedad ,
+                                                                                                    hora_novedad=hora_actual 
+                                                                                                                        )
+                                                    else:
+                                                        novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
+                                                                                                    SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
+                                                                                                    comentario= comment ,
+                                                                                                    Fecha_novedad=fecha_novedad ,
+                                                                                                    hora_novedad=hora_actual ,
+                                                                                                    Colaborador= user_profile_obj.Colaborador
+                                                                                                                        )
                 
-                if True: #guardar Novedades
-                        
 
-                                                tipo_seguimiento='Viaticos / Ajuste '
-                                                sUB_Tipo_seguimiento=' Eliminar '
-                                                comment=' Eliminar Viaticos / Ajuste: '+a_borrar.Tipo_Ajuste+' , Periodo: '+str(a_borrar.Etapa)+' Monto: '+str(a_borrar.Monto)+' Colaborador: '+a_borrar.Colaborador.Colaborador_nombre+' '+a_borrar.Colaborador.Colaborador_apellido+' Nro Ident.: '+a_borrar.Colaborador.Nro_Identificacion
-                                                fecha_novedad_date=datetime.now()
-                                                fecha_novedad=fecha_novedad_date.date()
-                                                hora_actual = fecha_novedad_date.strftime('%H:%M')
-                                                
-                                                if es_admin:
+                        Mensaje='Aprobado Viaticos para: '+str(lista_ausencia_aprobar)+' Viaticos por: '+Aprobado_por
+                        existo='existo'
 
-                                                    novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
-                                                                                                SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
-                                                                                                comentario= comment ,
-                                                                                                Fecha_novedad=fecha_novedad ,
-                                                                                                hora_novedad=hora_actual 
-                                                                                                                    )
-                                                else:
-                                                    novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
-                                                                                                SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
-                                                                                                comentario= comment ,
-                                                                                                Fecha_novedad=fecha_novedad ,
-                                                                                                hora_novedad=hora_actual ,
-                                                                                                Colaborador= user_profile_obj.Colaborador
-                                                                                                                    )
-             
-                a_borrar.delete()
-                Mensaje=comment.replace('Eliminar','Eliminado')
-                existo='existo'
-                 
-
-        if True:
-            lista_AJUSTE=Ajuste_Planilla.objects.filter(Colaborador__Status='Activo')
-           
-            lista_ausencia_final=[]
-
-            for i in lista_AJUSTE:
-              
-                     
-                lista=[i.pk,
-                        i.Estado_Permiso,
-                        i.Colaborador.Colaborador_nombre+' '+i.Colaborador.Colaborador_apellido,
-                        i.Colaborador.Cargo,
-                        i.Colaborador.Departamento,
-                        i.Monto,
-                        i.Tipo_Ajuste,
-                        i.Concepto_Ajuste,
-                        i.Comentario,
-                        i.Retencion_Iva,
-                        i.Quien_agrego_Jornada,
-                        i.Aprobado_por,
-                        i.Aprobado_bool,
-                        i.Colaborador.imagen
-
-                        #<td class="col-2"><img src="{{ MEDIA_URL }}{{  clientes.13 }}" alt="mdo" width="32" height="32" class="rounded-circle mb-2">  {{ clientes.2 }}</td>
-                           ]
-
-                lista_ausencia_final.append(lista)   
+                            
+                #### fecha de comparacion terminadas
             
-        return render(request, "ver_viaticos.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'agregado':existo, 'Mensaje': Mensaje, 'lista_cliente':lista_ausencia_final,'qty_notificaciones_permisos':qty_notificaciones_permisos, 'qty_notificaciones_acreedores':qty_notificaciones_acreedores})
+            elif 'Rechazar' in values:
+                    rechazar_permiso=Ajuste_Planilla.objects.get(pk=int(request.POST["Rechazar"]))
+                    permiso_aprobado_Q=rechazar_permiso.Estado_Permiso
+                    rechazar_permiso.Estado_Permiso='Rechazar'
+                    rechazar_permiso.Aprobado_por= Aprobado_por
+                    
+                    rechazar_permiso.save()
+                    Mensaje='Rechazado Viaticos para: '+rechazar_permiso.Colaborador.Colaborador_nombre+' '+rechazar_permiso.Colaborador.Colaborador_apellido+' Monto por '+rechazar_permiso.Monto+' Periodo: '+rechazar_permiso.Etapa
+                    existo='existo'
 
+            elif 'Aprobar' in values:
+                    rechazar_permiso=Ajuste_Planilla.objects.get(pk=int(request.POST["Aprobar"]))
+                    rechazar_permiso.Estado_Permiso='Aprobado'
+                    rechazar_permiso.Aprobado_por= Aprobado_por
+                    rechazar_permiso.save()
+                    Mensaje='Validado Viaticos para: '+rechazar_permiso.Colaborador.Colaborador_nombre+' '+rechazar_permiso.Colaborador.Colaborador_apellido+' Monto por '+rechazar_permiso.Monto+' Periodo: '+rechazar_permiso.Etapa
+                    existo='existo'
+
+            elif 'Borrar' in values:
+                    a_borrar=Ajuste_Planilla.objects.get(pk=int(request.POST["Borrar"]))
+                    
+                    if True: #guardar Novedades
+                            
+
+                                                    tipo_seguimiento='Viaticos / Ajuste '
+                                                    sUB_Tipo_seguimiento=' Eliminar '
+                                                    comment=' Eliminar Viaticos / Ajuste: '+a_borrar.Tipo_Ajuste+' , Periodo: '+str(a_borrar.Etapa)+' Monto: '+str(a_borrar.Monto)+' Colaborador: '+a_borrar.Colaborador.Colaborador_nombre+' '+a_borrar.Colaborador.Colaborador_apellido+' Nro Ident.: '+a_borrar.Colaborador.Nro_Identificacion
+                                                    fecha_novedad_date=datetime.now()
+                                                    fecha_novedad=fecha_novedad_date.date()
+                                                    hora_actual = fecha_novedad_date.strftime('%H:%M')
+                                                    
+                                                    if es_admin:
+
+                                                        novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
+                                                                                                    SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
+                                                                                                    comentario= comment ,
+                                                                                                    Fecha_novedad=fecha_novedad ,
+                                                                                                    hora_novedad=hora_actual 
+                                                                                                                        )
+                                                    else:
+                                                        novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
+                                                                                                    SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
+                                                                                                    comentario= comment ,
+                                                                                                    Fecha_novedad=fecha_novedad ,
+                                                                                                    hora_novedad=hora_actual ,
+                                                                                                    Colaborador= user_profile_obj.Colaborador
+                                                                                                                        )
+                
+                    a_borrar.delete()
+                    Mensaje=comment.replace('Eliminar','Eliminado')
+                    existo='existo'
+                    
+
+            if True:
+                lista_AJUSTE=Ajuste_Planilla.objects.filter(Colaborador__Status='Activo')
+            
+                lista_ausencia_final=[]
+
+                for i in lista_AJUSTE:
+                
+                        
+                    lista=[i.pk,
+                            i.Estado_Permiso,
+                            i.Colaborador.Colaborador_nombre+' '+i.Colaborador.Colaborador_apellido,
+                            i.Colaborador.Cargo,
+                            i.Colaborador.Departamento,
+                            i.Monto,
+                            i.Tipo_Ajuste,
+                            i.Concepto_Ajuste,
+                            i.Comentario,
+                            i.Retencion_Iva,
+                            i.Quien_agrego_Jornada,
+                            i.Aprobado_por,
+                            i.Aprobado_bool,
+                            i.Colaborador.imagen
+
+                            #<td class="col-2"><img src="{{ MEDIA_URL }}{{  clientes.13 }}" alt="mdo" width="32" height="32" class="rounded-circle mb-2">  {{ clientes.2 }}</td>
+                            ]
+
+                    lista_ausencia_final.append(lista)   
+                
+            return render(request, "ver_viaticos.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'agregado':existo, 'Mensaje': Mensaje, 'lista_cliente':lista_ausencia_final,'qty_notificaciones_permisos':qty_notificaciones_permisos, 'qty_notificaciones_acreedores':qty_notificaciones_acreedores})
+        except Exception as e:
+            print("Se produjo una excepción:", type(e).__name__, "-", e)
+            # Imprimir la información de la traza de la excepción
+            traceback.print_exc()
+            print(traceback.print_exc(), 'print')
+            print("Archivo:", e.__traceback__.tb_frame.f_code.co_filename)
+            print("Línea:", e.__traceback__.tb_lineno)   
 
 
 def Viaticos_supervisor(request):
