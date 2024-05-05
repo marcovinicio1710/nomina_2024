@@ -555,165 +555,172 @@ def fun_fecha_retrocediendo_anos(fecha_actual, yearss):
     return fecha_estudio
 
 
-def calculo_planilla_dia_Ruta(num_hr_acumuladas_en_semana, id_col , hr_jornada_semanal, fecha_iterador, fecha_final_corte , lista_vacas_trabj_final, lista_descanso , lista_feriados , lista_incap_trabj_final , lista_lic_p_trabj_final):
+def calculo_planilla_dia_Ruta(num_hr_acumuladas_en_semana, id_col , hr_jornada_semanal, fecha_iterador, fecha_final_corte , lista_vacas_trabj_final, lista_descanso , lista_feriados , lista_incap_trabj_final , lista_lic_p_trabj_final,lista_incap_trabj_caja_paga_final):
     if True:
-        num_hr_extras_acumuladas_en_semana_=0
-        dias_trabj_fer_con_descanso=0
+            num_hr_extras_acumuladas_en_semana_=0
+            dias_trabj_fer_con_descanso=0
 
-        min_dias_trabj_fer_con_descanso=0
-        min_dias_traba_feriados=0
+            min_dias_trabj_fer_con_descanso=0
+            min_dias_traba_feriados=0
 
-        dias_trabaja_descanso=0
-        min_dias_trabaja_descanso=0
+            dias_trabaja_descanso=0
+            min_dias_trabaja_descanso=0
 
-        min_dias_trabajados_normales=0
-        dias_trabajados=0
+            min_dias_trabajados_normales=0
+            dias_trabajados=0
 
-        min_ausencia_ruta=0
-        min_hr_ordinaria_ruta=0
-        min_hr_extra_diurna_ruta =0
+            min_ausencia_ruta=0
+            min_hr_ordinaria_ruta=0
+            min_hr_extra_diurna_ruta =0
 
-        dias_traba_feriados=0
-        dia_ausencia=0
-        
-        lista_cliente_periodo=[]
+            dias_traba_feriados=0
+            dia_ausencia=0
+            
+            lista_cliente_periodo=[]
 
-        vacaciones=0
+            vacaciones=0
 
-        dia_descanso=0
-        dias_trabajados_compl=0
-        incapacidad=0
-        licenc_paga=0
+            dia_descanso=0
+            dias_trabajados_compl=0
+            incapacidad=0
+            licenc_paga=0
+            incapacidad_caja=0
 
-        iter_inicio=True
+            iter_inicio=True
 
-        while iter_inicio:
-                    
-                    saber_dia=fecha_iterador.weekday()
-                    if saber_dia==0:
-                        num_hr_extras_acumuladas_en_semana_=0
-                        num_hr_acumuladas_en_semana=0
-
-                    lista_si_trabajo_ese_dia= Hoja_tiempo.objects.filter(Dia_entrada=fecha_iterador, Colaborador__pk=id_col)
-                    if len(lista_si_trabajo_ese_dia)>0:
-                        Min_totales_Trabajado_Dia=0
-                        for intraday in lista_si_trabajo_ese_dia:
-                            Min_totales_Trabajado_Dia+=intraday.Minutos_Trabajads
-                            trabj_feriad=intraday.laboro_dia_feriado
-                            trabj_descanso=intraday.Laboro_dia_domingo_descanso
-                            lista_cliente_periodo.append([intraday.Empresa.pk,intraday.Minutos_Trabajads])
-
-
-                        bool_trabajo=True
-                    else:
-                        bool_trabajo=False
-
-
-                    if bool_trabajo:
-                   
-
-                        if trabj_feriad and trabj_descanso:
-                            dias_trabj_fer_con_descanso+=1
-                            min_dias_trabj_fer_con_descanso+=Min_totales_Trabajado_Dia
-
-
-                        elif trabj_feriad:
-                            dias_traba_feriados+=1
-                            min_dias_traba_feriados+=Min_totales_Trabajado_Dia
-
-                            
-
-                        elif trabj_descanso:
-                            
-                             
-                                dias_trabaja_descanso+=1
-                                min_dias_trabaja_descanso+=Min_totales_Trabajado_Dia
-                               
-                             
-                        else:  
-                            dias_trabajados+=1
-
-                            min_dias_trabajados_normales+=Min_totales_Trabajado_Dia
-
-                            num_hr_acumuladas_en_semana+=Min_totales_Trabajado_Dia
-                            
-                            
-                            
-                    elif fecha_iterador in  lista_vacas_trabj_final:
-                        vacaciones+=1
-                    
-                    elif saber_dia in lista_descanso  :
-                        dia_descanso+=1
-                    
+            while iter_inicio:
                         
-                    elif fecha_iterador in lista_feriados :
-                       
-                        dias_trabajados_compl+=1   
-                    
-                    elif fecha_iterador in  lista_incap_trabj_final:
-                        incapacidad+=1
+                        saber_dia=fecha_iterador.weekday()
+                        if saber_dia==0:
+                            num_hr_extras_acumuladas_en_semana_=0
+                            num_hr_acumuladas_en_semana=0
 
-                    elif fecha_iterador in  lista_lic_p_trabj_final:
-                        licenc_paga+=1
-
-                    
-                    
-                    else:
-                         
-                        dia_ausencia+=0
-                    
+                        lista_si_trabajo_ese_dia= Hoja_tiempo.objects.filter(Dia_entrada=fecha_iterador, Colaborador__pk=id_col)
+                        if len(lista_si_trabajo_ese_dia)>0:
+                            Min_totales_Trabajado_Dia=0
+                            for intraday in lista_si_trabajo_ese_dia:
+                                Min_totales_Trabajado_Dia+=intraday.Minutos_Trabajads
+                                trabj_feriad=intraday.laboro_dia_feriado
+                                trabj_descanso=intraday.Laboro_dia_domingo_descanso
+                                lista_cliente_periodo.append([intraday.Empresa.pk,intraday.Minutos_Trabajads])
 
 
-                    if saber_dia==6 and num_hr_acumuladas_en_semana  <  hr_jornada_semanal*60:
-
-                        min_ausencia_ruta += hr_jornada_semanal*60 - num_hr_acumuladas_en_semana
-                    
-                    elif saber_dia==6 and num_hr_acumuladas_en_semana  >  hr_jornada_semanal*60:
-
-                        if num_hr_acumuladas_en_semana > 48*60:
-                            min_hr_extra_diurna_ruta+= num_hr_acumuladas_en_semana - 48*60
-                            min_hr_ordinaria_ruta += num_hr_acumuladas_en_semana - hr_jornada_semanal*60 - min_hr_extra_diurna_ruta
-
+                            bool_trabajo=True
                         else:
+                            bool_trabajo=False
 
-                            min_hr_ordinaria_ruta += num_hr_acumuladas_en_semana - hr_jornada_semanal*60 
-                        
-                       
 
-                    if fecha_iterador==fecha_final_corte.date():
-                        iter_inicio=False
+                        if bool_trabajo:
                     
-                    else:
-                        fecha_iterador+=timedelta(days=1)
 
-        lista=[dias_trabj_fer_con_descanso,
-
-        min_dias_trabj_fer_con_descanso,
-        min_dias_traba_feriados,
-
-        dias_trabaja_descanso,
-        min_dias_trabaja_descanso,
-
-        min_dias_trabajados_normales,
-        dias_trabajados,
-
-        min_ausencia_ruta,
-        min_hr_ordinaria_ruta,
-        min_hr_extra_diurna_ruta ,
-
-        dias_traba_feriados,
-        dia_ausencia ,
-        lista_cliente_periodo,
-        vacaciones,
-        
-        incapacidad,
-        licenc_paga
+                            if trabj_feriad and trabj_descanso:
+                                dias_trabj_fer_con_descanso+=1
+                                min_dias_trabj_fer_con_descanso+=Min_totales_Trabajado_Dia
 
 
-        ]
+                            elif trabj_feriad:
+                                dias_traba_feriados+=1
+                                min_dias_traba_feriados+=Min_totales_Trabajado_Dia
 
-        return lista
+                                
+
+                            elif trabj_descanso:
+                                
+                                
+                                    dias_trabaja_descanso+=1
+                                    min_dias_trabaja_descanso+=Min_totales_Trabajado_Dia
+                                
+                                
+                            else:  
+                                dias_trabajados+=1
+
+                                min_dias_trabajados_normales+=Min_totales_Trabajado_Dia
+
+                                num_hr_acumuladas_en_semana+=Min_totales_Trabajado_Dia
+                                
+                                
+                                
+                        elif fecha_iterador in  lista_vacas_trabj_final:
+                            vacaciones+=1
+                        
+                        elif saber_dia in lista_descanso  :
+                            dia_descanso+=1
+                        
+                            
+                        elif fecha_iterador in lista_feriados :
+                        
+                            dias_trabajados_compl+=1   
+                        
+                        elif fecha_iterador in  lista_incap_trabj_final:
+                            incapacidad+=1
+                        
+                        elif fecha_iterador in lista_incap_trabj_caja_paga_final:
+                            incapacidad_caja+=1
+
+                        elif fecha_iterador in  lista_lic_p_trabj_final:
+                            licenc_paga+=1
+
+                        
+                        
+                        else:
+                            
+                            dia_ausencia+=0
+                        
+
+
+                        if saber_dia==6 and num_hr_acumuladas_en_semana  <  hr_jornada_semanal*60:
+
+                            min_ausencia_ruta += hr_jornada_semanal*60 - num_hr_acumuladas_en_semana
+                        
+                        elif saber_dia==6 and num_hr_acumuladas_en_semana  >  hr_jornada_semanal*60:
+
+                            if num_hr_acumuladas_en_semana > 48*60:
+                                min_hr_extra_diurna_ruta+= num_hr_acumuladas_en_semana - 48*60
+                                min_hr_ordinaria_ruta += num_hr_acumuladas_en_semana - hr_jornada_semanal*60 - min_hr_extra_diurna_ruta
+
+                            else:
+
+                                min_hr_ordinaria_ruta += num_hr_acumuladas_en_semana - hr_jornada_semanal*60 
+                            
+                        
+
+                        if fecha_iterador==fecha_final_corte.date():
+                            iter_inicio=False
+                        
+                        else:
+                            fecha_iterador+=timedelta(days=1)
+
+            lista=[dias_trabj_fer_con_descanso,
+
+            min_dias_trabj_fer_con_descanso,
+            min_dias_traba_feriados,
+
+            dias_trabaja_descanso,
+            min_dias_trabaja_descanso,
+
+            min_dias_trabajados_normales,
+            dias_trabajados,
+
+            min_ausencia_ruta,
+            min_hr_ordinaria_ruta,
+            min_hr_extra_diurna_ruta ,
+
+            dias_traba_feriados,
+            dia_ausencia ,
+            lista_cliente_periodo,
+            vacaciones,
+            
+            incapacidad,
+            licenc_paga,
+            incapacidad_caja
+
+
+
+            ]
+
+            return lista
     
+  
 
 def fun_determinar_horas_bien_planificacion(lista_dia_entrada,hr_Lunes,hora_entrada_Lunes,hora_salida_Lunes,almuerzo_aplica_Lunes,inicio_Almuerzo_Lunes,Dia_Siguiente_Lunes):
 
@@ -21774,7 +21781,7 @@ def motor_planilla_p6_l(request):
 
                 ##print('num_hr_extras_acumuladas_en_semana_',num_hr_extras_acumuladas_en_semana_)
                 if   colaborador_obj.Departamento=='Ruta':
-                    lista_calculo_dia_ruta = calculo_planilla_dia_Ruta(num_hr_acumuladas_en_semana, colaborador_obj.pk , hr_jornada_semanal, fecha_iterador, fecha_final_corte , lista_vacas_trabj_final, lista_descanso , lista_feriados , lista_incap_trabj_final , lista_lic_p_trabj_final)
+                    lista_calculo_dia_ruta = calculo_planilla_dia_Ruta(num_hr_acumuladas_en_semana, colaborador_obj.pk , hr_jornada_semanal, fecha_iterador, fecha_final_corte , lista_vacas_trabj_final, lista_descanso , lista_feriados , lista_incap_trabj_final , lista_lic_p_trabj_final,lista_incap_trabj_caja_paga_final )
                     
                     dias_trabj_fer_con_descanso=lista_calculo_dia_ruta[0]
 
@@ -21798,6 +21805,7 @@ def motor_planilla_p6_l(request):
         
                     incapacidad= lista_calculo_dia_ruta[14]
                     licenc_paga= lista_calculo_dia_ruta[15]
+                    incapacidad_caja=lista_calculo_dia_ruta[15]
 
 
                 else:
