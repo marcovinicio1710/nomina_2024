@@ -14874,7 +14874,7 @@ def motor_planilla_p10(request):
 
                 ##print('num_hr_extras_acumuladas_en_semana_',num_hr_extras_acumuladas_en_semana_)
                 if   colaborador_obj.Departamento=='Ruta':
-                    lista_calculo_dia_ruta = calculo_planilla_dia_Ruta(num_hr_acumuladas_en_semana, colaborador_obj.pk , hr_jornada_semanal, fecha_iterador, fecha_final_corte , lista_vacas_trabj_final, lista_descanso , lista_feriados , lista_incap_trabj_final , lista_lic_p_trabj_final)
+                    lista_calculo_dia_ruta = calculo_planilla_dia_Ruta(num_hr_acumuladas_en_semana, colaborador_obj.pk , hr_jornada_semanal, fecha_iterador, fecha_final_corte , lista_vacas_trabj_final, lista_descanso , lista_feriados , lista_incap_trabj_final , lista_lic_p_trabj_final , lista_incap_trabj_caja_paga_final)
                     
                     dias_trabj_fer_con_descanso=lista_calculo_dia_ruta[0]
 
@@ -14898,6 +14898,7 @@ def motor_planilla_p10(request):
         
                     incapacidad= lista_calculo_dia_ruta[14]
                     licenc_paga= lista_calculo_dia_ruta[15]
+                    incapacidad_caja=lista_calculo_dia_ruta[16]
 
 
                 else:
@@ -15052,6 +15053,7 @@ def motor_planilla_p10(request):
                             incapacidad+=1
                         elif fecha_iterador in lista_incap_trabj_caja_paga_final:
                             incapacidad_caja+=1
+                        
                         elif fecha_iterador in  lista_lic_p_trabj_final:
                             licenc_paga+=1
 
