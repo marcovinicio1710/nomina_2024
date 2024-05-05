@@ -17177,7 +17177,7 @@ def txt_quincena(request):
                     excel_buffer.close()
 
         
-        return render(request, "ver_txt.html",{"name": 'Descargue TXT para pago de nomina quincela', 'MEDIA_URL':settings.MEDIA_URL, 'name_1':nombre_archivo_quincena ,'name_xiii':nombre_archivo_xiii, 'name_bonos':nombre_archivo_bono , 'name_xlsx':nombre_archivo_excel, 'request':request.method , 'lista_cliente':lista_final,'qty_notificaciones_permisos':qty_notificaciones_permisos,'qty_notificaciones_acreedores':qty_notificaciones_acreedores, 'TOTAL_C':len(lista_administrativo)+len(lista_produccion),'admin':len(lista_administrativo), 'produccion':len(lista_produccion)})
+        return render(request, "ver_txt.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, "name": 'Descargue TXT para pago de nomina quincela', 'MEDIA_URL':settings.MEDIA_URL, 'name_1':nombre_archivo_quincena ,'name_xiii':nombre_archivo_xiii, 'name_bonos':nombre_archivo_bono , 'name_xlsx':nombre_archivo_excel, 'request':request.method , 'lista_cliente':lista_final,'qty_notificaciones_permisos':qty_notificaciones_permisos,'qty_notificaciones_acreedores':qty_notificaciones_acreedores, 'TOTAL_C':len(lista_administrativo)+len(lista_produccion),'admin':len(lista_administrativo), 'produccion':len(lista_produccion)})
 
 def sipe_quincena(request):
     if True: #Autenticacion
@@ -23012,469 +23012,352 @@ def motor_planilla_p7_l(request):
         # #print(request.FILES['archivo'])
         
         values= list(request.POST.keys()) 
-       
-        if 'Confirmar_liquidacion' in values:
-            quater=request.POST["Confirmar_liquidacion"]
-            id_col=int(request.POST["id_colaborador"])
-            fecha_salida=request.POST["fecha_salida"]
-            lista_fecha=fecha_salida.split('-')
-            fecha_egreso =  datetime(int(lista_fecha[0]),int(lista_fecha[1]), int(lista_fecha[2]))
-            obj_cliente=Colaboradores.objects.get(pk=id_col)
-            obj_cliente.Status=request.POST["motivo"]
-            obj_cliente.Fecha_Egreso=fecha_egreso
-            obj_cliente.save()
+        try:
+            if 'Confirmar_liquidacion' in values:
+                quater=request.POST["Confirmar_liquidacion"]
+                id_col=int(request.POST["id_colaborador"])
+                fecha_salida=request.POST["fecha_salida"]
+                lista_fecha=fecha_salida.split('-')
+                fecha_egreso =  datetime(int(lista_fecha[0]),int(lista_fecha[1]), int(lista_fecha[2]))
+                obj_cliente=Colaboradores.objects.get(pk=id_col)
+                obj_cliente.Status=request.POST["motivo"]
+                obj_cliente.Fecha_Egreso=fecha_egreso
+                obj_cliente.save()
 
-            if True: #Actualizar acreedores 
-                lista_acreedores=Acreedores_quincena.objects.filter( Periodo_Cobro = quater , Tipo_Operacion='Liquidacion' , Acreedores__Colaborador__pk =id_col )
-                if len(lista_acreedores)>0:
-                    for acreedore_obj in lista_acreedores:
-                        if acreedore_obj.Realizo_Cobreo == False:
-                            monto_abonado = acreedore_obj.Monto_periodo
-                            obj_principal= acreedore_obj.Acreedores
-                            #actualizar
-                            obj_principal.dinero_pagado=obj_principal.dinero_pagado+monto_abonado
-                            obj_principal.cuotas_restante = acreedore_obj.Nro_Cuota
-                            obj_principal.save()
-                            acreedore_obj.Realizo_Cobreo=True
-                            acreedore_obj.save()
+                if True: #Actualizar acreedores 
+                    lista_acreedores=Acreedores_quincena.objects.filter( Periodo_Cobro = quater , Tipo_Operacion='Liquidacion' , Acreedores__Colaborador__pk =id_col )
+                    if len(lista_acreedores)>0:
+                        for acreedore_obj in lista_acreedores:
+                            if acreedore_obj.Realizo_Cobreo == False:
+                                monto_abonado = acreedore_obj.Monto_periodo
+                                obj_principal= acreedore_obj.Acreedores
+                                #actualizar
+                                obj_principal.dinero_pagado=obj_principal.dinero_pagado+monto_abonado
+                                obj_principal.cuotas_restante = acreedore_obj.Nro_Cuota
+                                obj_principal.save()
+                                acreedore_obj.Realizo_Cobreo=True
+                                acreedore_obj.save()
+                        
+
+                if True: #guardar Novedades
+                                                    tipo_seguimiento='Liquidacion '
+                                                    sUB_Tipo_seguimiento=' Creacion '
+                                                    comment=' Creacion Liquidacion: '+'Motivo:'+request.POST["motivo"]+' Colaborador: '+obj_cliente.Colaborador_nombre+' '+obj_cliente.Colaborador_apellido+' Nro Ident.: '+obj_cliente.Nro_Identificacion
+                                                    fecha_novedad_date=datetime.now()
+                                                    fecha_novedad=fecha_novedad_date.date()
+                                                    hora_actual = fecha_novedad_date.strftime('%H:%M')
+                                                    
+                                                    if es_admin:
+
+                                                        novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
+                                                                                                    SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
+                                                                                                    comentario= comment ,
+                                                                                                    Fecha_novedad=fecha_novedad ,
+                                                                                                    hora_novedad=hora_actual 
+                                                                                                                        )
+                                                    else:
+                                                        novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
+                                                                                                    SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
+                                                                                                    comentario= comment ,
+                                                                                                    Fecha_novedad=fecha_novedad ,
+                                                                                                    hora_novedad=hora_actual ,
+                                                                                                    Colaborador= user_profile_obj.Colaborador
+                                                                                                                        )
                     
 
-            if True: #guardar Novedades
-                                                tipo_seguimiento='Liquidacion '
-                                                sUB_Tipo_seguimiento=' Creacion '
-                                                comment=' Creacion Liquidacion: '+'Motivo:'+request.POST["motivo"]+' Colaborador: '+obj_cliente.Colaborador_nombre+' '+obj_cliente.Colaborador_apellido+' Nro Ident.: '+obj_cliente.Nro_Identificacion
-                                                fecha_novedad_date=datetime.now()
-                                                fecha_novedad=fecha_novedad_date.date()
-                                                hora_actual = fecha_novedad_date.strftime('%H:%M')
-                                                
-                                                if es_admin:
 
-                                                    novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
-                                                                                                SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
-                                                                                                comentario= comment ,
-                                                                                                Fecha_novedad=fecha_novedad ,
-                                                                                                hora_novedad=hora_actual 
-                                                                                                                    )
-                                                else:
-                                                    novedades= Seguimiento_Actividad.objects.create(Tipo_seguimiento= tipo_seguimiento,
-                                                                                                SUB_Tipo_seguimiento= sUB_Tipo_seguimiento,
-                                                                                                comentario= comment ,
-                                                                                                Fecha_novedad=fecha_novedad ,
-                                                                                                hora_novedad=hora_actual ,
-                                                                                                Colaborador= user_profile_obj.Colaborador
-                                                                                                                    )
-                 
+                return redirect('liquidaciones-historico/') 
+            
+            if 'Actualizar' in values:
+                lista_xiii=['Q1-12','Q1-04','Q1-08']
+                planilla=request.POST["Actualizar"]
+                fecha_pagoo=request.POST["fecha_salida"]
+                id_col=int(request.POST["id_colaborador"])
+                lista_planilla=planilla.split('-')
+                Quater=lista_planilla[0]
+                QQ=Quater+'-'+lista_planilla[1]
+                Quater=Quater.replace('Q','')
+            
+                Quater=int(Quater)
+                mes=int(lista_planilla[1])
+                year=int(lista_planilla[2])
 
+                bool_acredores=False
+                id_acrre_empresa=0
+                acredores_empresa=0
+                pk_acreedor_empresa=0
+            
 
-            return redirect('liquidaciones-historico/') 
-        
-        if 'Actualizar' in values:
-            lista_xiii=['Q1-12','Q1-04','Q1-08']
-            planilla=request.POST["Actualizar"]
-            fecha_pagoo=request.POST["fecha_salida"]
-            id_col=int(request.POST["id_colaborador"])
-            lista_planilla=planilla.split('-')
-            Quater=lista_planilla[0]
-            QQ=Quater+'-'+lista_planilla[1]
-            Quater=Quater.replace('Q','')
-           
-            Quater=int(Quater)
-            mes=int(lista_planilla[1])
-            year=int(lista_planilla[2])
+                if True: #Actualizar acreedores 
+                    lista_acreedores=Acreedores_quincena.objects.filter( Periodo_Cobro = quater , Tipo_Operacion='Planilla' , Acreedores__Colaborador__pk =id_col )
+                    if len(lista_acreedores)>0:
+                        for acreedore_obj in lista_acreedores:
+                            if acreedore_obj.Realizo_Cobreo == False:
+                                monto_abonado = acreedore_obj.Monto_periodo
+                                obj_principal= acreedore_obj.Acreedores
+                                #actualizar
+                                obj_principal.dinero_pagado=obj_principal.dinero_pagado+monto_abonado
+                                obj_principal.cuotas_restante = acreedore_obj.Nro_Cuota
+                                if obj_principal.Monto_total > obj_principal.dinero_pagado  + monto_abonado :
+                                    bool_acredores=True
+                                    acredores_empresa += obj_principal.Monto_total - obj_principal.dinero_pagado  + monto_abonado
 
-            bool_acredores=False
-            id_acrre_empresa=0
-            acredores_empresa=0
-            pk_acreedor_empresa=0
-           
+                                obj_principal.save()
+                                acreedore_obj.Realizo_Cobreo=True
+                                acreedore_obj.save()
+                        
 
-            if True: #Actualizar acreedores 
-                lista_acreedores=Acreedores_quincena.objects.filter( Periodo_Cobro = quater , Tipo_Operacion='Planilla' , Acreedores__Colaborador__pk =id_col )
-                if len(lista_acreedores)>0:
-                    for acreedore_obj in lista_acreedores:
-                        if acreedore_obj.Realizo_Cobreo == False:
-                            monto_abonado = acreedore_obj.Monto_periodo
-                            obj_principal= acreedore_obj.Acreedores
-                            #actualizar
-                            obj_principal.dinero_pagado=obj_principal.dinero_pagado+monto_abonado
-                            obj_principal.cuotas_restante = acreedore_obj.Nro_Cuota
-                            if obj_principal.Monto_total > obj_principal.dinero_pagado  + monto_abonado :
-                                bool_acredores=True
-                                acredores_empresa += obj_principal.Monto_total - obj_principal.dinero_pagado  + monto_abonado
-
-                            obj_principal.save()
-                            acreedore_obj.Realizo_Cobreo=True
-                            acreedore_obj.save()
+                lista_xiii=['Q1-12','Q1-04','Q1-08']
+                if Quater==1:
+                    inicio_corte=26
+                    final_corte=10
+                    fecha_pago=15
+                    if mes==1:
+                        mes_inicial=12
+                        year_inicial=year-1
+                    else:
+                        mes_inicial=mes-1
+                        year_inicial=year
                     
-
-            lista_xiii=['Q1-12','Q1-04','Q1-08']
-            if Quater==1:
-                inicio_corte=26
-                final_corte=10
-                fecha_pago=15
-                if mes==1:
-                    mes_inicial=12
-                    year_inicial=year-1
                 else:
-                    mes_inicial=mes-1
+                    inicio_corte=11
+                    final_corte=25
+                    mes_inicial=mes
                     year_inicial=year
-                
-            else:
-                inicio_corte=11
-                final_corte=25
-                mes_inicial=mes
-                year_inicial=year
-                
-
-            fecha_inicial_corte_str=str(inicio_corte)+'-'+str(mes_inicial)+'-'+str(year_inicial)
-            fecha_final_corte_str=str(final_corte)+'-'+str(mes)+'-'+str(year)
-            
-
-            fecha_inicial_corte = datetime(year_inicial, mes_inicial, inicio_corte)      # Ejemplo: 10 de julio de 2024
-            fecha_final_corte = datetime(year, mes, final_corte)        # Ejemplo: 20 de julio de 2024
-            if Quater==2:
-                fecha_pago = calendar.monthrange(fecha_final_corte.year, fecha_final_corte.month)[1]
-                
-            else:
-                fecha_pago=15
-            
-            fecha_pago_date=datetime(year, mes, fecha_pago)
-            
-            fecha_pago_str=str(fecha_pago)+'-'+str(mes)+'-'+str(year)
-                 
-            lista_planilla=[planilla,fecha_inicial_corte_str,fecha_final_corte_str,fecha_pagoo] 
-
-                     
-            #### Aqui en empieza calculo
-            
-            siguiente_bool=False
-            
-            # obtener decimo acumulado
-            colaborador_obj=Colaboradores.objects.get(pk=id_col)
-            Fecha_Ingreso=colaborador_obj.Fecha_Ingreso
-           
-            #decidir el mejor sueldo para eso la fecha
-            lista_fecha_pagoo=fecha_pagoo.split('-')
-            fecha_corte_liquidacion =  datetime(int(lista_fecha_pagoo[0]), int(lista_fecha_pagoo[1]), int(lista_fecha_pagoo[2]))
-            ultimo_dia = calendar.monthrange(fecha_corte_liquidacion.year, fecha_corte_liquidacion.month)[1]
-            fecha_ultimo_dias_mes =  datetime(fecha_corte_liquidacion.year, fecha_corte_liquidacion.month, ultimo_dia)
-            if fecha_corte_liquidacion.date() == fecha_ultimo_dias_mes.date():
-                mes_30_dias=float(request.POST["mes_actual"])
-            else:
-                mes_30_dias=float(request.POST["mes_anterior"])
-
-            promedio_5_anios=float(request.POST["5_anos"])
-            promedio_6_meses=float(request.POST["6_meses"])
-            mayor_salario = max(mes_30_dias, promedio_5_anios, promedio_6_meses,colaborador_obj.Sueldo )
-
-
-            tipo_liquidacion=request.POST["tipo_liquidacion"]
-            preaviso_str=request.POST["preaviso"]
-            
-            permiso_objj=Permisos.objects.filter(Colaborador__pk=id_col, Tipo_permiso='Vacaciones', Estado_Permiso='Aprobado')
-            num_vacas_usada=0
-            for y in permiso_objj:
-                num_vacas_usada+=y.Dias_permiso
-
-            Vacaciones_totales=calcular_dias_vacaciones_2(Fecha_Ingreso,num_vacas_usada,fecha_corte_liquidacion.date())
-               
-                
-            vacaciones = Vacaciones_totales - num_vacas_usada
-            
-
-            tipo_contrato=colaborador_obj.Tipo_contrato
-
-            vacaciones_sueldo=vacaciones*(mayor_salario/30)
-            #decimo se necesita sacar en formato de la panama
-            #se necesita sacar los meses que corresponde al decimo
-            #fecha del ultimo corte de decimo con la fecha actual
-            mes = fecha_corte_liquidacion.month
-            fecha = fecha_corte_liquidacion.day
-            year = fecha_corte_liquidacion.year
-
-            if fecha <= 10:
-                QQQ='Q1-'+str(mes)+'-'+str(year)
-                
-
-            elif fecha >= 26:
-                if mes==12:
-                    mes_inicial=1
-                    year_inicial, year_final =year, year+1
-                else:
-             
-                    year_inicial, year_final =year, year
-
-                QQQ='Q1-'+str(mes_inicial)+'-'+str(year_final)
-             
-            else:
-                QQQ='Q2-'+str(mes)+'-'+str(year)
-            
-            lista_QQQ=QQQ.split('-')
-            dia_U_XIII, Mes_U_XIII, YEAR_U_XIII =fun_lista_buscar_decimo_1(lista_QQQ[0]+'-'+lista_QQQ[1],int(lista_QQQ[2]))
-            Ultimo_XIII=datetime(YEAR_U_XIII, Mes_U_XIII, dia_U_XIII)
-            if Ultimo_XIII.date() <= Fecha_Ingreso:
-                anios, mesess, diass = diferencia_fechas(Fecha_Ingreso, fecha_corte_liquidacion.date())
-            else:
-                anios, mesess, diass = diferencia_fechas(Ultimo_XIII.date(), fecha_corte_liquidacion.date())
-
-            anios_dif , meses_dif , dias_dif = diferencia_fechas(Fecha_Ingreso, fecha_corte_liquidacion.date())
-            meses_decimo_completo=(mesess*mayor_salario)/12
-            dias_decimo_completo= ((mayor_salario/30)*diass)/12
-            vacas_decimo_completo=vacaciones_sueldo/12
-
-            antiguedad= anios_dif+(meses_dif+dias_dif/30)/12
-
-
-            decimo_provisional_completo=meses_decimo_completo+dias_decimo_completo+vacas_decimo_completo
-            
-            preaviso=0
-            prima_antiguedad=0
-            Indemnización=0
-            Cesantía=0
-            Saldo_Bruto=0
-            #ISLR si existe en su quincena de pago en ambos periodos se tiene que regresar en la liquidacion
-            if planilla.find('Q1')!=-1:
-                planilla_Q1=planilla
-                planilla_Q2=planilla.replace('Q1','Q2')
-            else:
-                planilla_Q2=planilla
-                planilla_Q1=planilla.replace('Q2','Q1')
-            
-            Lista_Q_ISLR=[planilla_Q1,planilla_Q2]
-
-            lista_ISLR= Panilla_por_periodo_quincenal.objects.filter(Colaborador__pk=id_col , Periodo__in=Lista_Q_ISLR)
-
-            ISLR_A_regresar=0
-            for datos_col in lista_ISLR:
-                if datos_col.Deduccion_ISLR>0:
-                    ISLR_A_regresar+=datos_col.Deduccion_ISLR
-                    datos_col.Deduccion_ISLR=0
-                if datos_col.Vacaciones_ISLR>0:
-                    ISLR_A_regresar+=datos_col.Vacaciones_ISLR
-                    datos_col.Vacaciones_ISLR=0
-                
-                datos_col.save() 
-            
-            if ISLR_A_regresar>0:
-                lista_ISLR_clientes= Panilla_por_periodo_quincenal_clientes.objects.filter(Colaborador__pk=id_col , Periodo__in=Lista_Q_ISLR)
-                for datos_col in lista_ISLR_clientes:
                     
-                    datos_col.Deduccion_ISLR=0
-               
-                    datos_col.Vacaciones_ISLR=0
+
+                fecha_inicial_corte_str=str(inicio_corte)+'-'+str(mes_inicial)+'-'+str(year_inicial)
+                fecha_final_corte_str=str(final_corte)+'-'+str(mes)+'-'+str(year)
                 
+
+                fecha_inicial_corte = datetime(year_inicial, mes_inicial, inicio_corte)      # Ejemplo: 10 de julio de 2024
+                fecha_final_corte = datetime(year, mes, final_corte)        # Ejemplo: 20 de julio de 2024
+                if Quater==2:
+                    fecha_pago = calendar.monthrange(fecha_final_corte.year, fecha_final_corte.month)[1]
+                    
+                else:
+                    fecha_pago=15
+                
+                fecha_pago_date=datetime(year, mes, fecha_pago)
+                
+                fecha_pago_str=str(fecha_pago)+'-'+str(mes)+'-'+str(year)
+                    
+                lista_planilla=[planilla,fecha_inicial_corte_str,fecha_final_corte_str,fecha_pagoo] 
+
+                        
+                #### Aqui en empieza calculo
+                
+                siguiente_bool=False
+                
+                # obtener decimo acumulado
+                colaborador_obj=Colaboradores.objects.get(pk=id_col)
+                Fecha_Ingreso=colaborador_obj.Fecha_Ingreso
+            
+                #decidir el mejor sueldo para eso la fecha
+                lista_fecha_pagoo=fecha_pagoo.split('-')
+                fecha_corte_liquidacion =  datetime(int(lista_fecha_pagoo[0]), int(lista_fecha_pagoo[1]), int(lista_fecha_pagoo[2]))
+                ultimo_dia = calendar.monthrange(fecha_corte_liquidacion.year, fecha_corte_liquidacion.month)[1]
+                fecha_ultimo_dias_mes =  datetime(fecha_corte_liquidacion.year, fecha_corte_liquidacion.month, ultimo_dia)
+                if fecha_corte_liquidacion.date() == fecha_ultimo_dias_mes.date():
+                    mes_30_dias=float(request.POST["mes_actual"])
+                else:
+                    mes_30_dias=float(request.POST["mes_anterior"])
+
+                promedio_5_anios=float(request.POST["5_anos"])
+                promedio_6_meses=float(request.POST["6_meses"])
+                mayor_salario = max(mes_30_dias, promedio_5_anios, promedio_6_meses,colaborador_obj.Sueldo )
+
+
+                tipo_liquidacion=request.POST["tipo_liquidacion"]
+                preaviso_str=request.POST["preaviso"]
+                
+                permiso_objj=Permisos.objects.filter(Colaborador__pk=id_col, Tipo_permiso='Vacaciones', Estado_Permiso='Aprobado')
+                num_vacas_usada=0
+                for y in permiso_objj:
+                    num_vacas_usada+=y.Dias_permiso
+
+                Vacaciones_totales=calcular_dias_vacaciones_2(Fecha_Ingreso,num_vacas_usada,fecha_corte_liquidacion.date())
+                
+                    
+                vacaciones = Vacaciones_totales - num_vacas_usada
+                
+
+                tipo_contrato=colaborador_obj.Tipo_contrato
+
+                vacaciones_sueldo=vacaciones*(mayor_salario/30)
+                #decimo se necesita sacar en formato de la panama
+                #se necesita sacar los meses que corresponde al decimo
+                #fecha del ultimo corte de decimo con la fecha actual
+                mes = fecha_corte_liquidacion.month
+                fecha = fecha_corte_liquidacion.day
+                year = fecha_corte_liquidacion.year
+
+                if fecha <= 10:
+                    QQQ='Q1-'+str(mes)+'-'+str(year)
+                    
+
+                elif fecha >= 26:
+                    if mes==12:
+                        mes_inicial=1
+                        year_inicial, year_final =year, year+1
+                    else:
+                
+                        year_inicial, year_final =year, year
+
+                    QQQ='Q1-'+str(mes_inicial)+'-'+str(year_final)
+                
+                else:
+                    QQQ='Q2-'+str(mes)+'-'+str(year)
+                
+                lista_QQQ=QQQ.split('-')
+                dia_U_XIII, Mes_U_XIII, YEAR_U_XIII =fun_lista_buscar_decimo_1(lista_QQQ[0]+'-'+lista_QQQ[1],int(lista_QQQ[2]))
+                Ultimo_XIII=datetime(YEAR_U_XIII, Mes_U_XIII, dia_U_XIII)
+                if Ultimo_XIII.date() <= Fecha_Ingreso:
+                    anios, mesess, diass = diferencia_fechas(Fecha_Ingreso, fecha_corte_liquidacion.date())
+                else:
+                    anios, mesess, diass = diferencia_fechas(Ultimo_XIII.date(), fecha_corte_liquidacion.date())
+
+                anios_dif , meses_dif , dias_dif = diferencia_fechas(Fecha_Ingreso, fecha_corte_liquidacion.date())
+                meses_decimo_completo=(mesess*mayor_salario)/12
+                dias_decimo_completo= ((mayor_salario/30)*diass)/12
+                vacas_decimo_completo=vacaciones_sueldo/12
+
+                antiguedad= anios_dif+(meses_dif+dias_dif/30)/12
+
+
+                decimo_provisional_completo=meses_decimo_completo+dias_decimo_completo+vacas_decimo_completo
+                
+                preaviso=0
+                prima_antiguedad=0
+                Indemnización=0
+                Cesantía=0
+                Saldo_Bruto=0
+                #ISLR si existe en su quincena de pago en ambos periodos se tiene que regresar en la liquidacion
+                if planilla.find('Q1')!=-1:
+                    planilla_Q1=planilla
+                    planilla_Q2=planilla.replace('Q1','Q2')
+                else:
+                    planilla_Q2=planilla
+                    planilla_Q1=planilla.replace('Q2','Q1')
+                
+                Lista_Q_ISLR=[planilla_Q1,planilla_Q2]
+
+                lista_ISLR= Panilla_por_periodo_quincenal.objects.filter(Colaborador__pk=id_col , Periodo__in=Lista_Q_ISLR)
+
+                ISLR_A_regresar=0
+                for datos_col in lista_ISLR:
+                    if datos_col.Deduccion_ISLR>0:
+                        ISLR_A_regresar+=datos_col.Deduccion_ISLR
+                        datos_col.Deduccion_ISLR=0
+                    if datos_col.Vacaciones_ISLR>0:
+                        ISLR_A_regresar+=datos_col.Vacaciones_ISLR
+                        datos_col.Vacaciones_ISLR=0
+                    
                     datos_col.save() 
-
-
-            #SACAR PA, INDM, CESA
-            if tipo_liquidacion == 'Renuncia Voluntaria' and preaviso_str =='Si' and colaborador_obj.Tipo_contrato=='Contrato_Indefinido':
-                #toca PA sin indenminazion
-                #saber sueldo desde que entro hasta el fecha corte
-                suma_total_salario_bruto = Panilla_por_periodo_quincenal.objects.filter(Colaborador__pk=id_col).aggregate(total_salario_bruto=Sum('Pago_quincena_despues_descuento'))
-                suma_total_salario_bruto_1 = Panilla_por_periodo_quincenal.objects.filter(Colaborador__pk=id_col).aggregate( total_salario_colaboradores=Sum('Pago_Vacaciones'))
-                suma_total_salario_bruto_2 = SIPE_Mensual.objects.filter(nro_identificacion=colaborador_obj.Nro_Identificacion).aggregate( total_salario_colaboradores_2=Sum('total_sueldo'))
-                suma_total_salario_bruto_3 = SIPE_Mensual.objects.filter(nro_identificacion=colaborador_obj.Nro_Identificacion).aggregate( total_salario_colaboradores_3=Sum('total_vacaciones'))
-                 # Acceder al valor de la suma total
-                total = suma_total_salario_bruto['total_salario_bruto']
-                total_vacas = suma_total_salario_bruto_1['total_salario_colaboradores']
-                total_sueldo_impo=suma_total_salario_bruto_2['total_salario_colaboradores_2']
-                total_vacas_impo=suma_total_salario_bruto_3['total_salario_colaboradores_3']
-                Total_neto=total+total_vacas+total_sueldo_impo+total_vacas_impo
-
-
-                prima_antiguedad=Total_neto/52
-
-            elif tipo_liquidacion == 'Renuncia Voluntaria'  and colaborador_obj.Tipo_contrato=='Contrato_Indefinido' and preaviso_str =='No':
-                #toca PA sin indenminazion
-               
-                Total_neto= fun_sueldo_de_por_vida(id_col, fecha_corte_liquidacion.date())
-
-
-                prima_antiguedad=Total_neto/52
-
                 
-                preaviso=mayor_salario*12/52
-                if preaviso>=prima_antiguedad:
-                    preaviso=prima_antiguedad
-            elif tipo_liquidacion == 'Mutuo Consentimiento'  and colaborador_obj.Tipo_contrato=='Contrato_Indefinido' :
-
-              
-                Total_neto= fun_sueldo_de_por_vida(id_col, fecha_corte_liquidacion.date())
-
-
-                prima_antiguedad=Total_neto/52
-                Indemnización=3.4*prima_antiguedad
-        
+                if ISLR_A_regresar>0:
+                    lista_ISLR_clientes= Panilla_por_periodo_quincenal_clientes.objects.filter(Colaborador__pk=id_col , Periodo__in=Lista_Q_ISLR)
+                    for datos_col in lista_ISLR_clientes:
+                        
+                        datos_col.Deduccion_ISLR=0
+                
+                        datos_col.Vacaciones_ISLR=0
                     
+                        datos_col.save() 
+
+
+                #SACAR PA, INDM, CESA
+                if tipo_liquidacion == 'Renuncia Voluntaria' and preaviso_str =='Si' and colaborador_obj.Tipo_contrato=='Contrato_Indefinido':
+                    #toca PA sin indenminazion
+                    #saber sueldo desde que entro hasta el fecha corte
+                    suma_total_salario_bruto = Panilla_por_periodo_quincenal.objects.filter(Colaborador__pk=id_col).aggregate(total_salario_bruto=Sum('Pago_quincena_despues_descuento'))
+                    suma_total_salario_bruto_1 = Panilla_por_periodo_quincenal.objects.filter(Colaborador__pk=id_col).aggregate( total_salario_colaboradores=Sum('Pago_Vacaciones'))
+                    suma_total_salario_bruto_2 = SIPE_Mensual.objects.filter(nro_identificacion=colaborador_obj.Nro_Identificacion).aggregate( total_salario_colaboradores_2=Sum('total_sueldo'))
+                    suma_total_salario_bruto_3 = SIPE_Mensual.objects.filter(nro_identificacion=colaborador_obj.Nro_Identificacion).aggregate( total_salario_colaboradores_3=Sum('total_vacaciones'))
+                    # Acceder al valor de la suma total
+                    total = suma_total_salario_bruto['total_salario_bruto']
+                    total_vacas = suma_total_salario_bruto_1['total_salario_colaboradores']
+                    total_sueldo_impo=suma_total_salario_bruto_2['total_salario_colaboradores_2']
+                    total_vacas_impo=suma_total_salario_bruto_3['total_salario_colaboradores_3']
+                    Total_neto=total+total_vacas+total_sueldo_impo+total_vacas_impo
+
+
+                    prima_antiguedad=Total_neto/52
+
+                elif tipo_liquidacion == 'Renuncia Voluntaria'  and colaborador_obj.Tipo_contrato=='Contrato_Indefinido' and preaviso_str =='No':
+                    #toca PA sin indenminazion
                 
+                    Total_neto= fun_sueldo_de_por_vida(id_col, fecha_corte_liquidacion.date())
 
 
+                    prima_antiguedad=Total_neto/52
 
-            #deduciones 
-            seguro_social=vacaciones_sueldo*0.0975
-            seguro_educativo=vacaciones_sueldo*0.0125
-            seg_social_decimo=decimo_provisional_completo*0.0725
+                    
+                    preaviso=mayor_salario*12/52
+                    if preaviso>=prima_antiguedad:
+                        preaviso=prima_antiguedad
+                elif tipo_liquidacion == 'Mutuo Consentimiento'  and colaborador_obj.Tipo_contrato=='Contrato_Indefinido' :
 
-            total_a_pagar_bruto = decimo_provisional_completo+vacaciones_sueldo +  prima_antiguedad + Indemnización +  Cesantía
+                
+                    Total_neto= fun_sueldo_de_por_vida(id_col, fecha_corte_liquidacion.date())
 
+
+                    prima_antiguedad=Total_neto/52
+                    Indemnización=3.4*prima_antiguedad
             
-
-            if bool_acredores: #si hay acreditores pendientes
-                
-                
-                if colaborador_obj.Tipo_contrato=='Contrato_Indefinido':
+                        
                     
-                        if prima_antiguedad >= acredores_empresa:
-                            acredores_empresa=acredores_empresa
-                            fun_guardar_datos_en_acreedores_cuotas_liquidacion_empresa(colaborador_obj.pk , planilla, fecha_pago_date.date() , acredores_empresa , 'Liquidacion')
-                        else:
-                            acredores_empresa=prima_antiguedad
-                            fun_guardar_datos_en_acreedores_cuotas_liquidacion_empresa(colaborador_obj.pk , planilla, fecha_pago_date.date() , acredores_empresa , 'Liquidacion')
-                     
-                    
-                        total_deducciones_colab=seguro_social + seg_social_decimo +  seguro_educativo + preaviso - ISLR_A_regresar+ acredores_empresa
 
+
+
+                #deduciones 
+                seguro_social=vacaciones_sueldo*0.0975
+                seguro_educativo=vacaciones_sueldo*0.0125
+                seg_social_decimo=decimo_provisional_completo*0.0725
+
+                total_a_pagar_bruto = decimo_provisional_completo+vacaciones_sueldo +  prima_antiguedad + Indemnización +  Cesantía
+
+                
+
+                if bool_acredores: #si hay acreditores pendientes
+                    
+                    
+                    if colaborador_obj.Tipo_contrato=='Contrato_Indefinido':
+                        
+                            if prima_antiguedad >= acredores_empresa:
+                                acredores_empresa=acredores_empresa
+                                fun_guardar_datos_en_acreedores_cuotas_liquidacion_empresa(colaborador_obj.pk , planilla, fecha_pago_date.date() , acredores_empresa , 'Liquidacion')
+                            else:
+                                acredores_empresa=prima_antiguedad
+                                fun_guardar_datos_en_acreedores_cuotas_liquidacion_empresa(colaborador_obj.pk , planilla, fecha_pago_date.date() , acredores_empresa , 'Liquidacion')
+                        
+                        
+                            total_deducciones_colab=seguro_social + seg_social_decimo +  seguro_educativo + preaviso - ISLR_A_regresar+ acredores_empresa
+
+                    else:
+                        total_deducciones_colab = seguro_social + seg_social_decimo +  seguro_educativo + preaviso - ISLR_A_regresar   
+
+                    
+                    
                 else:
-                    total_deducciones_colab = seguro_social + seg_social_decimo +  seguro_educativo + preaviso - ISLR_A_regresar   
+                    total_deducciones_colab = seguro_social + seg_social_decimo +  seguro_educativo + preaviso - ISLR_A_regresar
+                    
+                total_a_pagar_neto = total_a_pagar_bruto - total_deducciones_colab
+
+                #deduciones patronales
+                seguro_social_patronal=vacaciones_sueldo*0.1225
+                seguro_educativo_patronal=vacaciones_sueldo*0.015
+                seg_social_decimo_patronal=decimo_provisional_completo*0.1075
+
+                total_Deduciones_Patronales=seguro_social_patronal+seguro_educativo_patronal+seg_social_decimo_patronal
+
+                Total_Pagar_por_empresa   = total_a_pagar_bruto +   total_Deduciones_Patronales - preaviso
 
                 
-                
-            else:
-                total_deducciones_colab = seguro_social + seg_social_decimo +  seguro_educativo + preaviso - ISLR_A_regresar
-                 
-            total_a_pagar_neto = total_a_pagar_bruto - total_deducciones_colab
 
-            #deduciones patronales
-            seguro_social_patronal=vacaciones_sueldo*0.1225
-            seguro_educativo_patronal=vacaciones_sueldo*0.015
-            seg_social_decimo_patronal=decimo_provisional_completo*0.1075
-
-            total_Deduciones_Patronales=seguro_social_patronal+seguro_educativo_patronal+seg_social_decimo_patronal
-
-            Total_Pagar_por_empresa   = total_a_pagar_bruto +   total_Deduciones_Patronales - preaviso
-
-            
-
-            #definido no requieren preaviso
-            try:
-                    created=Liquidaciones.objects.get(Colaborador__pk=colaborador_obj.pk)
-                    #save
-                    if True:
-
-                        created.Periodo = planilla
-                        created.Fecha_pago_liquidacion = fecha_corte_liquidacion.date()
-                        created.Anos_Laborado = anios_dif
-                        created.Meses_Laborados  =meses_dif
-                        created.Dias_Laborados = dias_dif
-
-                        created.Mes_Diferencia_XIII=mesess
-                        created.Dias_Diferencia_XIII=diass
-
-                        created.Colaborador= colaborador_obj
-                        created.Tipo_de_Liquidacion=tipo_liquidacion
-
-                        created.Salario_Mayor=mayor_salario
-                        created.Salario_Ultimos_30_Dias=mes_30_dias
-                        created.Salario_Ultimos_6_meses=promedio_6_meses
-                        created.Salario_Ultimos_5_anios=promedio_5_anios
-
-                        created.Dias_Vacaciones_Acumuladas=vacaciones
-                        created.Antiguedad_En_Anios=antiguedad
-                        created.Vacaciones_Provisionales_Brutas=vacaciones_sueldo
-                        #Deducciones
-                        created.Descuento_Acreedores_Empresa=acredores_empresa
-                        created.Seguro_Social_Provisiones_Vacas=seguro_social
-                        created.Seguro_Educativo_Proviciones_Vacas=seguro_educativo
-
-                        created.Decimo_Provisional_Bruto=decimo_provisional_completo
-                        created.Seguro_Social_Decimo_Provisiones = seg_social_decimo
-                        #
-                       
-                        created.Preaviso=preaviso
-                        created.Prima_Antiguedad=prima_antiguedad
-                        created.Indemnizacion=Indemnización
-                        created.Cesantía=Cesantía
-                        # Totales Colaborador
-                        created.Total_Liquidacion_Bruta=total_a_pagar_bruto
-                        created.Total_deduciones_Colaborador= total_deducciones_colab
-                        created.Total_Liquidacion_Neta= total_a_pagar_bruto - total_deducciones_colab
-
-                        #Patronales
-                        created.Seguro_Social_Provisiones_Vacas_Patron=seguro_social_patronal
-                        created.Seguro_Educativo_Proviciones_Vacas_Patron=seguro_educativo_patronal
-                        created.Seguro_Social_Decimo_Provisiones_Patron=seg_social_decimo_patronal
-                        created.Total_Deduciones_Patronales=seguro_social_patronal+seguro_educativo_patronal+seg_social_decimo_patronal
-                        #total gasto liquidacion empresa
-                        created.Total_Gastos_Patron = Total_Pagar_por_empresa
-                        created.Devolucion_ISLR= ISLR_A_regresar
-
-                        created.save()
-                
-            except:
-                created=Liquidaciones.objects.create(Periodo = planilla
-                        , Fecha_pago_liquidacion = fecha_corte_liquidacion.date()
-                        , Anos_Laborado = anios_dif
-                        , Meses_Laborados  =meses_dif
-                        , Dias_Laborados = dias_dif
-
-                        , Mes_Diferencia_XIII=mesess
-                        , Dias_Diferencia_XIII=diass
-
-                        , Colaborador= colaborador_obj
-                        , Tipo_de_Liquidacion=tipo_liquidacion
-
-                        , Salario_Mayor=mayor_salario
-                        , Salario_Ultimos_30_Dias=mes_30_dias
-                        , Salario_Ultimos_6_meses=promedio_6_meses
-                        , Salario_Ultimos_5_anios=promedio_5_anios
-
-                        , Dias_Vacaciones_Acumuladas=vacaciones
-                        , Antiguedad_En_Anios=antiguedad
-                        , Vacaciones_Provisionales_Brutas=vacaciones_sueldo
-                        #Deducciones
-                        , Descuento_Acreedores_Empresa=acredores_empresa
-                        , Seguro_Social_Provisiones_Vacas=seguro_social
-                        , Seguro_Educativo_Proviciones_Vacas=seguro_educativo
-
-                        , Decimo_Provisional_Bruto=decimo_provisional_completo
-                        , Seguro_Social_Decimo_Provisiones = seg_social_decimo
-                        #
-                        , Preaviso=preaviso
-                        , Prima_Antiguedad=prima_antiguedad
-                        , Indemnizacion=Indemnización
-                        , Cesantía=Cesantía
-                        # Totales Colaborador
-                        , Total_Liquidacion_Bruta=total_a_pagar_bruto
-                        , Total_deduciones_Colaborador= total_deducciones_colab
-                        , Total_Liquidacion_Neta= total_a_pagar_bruto - total_deducciones_colab
-
-                        #Patronales
-                        , Seguro_Social_Provisiones_Vacas_Patron=seguro_social_patronal
-                        , Seguro_Educativo_Proviciones_Vacas_Patron=seguro_educativo_patronal
-                        , Seguro_Social_Decimo_Provisiones_Patron=seg_social_decimo_patronal
-                        , Total_Deduciones_Patronales=seguro_social_patronal+seguro_educativo_patronal+seg_social_decimo_patronal
-                        #total gasto liquidacion empresa
-                        , Total_Gastos_Patron = Total_Pagar_por_empresa
-                        , Devolucion_ISLR= ISLR_A_regresar
-                        )
-
-
-           
-            
-
-           # hacer parte liquidacion de empresa
-            if True:
-                lista_obj_clientes=Panilla_por_periodo_quincenal_clientes.objects.filter(Periodo = planilla, Colaborador__pk=colaborador_obj.pk)
-                lista_para_crear_liquidacion_cliente=[]
-                for obj_cliente in lista_obj_clientes:
-                    lista_para_crear_liquidacion_cliente.append([obj_cliente.Cliente.pk,obj_cliente.Porcentaje])
-                
-                for guardar_cliente in lista_para_crear_liquidacion_cliente :
-                    pk_cliente=guardar_cliente[0]
-                    porc= guardar_cliente[1]
-                    try:
-                       
-                        created=Liquidaciones_Clientes.objects.get(Colaborador__pk=colaborador_obj.pk,Periodo=planilla, Cliente__pk=pk_cliente)
+                #definido no requieren preaviso
+                try:
+                        created=Liquidaciones.objects.get(Colaborador__pk=colaborador_obj.pk)
                         #save
                         if True:
 
@@ -23483,13 +23366,11 @@ def motor_planilla_p7_l(request):
                             created.Anos_Laborado = anios_dif
                             created.Meses_Laborados  =meses_dif
                             created.Dias_Laborados = dias_dif
-                            created.Porcentaje = porc
 
                             created.Mes_Diferencia_XIII=mesess
                             created.Dias_Diferencia_XIII=diass
 
                             created.Colaborador= colaborador_obj
-                           
                             created.Tipo_de_Liquidacion=tipo_liquidacion
 
                             created.Salario_Mayor=mayor_salario
@@ -23499,160 +23380,287 @@ def motor_planilla_p7_l(request):
 
                             created.Dias_Vacaciones_Acumuladas=vacaciones
                             created.Antiguedad_En_Anios=antiguedad
-                            created.Vacaciones_Provisionales_Brutas=vacaciones_sueldo *porc
-                        #Deducciones
-                            created.Descuento_Acreedores_Empresa=acredores_empresa *porc
-                            created.Seguro_Social_Provisiones_Vacas=seguro_social *porc
-                            created.Seguro_Educativo_Proviciones_Vacas=seguro_educativo *porc
+                            created.Vacaciones_Provisionales_Brutas=vacaciones_sueldo
+                            #Deducciones
+                            created.Descuento_Acreedores_Empresa=acredores_empresa
+                            created.Seguro_Social_Provisiones_Vacas=seguro_social
+                            created.Seguro_Educativo_Proviciones_Vacas=seguro_educativo
 
-                            created.Decimo_Provisional_Bruto=decimo_provisional_completo *porc
-                            created.Seguro_Social_Decimo_Provisiones = seg_social_decimo *porc
-                        #
-                       
-                            created.Preaviso=preaviso *porc
-                            created.Prima_Antiguedad=prima_antiguedad *porc
-                            created.Indemnizacion=Indemnización *porc
-                            created.Cesantía=Cesantía *porc
-                        # Totales Colaborador
-                            created.Total_Liquidacion_Bruta=total_a_pagar_bruto *porc
-                            created.Total_deduciones_Colaborador= total_deducciones_colab *porc
-                            created.Total_Liquidacion_Neta= total_a_pagar_bruto - total_deducciones_colab *porc
+                            created.Decimo_Provisional_Bruto=decimo_provisional_completo
+                            created.Seguro_Social_Decimo_Provisiones = seg_social_decimo
+                            #
+                        
+                            created.Preaviso=preaviso
+                            created.Prima_Antiguedad=prima_antiguedad
+                            created.Indemnizacion=Indemnización
+                            created.Cesantía=Cesantía
+                            # Totales Colaborador
+                            created.Total_Liquidacion_Bruta=total_a_pagar_bruto
+                            created.Total_deduciones_Colaborador= total_deducciones_colab
+                            created.Total_Liquidacion_Neta= total_a_pagar_bruto - total_deducciones_colab
 
-                        #Patronales
-                            created.Seguro_Social_Provisiones_Vacas_Patron=seguro_social_patronal *porc
-                            created.Seguro_Educativo_Proviciones_Vacas_Patron=seguro_educativo_patronal *porc
-                            created.Seguro_Social_Decimo_Provisiones_Patron=seg_social_decimo_patronal *porc
-                            created.Total_Deduciones_Patronales=seguro_social_patronal+seguro_educativo_patronal+seg_social_decimo_patronal *porc
-                        #total gasto liquidacion empresa 
-                            created.Total_Gastos_Patron = Total_Pagar_por_empresa *porc
-                            created.Devolucion_ISLR= ISLR_A_regresar *porc
+                            #Patronales
+                            created.Seguro_Social_Provisiones_Vacas_Patron=seguro_social_patronal
+                            created.Seguro_Educativo_Proviciones_Vacas_Patron=seguro_educativo_patronal
+                            created.Seguro_Social_Decimo_Provisiones_Patron=seg_social_decimo_patronal
+                            created.Total_Deduciones_Patronales=seguro_social_patronal+seguro_educativo_patronal+seg_social_decimo_patronal
+                            #total gasto liquidacion empresa
+                            created.Total_Gastos_Patron = Total_Pagar_por_empresa
+                            created.Devolucion_ISLR= ISLR_A_regresar
 
                             created.save()
-                
-                    except:
-                        obj_clientess=Info_Clientes.objects.get(pk=pk_cliente)
-                        created=Liquidaciones_Clientes.objects.create(Periodo = planilla
-                        , Fecha_pago_liquidacion = fecha_corte_liquidacion.date()
-                        , Anos_Laborado = anios_dif
-                        , Meses_Laborados  =meses_dif
-                        , Dias_Laborados = dias_dif
-                        , Cliente = obj_clientess
-                        , Porcentaje=porc
+                    
+                except:
+                    created=Liquidaciones.objects.create(Periodo = planilla
+                            , Fecha_pago_liquidacion = fecha_corte_liquidacion.date()
+                            , Anos_Laborado = anios_dif
+                            , Meses_Laborados  =meses_dif
+                            , Dias_Laborados = dias_dif
 
-                        , Mes_Diferencia_XIII=mesess
-                        , Dias_Diferencia_XIII=diass
+                            , Mes_Diferencia_XIII=mesess
+                            , Dias_Diferencia_XIII=diass
 
-                        , Colaborador= colaborador_obj
-                        , Tipo_de_Liquidacion=tipo_liquidacion
+                            , Colaborador= colaborador_obj
+                            , Tipo_de_Liquidacion=tipo_liquidacion
 
-                        , Salario_Mayor=mayor_salario
-                        , Salario_Ultimos_30_Dias=mes_30_dias
-                        , Salario_Ultimos_6_meses=promedio_6_meses
-                        , Salario_Ultimos_5_anios=promedio_5_anios
+                            , Salario_Mayor=mayor_salario
+                            , Salario_Ultimos_30_Dias=mes_30_dias
+                            , Salario_Ultimos_6_meses=promedio_6_meses
+                            , Salario_Ultimos_5_anios=promedio_5_anios
 
-                        , Dias_Vacaciones_Acumuladas=vacaciones
-                        , Antiguedad_En_Anios=antiguedad
-                        , Vacaciones_Provisionales_Brutas=vacaciones_sueldo * porc
-                        #Deducciones
-                        , Descuento_Acreedores_Empresa=acredores_empresa *porc
-                        , Seguro_Social_Provisiones_Vacas=seguro_social * porc
-                        , Seguro_Educativo_Proviciones_Vacas=seguro_educativo * porc
+                            , Dias_Vacaciones_Acumuladas=vacaciones
+                            , Antiguedad_En_Anios=antiguedad
+                            , Vacaciones_Provisionales_Brutas=vacaciones_sueldo
+                            #Deducciones
+                            , Descuento_Acreedores_Empresa=acredores_empresa
+                            , Seguro_Social_Provisiones_Vacas=seguro_social
+                            , Seguro_Educativo_Proviciones_Vacas=seguro_educativo
 
-                        , Decimo_Provisional_Bruto=decimo_provisional_completo * porc
-                        , Seguro_Social_Decimo_Provisiones = seg_social_decimo * porc
-                        #
-                        , Preaviso=preaviso  * porc
-                        , Prima_Antiguedad=prima_antiguedad  * porc
-                        , Indemnizacion=Indemnización  * porc
-                        , Cesantía=Cesantía  * porc
-                        # Totales Colaborador 
-                        , Total_Liquidacion_Bruta=total_a_pagar_bruto  * porc
-                        , Total_deduciones_Colaborador= total_deducciones_colab  * porc
-                        , Total_Liquidacion_Neta= total_a_pagar_bruto - total_deducciones_colab  * porc
+                            , Decimo_Provisional_Bruto=decimo_provisional_completo
+                            , Seguro_Social_Decimo_Provisiones = seg_social_decimo
+                            #
+                            , Preaviso=preaviso
+                            , Prima_Antiguedad=prima_antiguedad
+                            , Indemnizacion=Indemnización
+                            , Cesantía=Cesantía
+                            # Totales Colaborador
+                            , Total_Liquidacion_Bruta=total_a_pagar_bruto
+                            , Total_deduciones_Colaborador= total_deducciones_colab
+                            , Total_Liquidacion_Neta= total_a_pagar_bruto - total_deducciones_colab
 
-                        #Patronales
-                        , Seguro_Social_Provisiones_Vacas_Patron=seguro_social_patronal  * porc
-                        , Seguro_Educativo_Proviciones_Vacas_Patron=seguro_educativo_patronal  * porc
-                        , Seguro_Social_Decimo_Provisiones_Patron=seg_social_decimo_patronal  * porc
-                        , Total_Deduciones_Patronales=seguro_social_patronal+seguro_educativo_patronal+seg_social_decimo_patronal  * porc
-                        #total gasto liquidacion empresa
-                        , Total_Gastos_Patron = Total_Pagar_por_empresa  * porc
-                        , Devolucion_ISLR= ISLR_A_regresar  * porc
-                        )
-                   
-           
+                            #Patronales
+                            , Seguro_Social_Provisiones_Vacas_Patron=seguro_social_patronal
+                            , Seguro_Educativo_Proviciones_Vacas_Patron=seguro_educativo_patronal
+                            , Seguro_Social_Decimo_Provisiones_Patron=seg_social_decimo_patronal
+                            , Total_Deduciones_Patronales=seguro_social_patronal+seguro_educativo_patronal+seg_social_decimo_patronal
+                            #total gasto liquidacion empresa
+                            , Total_Gastos_Patron = Total_Pagar_por_empresa
+                            , Devolucion_ISLR= ISLR_A_regresar
+                            )
 
+
+            
                 
 
-
-
-            lista_planilla1=Liquidaciones.objects.get( Colaborador__pk=id_col)
-
-            nombre=lista_planilla1.Colaborador.Colaborador_nombre+' '+lista_planilla1.Colaborador.Colaborador_apellido
-                
-            sueldo_nominal=lista_planilla1.Colaborador.Sueldo
-
-            Tiempo_laborado=str(lista_planilla1.Anos_Laborado)+' Años '+str(lista_planilla1.Meses_Laborados)+" Meses "+ str(lista_planilla1.Dias_Laborados)+" Dias."
-
-            vacaciones=lista_planilla1.Vacaciones_Provisionales_Brutas
-                
-            Xiii_bruto=lista_planilla1.Decimo_Provisional_Bruto
-
-            PA=lista_planilla1.Prima_Antiguedad
-            INDE= lista_planilla1.Indemnizacion
-            CESANTIA =  lista_planilla1.Cesantía
-
-            deduciones_ley=lista_planilla1.Total_deduciones_Colaborador
-
-            neto_a_pagar= lista_planilla1.Total_Liquidacion_Neta
-
-            Gastos_Patronales= lista_planilla1.Total_Deduciones_Patronales
-
-            Total_gasto_Patron=lista_planilla1.Total_Gastos_Patron
-            lista_ausencia_final=[]   
-            lista=[lista_planilla1.pk,
-                   nombre,
-                       round(sueldo_nominal,2),
-                       Tiempo_laborado,
-                       round(vacaciones,2),
-                       round(Xiii_bruto,2),
-                      
-                       round(PA,2),
-                        round(INDE,2),
-                        round(CESANTIA,2),
-                        round(deduciones_ley,2),
-                        round(neto_a_pagar,2),
-                        round(Gastos_Patronales,2),
-                        round(Total_gasto_Patron,2),
+            # hacer parte liquidacion de empresa
+                if True:
+                    lista_obj_clientes=Panilla_por_periodo_quincenal_clientes.objects.filter(Periodo = planilla, Colaborador__pk=colaborador_obj.pk)
+                    lista_para_crear_liquidacion_cliente=[]
+                    for obj_cliente in lista_obj_clientes:
+                        lista_para_crear_liquidacion_cliente.append([obj_cliente.Cliente.pk,obj_cliente.Porcentaje])
+                    
+                    for guardar_cliente in lista_para_crear_liquidacion_cliente :
+                        pk_cliente=guardar_cliente[0]
+                        porc= guardar_cliente[1]
+                        try:
                         
-                        lista_planilla1.Colaborador.imagen ,
-                        lista_planilla1.Fecha_pago_liquidacion
-                        #<td class="small"><img src="{{ MEDIA_URL }}{{  clientes.12 }}" alt="mdo" width="32" height="32" class="rounded-circle mb-2">  {{ clientes.0 }}</td>
-                                                    
-                        ]
+                            created=Liquidaciones_Clientes.objects.get(Colaborador__pk=colaborador_obj.pk,Periodo=planilla, Cliente__pk=pk_cliente)
+                            #save
+                            if True:
 
-            lista_ausencia_final.append(lista)
-                 
-            colaborador_objj=Colaboradores.objects.get(pk=id_col)
-            Fecha_Ingreso=colaborador_objj.Fecha_Ingreso
-            tipo_contrato=colaborador_objj.Tipo_contrato
-            salario_base=colaborador_objj.Sueldo
-            permiso_objj=Permisos.objects.filter(Colaborador__pk=id_col, Tipo_permiso='Vacaciones', Estado_Permiso='Aprobado')
-            num_vacas_usada=0
-            for y in permiso_objj:
-                num_vacas_usada+=y.Dias_permiso
-  
+                                created.Periodo = planilla
+                                created.Fecha_pago_liquidacion = fecha_corte_liquidacion.date()
+                                created.Anos_Laborado = anios_dif
+                                created.Meses_Laborados  =meses_dif
+                                created.Dias_Laborados = dias_dif
+                                created.Porcentaje = porc
+
+                                created.Mes_Diferencia_XIII=mesess
+                                created.Dias_Diferencia_XIII=diass
+
+                                created.Colaborador= colaborador_obj
+                            
+                                created.Tipo_de_Liquidacion=tipo_liquidacion
+
+                                created.Salario_Mayor=mayor_salario
+                                created.Salario_Ultimos_30_Dias=mes_30_dias
+                                created.Salario_Ultimos_6_meses=promedio_6_meses
+                                created.Salario_Ultimos_5_anios=promedio_5_anios
+
+                                created.Dias_Vacaciones_Acumuladas=vacaciones
+                                created.Antiguedad_En_Anios=antiguedad
+                                created.Vacaciones_Provisionales_Brutas=vacaciones_sueldo *porc
+                            #Deducciones
+                                created.Descuento_Acreedores_Empresa=acredores_empresa *porc
+                                created.Seguro_Social_Provisiones_Vacas=seguro_social *porc
+                                created.Seguro_Educativo_Proviciones_Vacas=seguro_educativo *porc
+
+                                created.Decimo_Provisional_Bruto=decimo_provisional_completo *porc
+                                created.Seguro_Social_Decimo_Provisiones = seg_social_decimo *porc
+                            #
+                        
+                                created.Preaviso=preaviso *porc
+                                created.Prima_Antiguedad=prima_antiguedad *porc
+                                created.Indemnizacion=Indemnización *porc
+                                created.Cesantía=Cesantía *porc
+                            # Totales Colaborador
+                                created.Total_Liquidacion_Bruta=total_a_pagar_bruto *porc
+                                created.Total_deduciones_Colaborador= total_deducciones_colab *porc
+                                created.Total_Liquidacion_Neta= total_a_pagar_bruto - total_deducciones_colab *porc
+
+                            #Patronales
+                                created.Seguro_Social_Provisiones_Vacas_Patron=seguro_social_patronal *porc
+                                created.Seguro_Educativo_Proviciones_Vacas_Patron=seguro_educativo_patronal *porc
+                                created.Seguro_Social_Decimo_Provisiones_Patron=seg_social_decimo_patronal *porc
+                                created.Total_Deduciones_Patronales=seguro_social_patronal+seguro_educativo_patronal+seg_social_decimo_patronal *porc
+                            #total gasto liquidacion empresa 
+                                created.Total_Gastos_Patron = Total_Pagar_por_empresa *porc
+                                created.Devolucion_ISLR= ISLR_A_regresar *porc
+
+                                created.save()
+                    
+                        except:
+                            obj_clientess=Info_Clientes.objects.get(pk=pk_cliente)
+                            created=Liquidaciones_Clientes.objects.create(Periodo = planilla
+                            , Fecha_pago_liquidacion = fecha_corte_liquidacion.date()
+                            , Anos_Laborado = anios_dif
+                            , Meses_Laborados  =meses_dif
+                            , Dias_Laborados = dias_dif
+                            , Cliente = obj_clientess
+                            , Porcentaje=porc
+
+                            , Mes_Diferencia_XIII=mesess
+                            , Dias_Diferencia_XIII=diass
+
+                            , Colaborador= colaborador_obj
+                            , Tipo_de_Liquidacion=tipo_liquidacion
+
+                            , Salario_Mayor=mayor_salario
+                            , Salario_Ultimos_30_Dias=mes_30_dias
+                            , Salario_Ultimos_6_meses=promedio_6_meses
+                            , Salario_Ultimos_5_anios=promedio_5_anios
+
+                            , Dias_Vacaciones_Acumuladas=vacaciones
+                            , Antiguedad_En_Anios=antiguedad
+                            , Vacaciones_Provisionales_Brutas=vacaciones_sueldo * porc
+                            #Deducciones
+                            , Descuento_Acreedores_Empresa=acredores_empresa *porc
+                            , Seguro_Social_Provisiones_Vacas=seguro_social * porc
+                            , Seguro_Educativo_Proviciones_Vacas=seguro_educativo * porc
+
+                            , Decimo_Provisional_Bruto=decimo_provisional_completo * porc
+                            , Seguro_Social_Decimo_Provisiones = seg_social_decimo * porc
+                            #
+                            , Preaviso=preaviso  * porc
+                            , Prima_Antiguedad=prima_antiguedad  * porc
+                            , Indemnizacion=Indemnización  * porc
+                            , Cesantía=Cesantía  * porc
+                            # Totales Colaborador 
+                            , Total_Liquidacion_Bruta=total_a_pagar_bruto  * porc
+                            , Total_deduciones_Colaborador= total_deducciones_colab  * porc
+                            , Total_Liquidacion_Neta= total_a_pagar_bruto - total_deducciones_colab  * porc
+
+                            #Patronales
+                            , Seguro_Social_Provisiones_Vacas_Patron=seguro_social_patronal  * porc
+                            , Seguro_Educativo_Proviciones_Vacas_Patron=seguro_educativo_patronal  * porc
+                            , Seguro_Social_Decimo_Provisiones_Patron=seg_social_decimo_patronal  * porc
+                            , Total_Deduciones_Patronales=seguro_social_patronal+seguro_educativo_patronal+seg_social_decimo_patronal  * porc
+                            #total gasto liquidacion empresa
+                            , Total_Gastos_Patron = Total_Pagar_por_empresa  * porc
+                            , Devolucion_ISLR= ISLR_A_regresar  * porc
+                            )
+                    
             
 
-            anios, mesess, diass = diferencia_fechas(Fecha_Ingreso, fecha_corte_liquidacion.date())
-            antiguedad=str(anios)+' Años '+str(mesess)+" Meses "+ str(diass)+" Dias."
-            
+                    
 
-            lista_datos_liquidar = [Fecha_Ingreso,tipo_contrato, num_vacas_usada, lista_planilla1.Dias_Vacaciones_Acumuladas, sueldo_nominal,
-                                    lista_planilla1.Salario_Ultimos_5_anios ,lista_planilla1.Salario_Ultimos_6_meses ,lista_planilla1.Salario_Ultimos_30_Dias, lista_planilla1.Salario_Mayor, lista_planilla1.Antiguedad_En_Anios, antiguedad]  
-        
-        return render(request, "motor_planilla_7-l.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj,'pk_acreedor_empresa':pk_acreedor_empresa, 'lista_datos_liquidar':lista_datos_liquidar,'lista_cliente':lista_ausencia_final,'qty_notificaciones_permisos':qty_notificaciones_permisos,'qty_notificaciones_acreedores':qty_notificaciones_acreedores, 'TOTAL_C':len(lista_administrativo)+len(lista_produccion),'admin':len(lista_administrativo), 'produccion':len(lista_produccion),'lista_planilla':lista_planilla,'siguiente_bool':True, 'colaborador':id_col, 'tipo_liquidacion':tipo_liquidacion,  'fecha_salida':str(fecha_corte_liquidacion.date() ) })
+
+
+                lista_planilla1=Liquidaciones.objects.get( Colaborador__pk=id_col)
+
+                nombre=lista_planilla1.Colaborador.Colaborador_nombre+' '+lista_planilla1.Colaborador.Colaborador_apellido
+                    
+                sueldo_nominal=lista_planilla1.Colaborador.Sueldo
+
+                Tiempo_laborado=str(lista_planilla1.Anos_Laborado)+' Años '+str(lista_planilla1.Meses_Laborados)+" Meses "+ str(lista_planilla1.Dias_Laborados)+" Dias."
+
+                vacaciones=lista_planilla1.Vacaciones_Provisionales_Brutas
+                    
+                Xiii_bruto=lista_planilla1.Decimo_Provisional_Bruto
+
+                PA=lista_planilla1.Prima_Antiguedad
+                INDE= lista_planilla1.Indemnizacion
+                CESANTIA =  lista_planilla1.Cesantía
+
+                deduciones_ley=lista_planilla1.Total_deduciones_Colaborador
+
+                neto_a_pagar= lista_planilla1.Total_Liquidacion_Neta
+
+                Gastos_Patronales= lista_planilla1.Total_Deduciones_Patronales
+
+                Total_gasto_Patron=lista_planilla1.Total_Gastos_Patron
+                lista_ausencia_final=[]   
+                lista=[lista_planilla1.pk,
+                    nombre,
+                        round(sueldo_nominal,2),
+                        Tiempo_laborado,
+                        round(vacaciones,2),
+                        round(Xiii_bruto,2),
+                        
+                        round(PA,2),
+                            round(INDE,2),
+                            round(CESANTIA,2),
+                            round(deduciones_ley,2),
+                            round(neto_a_pagar,2),
+                            round(Gastos_Patronales,2),
+                            round(Total_gasto_Patron,2),
+                            
+                            lista_planilla1.Colaborador.imagen ,
+                            lista_planilla1.Fecha_pago_liquidacion
+                            #<td class="small"><img src="{{ MEDIA_URL }}{{  clientes.12 }}" alt="mdo" width="32" height="32" class="rounded-circle mb-2">  {{ clientes.0 }}</td>
+                                                        
+                            ]
+
+                lista_ausencia_final.append(lista)
+                    
+                colaborador_objj=Colaboradores.objects.get(pk=id_col)
+                Fecha_Ingreso=colaborador_objj.Fecha_Ingreso
+                tipo_contrato=colaborador_objj.Tipo_contrato
+                salario_base=colaborador_objj.Sueldo
+                permiso_objj=Permisos.objects.filter(Colaborador__pk=id_col, Tipo_permiso='Vacaciones', Estado_Permiso='Aprobado')
+                num_vacas_usada=0
+                for y in permiso_objj:
+                    num_vacas_usada+=y.Dias_permiso
     
+                
+
+                anios, mesess, diass = diferencia_fechas(Fecha_Ingreso, fecha_corte_liquidacion.date())
+                antiguedad=str(anios)+' Años '+str(mesess)+" Meses "+ str(diass)+" Dias."
+                
+
+                lista_datos_liquidar = [Fecha_Ingreso,tipo_contrato, num_vacas_usada, lista_planilla1.Dias_Vacaciones_Acumuladas, sueldo_nominal,
+                                        lista_planilla1.Salario_Ultimos_5_anios ,lista_planilla1.Salario_Ultimos_6_meses ,lista_planilla1.Salario_Ultimos_30_Dias, lista_planilla1.Salario_Mayor, lista_planilla1.Antiguedad_En_Anios, antiguedad]  
+            
+            return render(request, "motor_planilla_7-l.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj,'pk_acreedor_empresa':pk_acreedor_empresa, 'lista_datos_liquidar':lista_datos_liquidar,'lista_cliente':lista_ausencia_final,'qty_notificaciones_permisos':qty_notificaciones_permisos,'qty_notificaciones_acreedores':qty_notificaciones_acreedores, 'TOTAL_C':len(lista_administrativo)+len(lista_produccion),'admin':len(lista_administrativo), 'produccion':len(lista_produccion),'lista_planilla':lista_planilla,'siguiente_bool':True, 'colaborador':id_col, 'tipo_liquidacion':tipo_liquidacion,  'fecha_salida':str(fecha_corte_liquidacion.date() ) })
+
+        except Exception as e:
+            print("Se produjo una excepción:", type(e).__name__, "-", e)
+            # Imprimir la información de la traza de la excepción
+            traceback.print_exc()
+            print(traceback.print_exc(), 'print')
+            print("Archivo:", e.__traceback__.tb_frame.f_code.co_filename)
+            print("Línea:", e.__traceback__.tb_lineno) 
+            
 def ver_liquidacion_detalles(request, searched):
     if True: #Autenticacion
         if not request.user.is_authenticated:
