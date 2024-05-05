@@ -23089,7 +23089,7 @@ def motor_planilla_p7_l(request):
             
 
                 if True: #Actualizar acreedores 
-                    lista_acreedores=Acreedores_quincena.objects.filter( Periodo_Cobro = quater , Tipo_Operacion='Planilla' , Acreedores__Colaborador__pk =id_col )
+                    lista_acreedores=Acreedores_quincena.objects.filter( Periodo_Cobro = planilla , Tipo_Operacion='Planilla' , Acreedores__Colaborador__pk =id_col )
                     if len(lista_acreedores)>0:
                         for acreedore_obj in lista_acreedores:
                             if acreedore_obj.Realizo_Cobreo == False:
@@ -23660,7 +23660,7 @@ def motor_planilla_p7_l(request):
             print(traceback.print_exc(), 'print')
             print("Archivo:", e.__traceback__.tb_frame.f_code.co_filename)
             print("Línea:", e.__traceback__.tb_lineno) 
-            
+
 def ver_liquidacion_detalles(request, searched):
     if True: #Autenticacion
         if not request.user.is_authenticated:
