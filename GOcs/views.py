@@ -9973,69 +9973,12 @@ def ver_jornada(request):
 
     if request.method=='GET':
         lista_final=[]
-        lista_clientes=Hoja_tiempo.objects.all()
+        #lista_clientes=Hoja_tiempo.objects.all()
         
-        for i in range(len(lista_clientes)):
-                minutos_Trabajads=fun_minutoss(lista_clientes[i].Minutos_Trabajads)
-                Minutos_Trabajads_Jornada_Laboral=fun_minutoss(lista_clientes[i].Minutos_Trabajads_Jornada_Laboral)
-                Minutos_Extras_Diurnos=fun_minutoss(lista_clientes[i].Minutos_Extras_Diurnos)
-                Minutos_Extras_Noctuno=fun_minutoss(lista_clientes[i].Minutos_Extras_Noctuno)
-                Minutos_Laborales_extras=fun_minutoss(lista_clientes[i].Minutos_Laborales_extras)
-                Minutos_Tardia=fun_minutoss(lista_clientes[i].Minutos_Tardia)
-                Minutos_Faltantes_turno=fun_minutoss(lista_clientes[i].Minutos_Faltantes_turno)
-                Minutos_llego_temprano=fun_minutoss(lista_clientes[i].Minutos_llego_temprano)
-                Minutos_extras_mixtas_nocturnas=fun_minutoss(lista_clientes[i].Minutos_extras_mixtas_nocturnas)
-                Minutos_extras_mixtas_diurnas=fun_minutoss(lista_clientes[i].Minutos_extras_mixtas_diurnas)
-                Minutos_extras_diurnos_3h=fun_minutoss(lista_clientes[i].Minutos_extras_diurnos_3h)
-                Minutos_extras_nocturnos_3h=fun_minutoss(lista_clientes[i].Minutos_extras_nocturnos_3h)
-                Minutos_de_extras_mixtas_diurnas_3hr=fun_minutoss(lista_clientes[i].Minutos_de_extras_mixtas_diurnas_3hr)
-                Minutos_de_extras_mixtas_nocturnas_3hr=fun_minutoss(lista_clientes[i].Minutos_de_extras_mixtas_nocturnas_3hr)
-                Laboro_dia_domingo_descanso=lista_clientes[i].Laboro_dia_domingo_descanso
-                if Laboro_dia_domingo_descanso==True:
-                     str_Laboro_dia_domingo_descanso='Si'
-                else:
-                     str_Laboro_dia_domingo_descanso='No'
-                
-                str_laboro_dia_feriado='No'
-                laboro_dia_feriado=lista_clientes[i].laboro_dia_feriado
-                if laboro_dia_feriado==True:
-                     str_laboro_dia_feriado='Si'
-                     
-                
-
-                lista=[lista_clientes[i].pk,
-                        lista_clientes[i].Colaborador.Colaborador_nombre ,
-                        lista_clientes[i].Colaborador.Colaborador_apellido,
-                        lista_clientes[i].Colaborador.Cargo,
-                        lista_clientes[i].Empresa.Codigo_cliente,
-                        lista_clientes[i].Empresa.nombre_empresa,
-                        str(lista_clientes[i].Dia_entrada)+' '+ lista_clientes[i].Entrada,
-                        str(lista_clientes[i].Dia_salida)+' '+ lista_clientes[i].Salida,
-                        lista_clientes[i].Quien_agrego_Jornada,
-                        minutos_Trabajads ,
-                        Minutos_Trabajads_Jornada_Laboral, 
-                        Minutos_Extras_Diurnos,
-                        Minutos_Extras_Noctuno,
-                        Minutos_Laborales_extras,
-                        Minutos_Tardia,
-                        Minutos_Faltantes_turno,
-                        Minutos_llego_temprano,
-                        Minutos_extras_mixtas_nocturnas,
-                        Minutos_extras_mixtas_diurnas,
-                        Minutos_extras_diurnos_3h,
-                        Minutos_extras_nocturnos_3h,
-                        Minutos_de_extras_mixtas_diurnas_3hr,
-                        Minutos_de_extras_mixtas_nocturnas_3hr,
-                        str_Laboro_dia_domingo_descanso,
-                        str_laboro_dia_feriado
-
-
-                        
-                        ]
-                lista_final.append(lista)
         
         
         return render(request, "ver_jornada.html",{'nivel':nivel,'es_admin':es_admin, 'Pic':Pic, 'user_profile_obj':user_profile_obj, 'request':request.method ,'lista_cliente':lista_final,'qty_notificaciones_permisos':qty_notificaciones_permisos, 'qty_notificaciones_acreedores':qty_notificaciones_acreedores})
+    
     elif request.method=='POST':
         existo='no existo'
         Mensaje=''
