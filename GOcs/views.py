@@ -18762,7 +18762,7 @@ def comprobantes_pagos(request):
                         cargo=plan_quincena.Colaborador.Cargo.upper()
                         Sueldo_nominal= round(plan_quincena.Sueldo_quincenal,2)
                         Rata_por_HR= round(plan_quincena.Sueldo_HR,2)
-                        Sueldo_base_quincenal = round(plan_quincena.Pago_quincena_despues_descuento - (plan_quincena.Pago_Dias_Trabajo_Feriado_descanso+plan_quincena.Pago_Dias_Trabajo_Feriado_descanso+plan_quincena.Pago_Dias_Trabajo_Descanso+plan_quincena.Pago_Dias_Trabajo_HR_Regulares_Adicionales+plan_quincena.Pago_Incapacidad+plan_quincena.Pago_Licencia_paga+plan_quincena.Pago_Total_Sobretiempo_quincenal+plan_quincena.Pago_Bono_con_Impuesto)+plan_quincena.Pago_Dia_ausencia+plan_quincena.Pago_MIN_Ausencia ,2)
+                        Sueldo_base_quincenal = round(plan_quincena.Pago_quincena_despues_descuento - (plan_quincena.Pago_Dias_Trabajo_Feriado_descanso+plan_quincena.Pago_Dias_Trabajo_Feriado+plan_quincena.Pago_Dias_Trabajo_Descanso+plan_quincena.Pago_Dias_Trabajo_HR_Regulares_Adicionales+plan_quincena.Pago_Incapacidad+plan_quincena.Pago_Licencia_paga+plan_quincena.Pago_Total_Sobretiempo_quincenal+plan_quincena.Pago_Bono_con_Impuesto)+plan_quincena.Pago_Dia_ausencia+plan_quincena.Pago_MIN_Ausencia ,2)
                         Pago_Dias_Trabajo_Feriado_descanso  = round(plan_quincena.Pago_Dias_Trabajo_Feriado_descanso,2)
                         Pago_Dias_Trabajo_Feriado  =round(plan_quincena.Pago_Dias_Trabajo_Feriado_descanso,2)
                         Pago_Dias_Trabajo_Descanso  = round(plan_quincena.Pago_Dias_Trabajo_Descanso,2)
